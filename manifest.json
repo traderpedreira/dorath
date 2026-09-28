@@ -1,0 +1,391 @@
+{
+  "project": "Dorath",
+  "period": 1,
+  "version": "QR MASTER 54 — 2026-09-27",
+  "count": 54,
+  "payload_rule": "Cada QR contém exatamente o código da casa, sem URL e sem texto adicional.",
+  "first_code": "P1-010",
+  "last_code": "P1-540",
+  "error_correction": "H",
+  "quiet_zone_modules": 4,
+  "codes": [
+    {
+      "house": 1,
+      "code": "P1-010",
+      "payload": "P1-010",
+      "png": "PNG/01_P1-010.png",
+      "svg": "SVG/01_P1-010.svg"
+    },
+    {
+      "house": 2,
+      "code": "P1-020",
+      "payload": "P1-020",
+      "png": "PNG/02_P1-020.png",
+      "svg": "SVG/02_P1-020.svg"
+    },
+    {
+      "house": 3,
+      "code": "P1-030",
+      "payload": "P1-030",
+      "png": "PNG/03_P1-030.png",
+      "svg": "SVG/03_P1-030.svg"
+    },
+    {
+      "house": 4,
+      "code": "P1-040",
+      "payload": "P1-040",
+      "png": "PNG/04_P1-040.png",
+      "svg": "SVG/04_P1-040.svg"
+    },
+    {
+      "house": 5,
+      "code": "P1-050",
+      "payload": "P1-050",
+      "png": "PNG/05_P1-050.png",
+      "svg": "SVG/05_P1-050.svg"
+    },
+    {
+      "house": 6,
+      "code": "P1-060",
+      "payload": "P1-060",
+      "png": "PNG/06_P1-060.png",
+      "svg": "SVG/06_P1-060.svg"
+    },
+    {
+      "house": 7,
+      "code": "P1-070",
+      "payload": "P1-070",
+      "png": "PNG/07_P1-070.png",
+      "svg": "SVG/07_P1-070.svg"
+    },
+    {
+      "house": 8,
+      "code": "P1-080",
+      "payload": "P1-080",
+      "png": "PNG/08_P1-080.png",
+      "svg": "SVG/08_P1-080.svg"
+    },
+    {
+      "house": 9,
+      "code": "P1-090",
+      "payload": "P1-090",
+      "png": "PNG/09_P1-090.png",
+      "svg": "SVG/09_P1-090.svg"
+    },
+    {
+      "house": 10,
+      "code": "P1-100",
+      "payload": "P1-100",
+      "png": "PNG/10_P1-100.png",
+      "svg": "SVG/10_P1-100.svg"
+    },
+    {
+      "house": 11,
+      "code": "P1-110",
+      "payload": "P1-110",
+      "png": "PNG/11_P1-110.png",
+      "svg": "SVG/11_P1-110.svg"
+    },
+    {
+      "house": 12,
+      "code": "P1-120",
+      "payload": "P1-120",
+      "png": "PNG/12_P1-120.png",
+      "svg": "SVG/12_P1-120.svg"
+    },
+    {
+      "house": 13,
+      "code": "P1-130",
+      "payload": "P1-130",
+      "png": "PNG/13_P1-130.png",
+      "svg": "SVG/13_P1-130.svg"
+    },
+    {
+      "house": 14,
+      "code": "P1-140",
+      "payload": "P1-140",
+      "png": "PNG/14_P1-140.png",
+      "svg": "SVG/14_P1-140.svg"
+    },
+    {
+      "house": 15,
+      "code": "P1-150",
+      "payload": "P1-150",
+      "png": "PNG/15_P1-150.png",
+      "svg": "SVG/15_P1-150.svg"
+    },
+    {
+      "house": 16,
+      "code": "P1-160",
+      "payload": "P1-160",
+      "png": "PNG/16_P1-160.png",
+      "svg": "SVG/16_P1-160.svg"
+    },
+    {
+      "house": 17,
+      "code": "P1-170",
+      "payload": "P1-170",
+      "png": "PNG/17_P1-170.png",
+      "svg": "SVG/17_P1-170.svg"
+    },
+    {
+      "house": 18,
+      "code": "P1-180",
+      "payload": "P1-180",
+      "png": "PNG/18_P1-180.png",
+      "svg": "SVG/18_P1-180.svg"
+    },
+    {
+      "house": 19,
+      "code": "P1-190",
+      "payload": "P1-190",
+      "png": "PNG/19_P1-190.png",
+      "svg": "SVG/19_P1-190.svg"
+    },
+    {
+      "house": 20,
+      "code": "P1-200",
+      "payload": "P1-200",
+      "png": "PNG/20_P1-200.png",
+      "svg": "SVG/20_P1-200.svg"
+    },
+    {
+      "house": 21,
+      "code": "P1-210",
+      "payload": "P1-210",
+      "png": "PNG/21_P1-210.png",
+      "svg": "SVG/21_P1-210.svg"
+    },
+    {
+      "house": 22,
+      "code": "P1-220",
+      "payload": "P1-220",
+      "png": "PNG/22_P1-220.png",
+      "svg": "SVG/22_P1-220.svg"
+    },
+    {
+      "house": 23,
+      "code": "P1-230",
+      "payload": "P1-230",
+      "png": "PNG/23_P1-230.png",
+      "svg": "SVG/23_P1-230.svg"
+    },
+    {
+      "house": 24,
+      "code": "P1-240",
+      "payload": "P1-240",
+      "png": "PNG/24_P1-240.png",
+      "svg": "SVG/24_P1-240.svg"
+    },
+    {
+      "house": 25,
+      "code": "P1-250",
+      "payload": "P1-250",
+      "png": "PNG/25_P1-250.png",
+      "svg": "SVG/25_P1-250.svg"
+    },
+    {
+      "house": 26,
+      "code": "P1-260",
+      "payload": "P1-260",
+      "png": "PNG/26_P1-260.png",
+      "svg": "SVG/26_P1-260.svg"
+    },
+    {
+      "house": 27,
+      "code": "P1-270",
+      "payload": "P1-270",
+      "png": "PNG/27_P1-270.png",
+      "svg": "SVG/27_P1-270.svg"
+    },
+    {
+      "house": 28,
+      "code": "P1-280",
+      "payload": "P1-280",
+      "png": "PNG/28_P1-280.png",
+      "svg": "SVG/28_P1-280.svg"
+    },
+    {
+      "house": 29,
+      "code": "P1-290",
+      "payload": "P1-290",
+      "png": "PNG/29_P1-290.png",
+      "svg": "SVG/29_P1-290.svg"
+    },
+    {
+      "house": 30,
+      "code": "P1-300",
+      "payload": "P1-300",
+      "png": "PNG/30_P1-300.png",
+      "svg": "SVG/30_P1-300.svg"
+    },
+    {
+      "house": 31,
+      "code": "P1-310",
+      "payload": "P1-310",
+      "png": "PNG/31_P1-310.png",
+      "svg": "SVG/31_P1-310.svg"
+    },
+    {
+      "house": 32,
+      "code": "P1-320",
+      "payload": "P1-320",
+      "png": "PNG/32_P1-320.png",
+      "svg": "SVG/32_P1-320.svg"
+    },
+    {
+      "house": 33,
+      "code": "P1-330",
+      "payload": "P1-330",
+      "png": "PNG/33_P1-330.png",
+      "svg": "SVG/33_P1-330.svg"
+    },
+    {
+      "house": 34,
+      "code": "P1-340",
+      "payload": "P1-340",
+      "png": "PNG/34_P1-340.png",
+      "svg": "SVG/34_P1-340.svg"
+    },
+    {
+      "house": 35,
+      "code": "P1-350",
+      "payload": "P1-350",
+      "png": "PNG/35_P1-350.png",
+      "svg": "SVG/35_P1-350.svg"
+    },
+    {
+      "house": 36,
+      "code": "P1-360",
+      "payload": "P1-360",
+      "png": "PNG/36_P1-360.png",
+      "svg": "SVG/36_P1-360.svg"
+    },
+    {
+      "house": 37,
+      "code": "P1-370",
+      "payload": "P1-370",
+      "png": "PNG/37_P1-370.png",
+      "svg": "SVG/37_P1-370.svg"
+    },
+    {
+      "house": 38,
+      "code": "P1-380",
+      "payload": "P1-380",
+      "png": "PNG/38_P1-380.png",
+      "svg": "SVG/38_P1-380.svg"
+    },
+    {
+      "house": 39,
+      "code": "P1-390",
+      "payload": "P1-390",
+      "png": "PNG/39_P1-390.png",
+      "svg": "SVG/39_P1-390.svg"
+    },
+    {
+      "house": 40,
+      "code": "P1-400",
+      "payload": "P1-400",
+      "png": "PNG/40_P1-400.png",
+      "svg": "SVG/40_P1-400.svg"
+    },
+    {
+      "house": 41,
+      "code": "P1-410",
+      "payload": "P1-410",
+      "png": "PNG/41_P1-410.png",
+      "svg": "SVG/41_P1-410.svg"
+    },
+    {
+      "house": 42,
+      "code": "P1-420",
+      "payload": "P1-420",
+      "png": "PNG/42_P1-420.png",
+      "svg": "SVG/42_P1-420.svg"
+    },
+    {
+      "house": 43,
+      "code": "P1-430",
+      "payload": "P1-430",
+      "png": "PNG/43_P1-430.png",
+      "svg": "SVG/43_P1-430.svg"
+    },
+    {
+      "house": 44,
+      "code": "P1-440",
+      "payload": "P1-440",
+      "png": "PNG/44_P1-440.png",
+      "svg": "SVG/44_P1-440.svg"
+    },
+    {
+      "house": 45,
+      "code": "P1-450",
+      "payload": "P1-450",
+      "png": "PNG/45_P1-450.png",
+      "svg": "SVG/45_P1-450.svg"
+    },
+    {
+      "house": 46,
+      "code": "P1-460",
+      "payload": "P1-460",
+      "png": "PNG/46_P1-460.png",
+      "svg": "SVG/46_P1-460.svg"
+    },
+    {
+      "house": 47,
+      "code": "P1-470",
+      "payload": "P1-470",
+      "png": "PNG/47_P1-470.png",
+      "svg": "SVG/47_P1-470.svg"
+    },
+    {
+      "house": 48,
+      "code": "P1-480",
+      "payload": "P1-480",
+      "png": "PNG/48_P1-480.png",
+      "svg": "SVG/48_P1-480.svg"
+    },
+    {
+      "house": 49,
+      "code": "P1-490",
+      "payload": "P1-490",
+      "png": "PNG/49_P1-490.png",
+      "svg": "SVG/49_P1-490.svg"
+    },
+    {
+      "house": 50,
+      "code": "P1-500",
+      "payload": "P1-500",
+      "png": "PNG/50_P1-500.png",
+      "svg": "SVG/50_P1-500.svg"
+    },
+    {
+      "house": 51,
+      "code": "P1-510",
+      "payload": "P1-510",
+      "png": "PNG/51_P1-510.png",
+      "svg": "SVG/51_P1-510.svg"
+    },
+    {
+      "house": 52,
+      "code": "P1-520",
+      "payload": "P1-520",
+      "png": "PNG/52_P1-520.png",
+      "svg": "SVG/52_P1-520.svg"
+    },
+    {
+      "house": 53,
+      "code": "P1-530",
+      "payload": "P1-530",
+      "png": "PNG/53_P1-530.png",
+      "svg": "SVG/53_P1-530.svg"
+    },
+    {
+      "house": 54,
+      "code": "P1-540",
+      "payload": "P1-540",
+      "png": "PNG/54_P1-540.png",
+      "svg": "SVG/54_P1-540.svg"
+    }
+  ]
+}
