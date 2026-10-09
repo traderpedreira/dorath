@@ -2,15 +2,24 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {newPlayer,applyAction,publicView} from '../supabase/functions/dorath-p1/engine.js';
 import {master} from '../supabase/functions/dorath-p1/master-data.js';
-import fs from 'node:fs';
 const play=(g,p,type,other={})=>applyAction(g,p,{type,...other});
 function game(){const a=newPlayer('Ana','ABC123',''),b=newPlayer('Beto','ABC123','');return {id:crypto.randomUUID(),motherCode:'XYZ123',hostPlayerId:a.id,rooms:[{code:'ABC123',name:'Sala 1',team:''}],players:[a,b],phase:'lobby',round:1,turnIndex:0,globalStates:{},violence:0,marcos:{},arkOpened:false,preparationClosed:false,rupturesResolved:{},pendingRupture:null,activeThreats:[],seenThreats:[],lastSpawnRound:0,trades:[],history:[],revision:0,pendingConsequencePlayers:[],pendingThreat:null,marcoQueue:[],finalScores:null}}
 function start(g){for(const p of g.players)play(g,p,'setup',{rolls:[2,4,6],order:['conhecimento','influencia','provisoes']});play(g,g.players[0],'start')}
-test('master v1.2 and QR manifest agree on 54 codes',()=>{
- const m=JSON.parse(fs.readFileSync(new URL('../site/data/manifest.json',import.meta.url)));
- assert.equal(master.houses.length,54);assert.deepEqual(master.validCodes,m.codes.map(x=>x.code));
- assert.equal(master.houses[9].name,'A Criação de Eva');assert.equal(master.houses[49].name,'Fechamento da Arca');
+test('master v1.5 preserva 54 códigos e reorganiza a Zona 1',()=>{
+ const names=master.houses.slice(0,8).map(h=>h.name);
+ assert.deepEqual(names,['Criação de Adão','Jeová prepara o Jardim do Éden','Adão é colocado no jardim','As duas árvores','Cultivar e cuidar do jardim','O Mandamento no Jardim','Vida e tarefas no jardim','Adão dá nome aos animais']);
+ assert.equal(master.masterVersion,'P1-MASTER-v1.5');
+ assert.equal(master.houses.length,54);
+ assert.equal(master.houses[3].classification,'Casa dinâmica / Escolha');
+ assert.equal(master.houses[3].family,'Recurso / oportunidade');
+ assert.equal(master.houses[4].family,'Interação positiva');
+ assert.equal(master.houses[6].family,'Preparação para Marco');
+ assert.equal(master.qr.readByApp,false);
 });
+test('Casa 04 apresenta as árvores sem ativar MANDAMENTO nem antecipar a Queda',()=>{const g=game();start(g);const [a]=g.players;a.house=3;play(g,a,'move',{roll:1});assert.equal(a.house,4);assert.equal(g.phase,'active');assert.equal(!!g.globalStates.MANDAMENTO,false);assert.equal(g.pendingRupture,null)});
+test('Casa 06 ativa MANDAMENTO e a Casa 07 permite resolver escolhas das árvores',()=>{const g=game();start(g);const [a]=g.players;a.house=5;play(g,a,'move',{roll:1});assert.equal(g.phase,'marco-roll');play(g,a,'marcoD4',{d4:2});assert.equal(g.phase,'marco-individual');play(g,a,'marcoIndividualD4',{d4:1});assert.equal(g.globalStates.MANDAMENTO,true);a.house=7;const before=a.resources.provisoes;play(g,a,'specialChoice',{card:'vida',option:'provisoes'});assert.equal(a.resources.provisoes,before+2)});
+test('correção manual usa número da casa e registra histórico sem QR',()=>{const g=game();start(g);const [a]=g.players;a.house=3;play(g,a,'correctPosition',{house:4,reason:'ajuste de mesa'});assert.equal(a.house,4);assert.match(g.history.at(-1).message,/P1-040/)});
+
 test('setup, Marco collective and separate individual D4',()=>{const g=game();start(g);const [a,b]=g.players;a.house=5;play(g,a,'move',{roll:1});assert.equal(g.phase,'marco-roll');play(g,a,'marcoD4',{d4:2});assert.equal(g.phase,'marco-individual');play(g,a,'marcoIndividualD4',{d4:3});assert.equal(g.phase,'active');assert.equal(a.resources.conhecimento,3);assert.equal(b.resources.conhecimento,2);assert.equal(g.marcos[6].d4,2)});
 test('later player landing on an already active Marco gets individual D4 once',()=>{const g=game();start(g);const [a,b]=g.players;g.marcos[10]={d4:2};a.house=9;play(g,a,'move',{roll:1});assert.equal(g.phase,'marco-individual');play(g,a,'marcoIndividualD4',{d4:2});assert.equal(a.resources.influencia,4);assert.equal(g.phase,'active');play(g,a,'endTurn');b.house=9;play(g,b,'move',{roll:1});assert.equal(g.phase,'marco-individual');play(g,b,'marcoIndividualD4',{d4:1});assert.equal(b.resources.influencia,4)});
 test('collective Rupture stops excess movement and synchronizes after preparation',()=>{const g=game();start(g);const [a,b]=g.players;a.house=11;play(g,a,'move',{roll:6});assert.equal(a.house,12);assert.equal(g.phase,'rupture-prep');play(g,b,'prepare',{option:'pass'});assert.equal(g.phase,'rupture-roll');play(g,a,'ruptureD4',{d4:2});assert.deepEqual(g.players.map(p=>p.house),[13,13]);assert.equal(g.rupturesResolved.R12.d4,2)});
