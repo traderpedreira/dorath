@@ -30,7 +30,7 @@ async function session(value: unknown, userId: string) {
   const { data: row, error: ge } = await db.from('dorath_games').select('id,revision,state').eq('id', s.game_id).maybeSingle();
   check(ge); if (!row) fail('Partida não encontrada', 404);
   const g = row.state; g.revision = row.revision;
-  if (g.engineVersion !== 'P1-MASTER-v1.2') fail('Partida de uma build anterior; inicie uma nova partida', 409);
+  if (g.engineVersion !== 'P1-MASTER-v1.5') fail('Partida criada antes da reorganização da Zona 1; inicie uma nova Partida-Mãe para o playtest v0.8.0', 409);
   const p = g.players.find((x: any) => x.id === s.player_id);
   if (!p) fail('Jogador não encontrado', 401);
   return { row, g, p };
@@ -38,7 +38,7 @@ async function session(value: unknown, userId: string) {
 async function create(a: any, userId: string) {
   const id = crypto.randomUUID(), motherCode = code(), roomCode = code();
   const player = newPlayer(a.name, roomCode, a.team, a.secretHistory, a.commonHistory);
-  const g = { id, engineVersion: 'P1-MASTER-v1.2', motherCode, hostPlayerId: player.id, rooms: [{ code: roomCode, name: 'Sala 1', team: a.team || '' }],
+  const g = { id, engineVersion: 'P1-MASTER-v1.5', motherCode, hostPlayerId: player.id, rooms: [{ code: roomCode, name: 'Sala 1', team: a.team || '' }],
     players: [player], phase: 'lobby', round: 1, turnIndex: 0, globalStates: {}, violence: 0,
     marcos: {}, arkOpened: false, preparationClosed: false, rupturesResolved: {}, pendingRupture: null,
     activeThreats: [], seenThreats: [], lastSpawnRound: 0, trades: [], history: [], revision: 0,
@@ -64,7 +64,7 @@ async function join(a: any, userId: string) {
   }
   if (!row) fail('Sala ou Partida-Mãe não encontrada', 404);
   const g = row.state;
-  if (g.engineVersion !== 'P1-MASTER-v1.2') fail('Partida de uma build anterior; inicie uma nova partida', 409);
+  if (g.engineVersion !== 'P1-MASTER-v1.5') fail('Partida criada antes da reorganização da Zona 1; inicie uma nova Partida-Mãe para o playtest v0.8.0', 409);
   if (g.phase !== 'lobby') fail('Esta partida já começou');
   const room = g.rooms.find((r: any) => r.code === codeText) || g.rooms[0];
   if (g.players.filter((p: any) => p.room === room.code).length >= 8) fail('Limite de oito jogadores na sala');
