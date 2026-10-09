@@ -287,7 +287,7 @@ function missionAttempt(g,p,a){
   log(g,'missao',`${p.name} falhou em ${m.name}`,{privateFor:p.id})}
 }
 function convert(g,p,a){
- if(p.house<12||p.house>=50||g.preparationClosed)fail('Conversão fora da janela permitida');
+ if((p.house<=12&&!g.rupturesResolved?.R12)||p.house>=50||g.preparationClosed)fail('Conversão fora da janela permitida');
  if(p.convertedRound===g.round)fail('Limite de uma conversão neste turno');
  const rate=master.conversion.rates[number(a.rate,0,5)];const [giveN,giveV]=Object.entries(rate.give)[0], [receiveN,receiveV]=Object.entries(rate.receive)[0];
  const from=influence[giveN],to=influence[receiveN];if(p.resources[from]<giveV)fail('Saldo insuficiente');
@@ -384,7 +384,12 @@ export function applyAction(g,p,a){
  case 'arkFinalize':if(g.phase!=='active'||p.house!==50||p.arkFinalized||g.preparationClosed)fail('Fechamento individual indisponível');if(a.enter&&!p.preserved)enterArk(g,p,a.characterId);if(!a.enter&&p.preserved)fail('Entrada antecipada não pode ser revertida');p.arkFinalized=true;closeArk(g);break;
  case 'preservationD6':if(!g.preparationClosed||!p.preserved||p.preservationBonus!==null)fail('Bônus secreto indisponível');p.preservationBonus=number(a.roll,1,6);log(g,'preservacao',`${p.name} registrou o D6 secreto`,{privateFor:p.id});break;
  case 'advanceFinal':finalAdvance(g,p);break;
- case 'correctPosition':if(g.phase!=='active'||p.house>=50)fail('Correção fora da sequência normal');{const m=/^P1-(\d{3})$/.exec(String(a.code||'').trim().toUpperCase()),reason=String(a.reason||'').trim();if(!m||!master.validCodes.includes('P1-'+m[1])||reason.length<6)fail('Código QR P1 ou motivo inválido');const to=Number(m[1])/10;if(to>p.house+6||to<p.house-6)fail('Correção excepcional limitada a seis casas; consulte a mesa');if(master.ruptures.some(r=>!g.rupturesResolved[r.id]&&((r.house>p.house&&r.house<=to)||(r.house>to&&r.house<=p.house))))fail('Correção não pode atravessar uma Ruptura pendente');p.house=to;log(g,'correcao',`${p.name} corrigiu posição para P1-${m[1]}: ${reason}`,{privateFor:p.id})}break;
+ case 'correctPosition':if(g.phase!=='active'||p.house>=50)fail('Correção fora da sequência normal');{
+  const reason=String(a.reason||'').trim();const to=number(a.house,1,49);
+  if(reason.length<6)fail('Informe o motivo da correção');
+  if(to>p.house+6||to<p.house-6)fail('Correção excepcional limitada a seis casas; consulte a mesa');
+  if(master.ruptures.some(r=>!g.rupturesResolved[r.id]&&((r.house>p.house&&r.house<=to)||(r.house>to&&r.house<=p.house))))fail('Correção não pode atravessar uma Ruptura pendente');
+  const code='P1-'+String(to*10).padStart(3,'0');p.house=to;log(g,'correcao',`${p.name} corrigiu posição para ${code}: ${reason}`,{privateFor:p.id})}break;
  default:fail('Ação desconhecida');
  }
  for(const q of g.players)secretCheck(g,q);
