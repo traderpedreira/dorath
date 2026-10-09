@@ -1,10 +1,10 @@
-# Dorath · Período 1 · Supabase v0.7.1 (Auth)
+# Dorath · Período 1 · Supabase v0.8.0 (Auth)
 
-Pacote de integração do playtest com o **JSON Master P1 v1.2**, **Livro de Regras v2.0 (27/09/2026)**, 54 QR oficiais e cinco artes aprovadas de Consequências. A interface e o motor foram atualizados a partir da v0.5.1. A v0.6.0 anterior deve ser substituída por este pacote; partidas antigas não são migradas.
+Pacote de integração do playtest com o **JSON Master P1 v1.5**, **Livro de Regras v2.0 (27/09/2026)**, cinco artes aprovadas de Consequências. A interface e o motor foram atualizados a partir da v0.5.1. A v0.6.0 anterior deve ser substituída por este pacote; partidas antigas não são migradas.
 
 ## Conteúdo
 
-- `site/`: site estático para celulares. `index.html` abre o playtest, `multiplayer.js` contém a interface, `data/periodo-1-54-casas-P1-MASTER-v1.2.json` e `data/manifest.json` são as referências operacionais; `qr/` traz os 54 PNG do conjunto oficial.
+- `site/`: site estático para celulares. `index.html` abre o playtest, `multiplayer.js` contém a interface, `data/periodo-1-54-casas-P1-MASTER-v1.5.json` é a referência operacional. `data/manifest.json` e `qr/` permanecem somente como legado histórico e não são usados pelo app.
 - `supabase/migrations/`: tabelas Postgres, RLS e gravação atômica por revisão.
 - `supabase/functions/dorath-p1/`: função de partida e motor de regras. A chave secreta fica somente na função.
 - `tests/`: testes locais do motor (`npm test`).
@@ -20,7 +20,7 @@ Pacote de integração do playtest com o **JSON Master P1 v1.2**, **Livro de Reg
 
 ## O que esta build registra
 
-- D6 físico para movimento desde o início, barreiras de Ruptura, Marcos por alcance/travessia, D4 individual ao parar e correção excepcional por código QR P1.
+- D6 físico para movimento desde o início, barreiras de Ruptura, Marcos por alcance/travessia, D4 individual ao parar e correção excepcional por número da casa, sempre registrada no histórico.
 - 20 Missões comuns do Master com alvo D6 e recompensa D4; 16 Missões Secretas privadas com histórico de sorteio no aparelho e bônus final; conversões, negociações e doações.
 - Cinco Consequências com D4 e duração, instrução de devolver a carta física ao fundo; Nefilins coletivos, primeira entrada em P1-380, chance de Escalada nas casas elegíveis e sequência D8→Decisor→D4→opção do Dominador.
 - Entrada na Arca ao parar em P1-480 ou no fechamento de P1-500; D6 secreto de Preservação; sequência coletiva sem D6 até P1-540 e ranking apenas dos Preservados.
@@ -33,8 +33,16 @@ Pacote de integração do playtest com o **JSON Master P1 v1.2**, **Livro de Reg
 - Custos, requisitos compostos e recompensas particulares das 20 Missões comuns são parametrizações de teste. Os testes D6 e a tabela D4 por dificuldade estão ativos, mas o balanceamento e algumas interações narrativas específicas exigem homologação em mesa.
 - A Última Oportunidade P1-490 usa provisoriamente D6 ≥ 5 para conceder 1 Provisão, identificado como parâmetro de playtest na tela. O Master exige recuperação sem garantia, mas não fixa o alvo nem o ganho.
 - A verificação de Missões Secretas usa contadores do app. Condições que dependem de uma interpretação de ajuda direta podem precisar de conferência manual na mesa. O histórico de sorteio local se perde se o navegador for apagado ou o aparelho trocado sem migração.
-- A câmera QR usa `BarcodeDetector` quando o navegador suporta essa API; digitar o código lido pela câmera nativa é a alternativa. O QR não substitui o D6.
-- A migração e a função foram publicadas e uma chamada anônima retornou HTTP 401. Ainda faltam publicação HTTPS do site, configuração do redirecionamento de e-mail, teste completo com contas reais e quatro celulares físicos, limite de uso para criação de partidas e política de limpeza de partidas antigas.
+- A migração do banco permanece válida. A Edge Function precisa ser republicada com o motor v1.5 antes do playtest; depois, validar login, partida real e múltiplos celulares.
 - As cinco artes de Consequências foram substituídas pelas aprovadas; as demais imagens herdadas da v0.5.1 precisam de conferência visual contra as últimas homologações físicas antes de impressão ou edição final.
 
 O pacote inclui o código e os arquivos necessários para publicar, mas **não é uma versão final de produção**. Antes de uma sessão oficial, compare as artes físicas em uso com o manual v2.0, especialmente cartas antigas que ainda contenham “Legado”.
+
+## Mudança obrigatória antes do playtest — v0.8.0
+
+- Zona 1: 01 Criação de Adão; 02 Jeová prepara o Jardim; 03 Adão é colocado no jardim; 04 As duas árvores; 05 Cultivar e cuidar; 06 O Mandamento; 07 Vida e tarefas; 08 Adão dá nome aos animais.
+- P1-040 é apresentação/reconhecimento das árvores: não produz desobediência nem Queda.
+- P1-060 ativa MANDAMENTO.
+- P1-070 preserva a missão dinâmica migrada e permite resolver escolhas especiais das árvores somente após MANDAMENTO.
+- QR não integra mais movimento, correção ou resolução. O app registra posição por movimento D6 e a correção manual exige número da casa e motivo.
+- Partidas criadas por motores anteriores são preservadas no banco, mas não são carregadas pelo v1.5 por incompatibilidade semântica das Casas 04/05/07. Inicie nova Partida-Mãe para o playtest.
