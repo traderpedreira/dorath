@@ -1890,22 +1890,27 @@
   "implementationStatus": {
     "rulesInThisMaster": "HOMOLOGADAS PARA PLAYTEST",
     "appImplementation": "ALVO DA BUILD v0.8.0; validar pelos testes e implantação",
-    "physicalQrVerification": "HOMOLOGADO — conjunto oficial de 54 QR codes verificado contra manifest.json; sequência P1-010 a P1-540, payload idêntico ao código impresso, sem E1, duplicidades ou lacunas.",
+    "physicalQrVerification": "ENCERRADO POR DESCONTINUAÇÃO — QR não integra mais o sistema oficial.",
     "consequenceCards": "HOMOLOGADAS — efeitos-base, duração e tabelas digitais D4 incorporados ao Master v1.1",
     "cardArtCorrections": "Consequências P1 finalizadas; demais correções de arte seguem em chat próprio.",
-    "qrAppIntegration": "CANCELADA — sem leitor QR ou dependência de QR",
+    "qrAppIntegration": "CANCELADA — sem leitor QR ou dependência de QR.",
     "boardAppSynchronization": "posição anterior + D6 físico informado; correção manual registrada",
     "zone1BuildTarget": "App v0.8.0 / Master P1 v1.5"
   },
   "physicalAssets": {
     "qrMaster": {
-      "status": "HOMOLOGADO",
-      "name": "QR MASTER 54 — 2026-09-27",
-      "manifest": "manifest.json",
-      "useOnFinalBoard": true,
-      "useSameSetInApp": true,
-      "pngAndSvgDeclared": true,
-      "manifestSha256": "57bd17f993bd2a9f339673318c3e159ff3123086121ce9e7fd20758e3d177beb"
+      "status": "OBSOLETO — NÃO USAR NO TABULEIRO FINAL",
+      "useOnFinalBoard": false,
+      "useSameSetInApp": false,
+      "historicalOnly": true,
+      "note": "Conjunto QR preservado apenas como legado do protótipo."
+    },
+    "finalBoardIdentification": {
+      "houseNumber": true,
+      "p1Code": true,
+      "houseName": true,
+      "qrCode": false,
+      "note": "O código P1 pode permanecer como identificador técnico; QR não integra a jogabilidade."
     }
   },
   "zone1Reorganization": {
