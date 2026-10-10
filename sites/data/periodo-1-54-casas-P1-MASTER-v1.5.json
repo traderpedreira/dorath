@@ -72,8 +72,7 @@
       "status": "PLAYTEST DINÂMICO",
       "name": "Criação de Adão",
       "legacyType": "MARCO",
-      "card": null,
-      "classification": "Início / Marco"
+      "card": null
     },
     {
       "house": 2,
@@ -87,8 +86,7 @@
       "status": "PLAYTEST DINÂMICO",
       "name": "Jeová prepara o Jardim do Éden",
       "legacyType": "MARCO",
-      "card": null,
-      "classification": "Casa dinâmica"
+      "card": null
     },
     {
       "house": 3,
@@ -102,8 +100,7 @@
       "status": "PLAYTEST DINÂMICO",
       "name": "Adão é colocado no jardim",
       "legacyType": "PERSONAGEM",
-      "card": null,
-      "classification": "Casa dinâmica"
+      "card": null
     },
     {
       "house": 4,
@@ -117,8 +114,7 @@
       "status": "PLAYTEST DINÂMICO",
       "name": "As duas árvores",
       "legacyType": "MISSÃO",
-      "card": null,
-      "classification": "Casa dinâmica / Escolha"
+      "card": null
     },
     {
       "house": 5,
@@ -132,8 +128,7 @@
       "status": "PLAYTEST DINÂMICO",
       "name": "Cultivar e cuidar do jardim",
       "legacyType": "MISSÃO",
-      "card": null,
-      "classification": "Casa dinâmica / Missão"
+      "card": null
     },
     {
       "house": 6,
@@ -148,8 +143,7 @@
       "name": "O Mandamento no Jardim",
       "legacyType": "MARCO",
       "card": "O Mandamento",
-      "asset": "assets/marcos/06_O_Mandamento.png",
-      "classification": "Marco narrativo"
+      "asset": "assets/marcos/06_O_Mandamento.png"
     },
     {
       "house": 7,
@@ -163,8 +157,7 @@
       "status": "PLAYTEST DINÂMICO",
       "name": "Vida e tarefas no jardim",
       "legacyType": "ESCOLHA",
-      "card": null,
-      "classification": "Casa dinâmica / Missão"
+      "card": null
     },
     {
       "house": 8,
@@ -178,8 +171,7 @@
       "status": "PLAYTEST DINÂMICO",
       "name": "Adão dá nome aos animais",
       "legacyType": "MISSÃO",
-      "card": null,
-      "classification": "Casa dinâmica / Missão"
+      "card": null
     },
     {
       "house": 9,
@@ -1943,7 +1935,7 @@
     "houses09to54RemainUnchanged": true,
     "qrSystem": "DESCONTINUADO",
     "functionalFamiliesPreserved": true,
-    "note": "classification descreve a apresentação da casa; family preserva o contrato mecânico usado pelo motor e pelos pools de Missões."
+    "note": "O campo family preserva exclusivamente o contrato mecânico usado pelo motor e pelos pools de Missões; não deve ser exibido como título no tabuleiro."
   },
   "narrativeDependencies": {
     "P1-040": {
@@ -1977,5 +1969,13 @@
       "mustBeLogged": true,
       "silentChangesForbidden": true
     }
+  },
+  "schemaCleanup": {
+    "date": "2026-10-10",
+    "removedField": "classification",
+    "reason": "Campo recente, não homologado e redundante com anchorType/name/family; removido para restabelecer consistência entre as 54 casas.",
+    "affectsGameMath": false,
+    "affectsHouseOrder": false,
+    "affectsMechanics": false
   }
 }
