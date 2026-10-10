@@ -10,7 +10,7 @@ test('master v1.5 preserva 54 códigos e reorganiza a Zona 1',()=>{
  assert.deepEqual(names,['Criação de Adão','Jeová prepara o Jardim do Éden','Adão é colocado no jardim','As duas árvores','Cultivar e cuidar do jardim','O Mandamento no Jardim','Vida e tarefas no jardim','Adão dá nome aos animais']);
  assert.equal(master.masterVersion,'P1-MASTER-v1.5');
  assert.equal(master.houses.length,54);
- assert.equal(master.houses[3].classification,'Casa dinâmica / Escolha');
+ assert.equal(master.houses.some(h=>Object.prototype.hasOwnProperty.call(h,'classification')),false);
  assert.equal(master.houses[3].family,'Recurso / oportunidade');
  assert.equal(master.houses[4].family,'Interação positiva');
  assert.equal(master.houses[6].family,'Preparação para Marco');
