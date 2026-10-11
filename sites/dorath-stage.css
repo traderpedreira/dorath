@@ -1,0 +1,51 @@
+/* Dorath V3: layout de palco para playtest. Interface apenas. */
+:root{--dv-gold:#dfb96f;--dv-parchment:#f0d5a0;--dv-ink:#402a18;--dv-dark:#17120f}
+html,body{min-width:320px}
+body{background:radial-gradient(ellipse at 50% 9%,#534132,#17130f 60%,#0e0d0d)!important;color:#f4e4c4!important;font-family:Georgia,'Times New Roman',serif!important}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(28deg,#d4b27c06 0 2px,transparent 2px 7px),radial-gradient(ellipse at center,transparent 35%,#0008);z-index:0}
+.mp-shell{max-width:790px!important;padding:14px 13px 112px!important}
+.topbar{border:0!important;margin:0 0 14px!important;padding:12px 5px 15px!important;background:transparent!important}
+.topbar::after{content:'✦';background:transparent!important;bottom:-8px!important}
+.topbar .eyebrow{font-size:.66rem!important;letter-spacing:.16em!important;color:#d2ac72!important}
+.topbar h1{color:#f3d092!important;font-size:clamp(2rem,8vw,3.6rem)!important;line-height:1.1;letter-spacing:.035em!important;text-shadow:0 2px 1px #56320c,0 5px 15px #000!important}
+.topbar .muted{font-size:.7rem!important;color:#d8c7a8!important}
+.mp-status{position:relative!important;top:auto!important;margin:10px 0 13px;background:linear-gradient(90deg,#e9cf9f,#f7e5be,#c8a36e)!important;color:#432b18!important;border:2px ridge #9e7746!important;box-shadow:0 3px 12px #0007!important;font-family:Georgia,serif!important;text-align:center;font-weight:bold}
+#summary{padding:14px 18px!important;background:linear-gradient(95deg,#edc995,#f8e5bd 46%,#e3bc81)!important;color:#3e2918!important;border:3px ridge #94682d!important;box-shadow:inset 0 0 24px #93511f35,0 7px 19px #0009!important;border-radius:7px!important;margin-bottom:13px}
+#summary h2{color:#49301b!important;font-size:clamp(1.14rem,4.8vw,1.65rem)!important;text-align:center;text-shadow:none!important}
+#summary p{color:#4d321f!important;font-size:.86rem;text-align:center}
+.dorath-card-strip{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:0 0 12px}
+.dorath-card-mini{border:2px solid #c49a5d;border-radius:10px;background:radial-gradient(circle at 15% 22%,#aa865738,transparent 60%),linear-gradient(145deg,#5a4834,#181f1b 75%);padding:10px;min-height:80px;display:flex;align-items:center;gap:11px;box-shadow:inset 0 0 0 2px #2c2116,0 4px 12px #0008}
+.dorath-card-mini>span{font-size:2rem;color:#e5b866;text-shadow:0 2px 5px #000}
+.dorath-card-mini div{min-width:0;display:grid;gap:4px}
+.dorath-card-mini small{font-size:.55rem;letter-spacing:.1em;color:#f6ddb2}
+.dorath-card-mini strong{font-size:.85rem;color:#f9e6c5;overflow-wrap:anywhere}
+.dorath-step{text-align:center;color:#edc98d;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;margin:7px 0 13px}
+.mp-grid{display:block!important;margin:0!important}
+.mp-grid>.mp-card{display:none!important}
+.mp-grid>.mp-card.dorath-current{display:block!important;min-height:310px;padding:clamp(18px,5vw,37px)!important;background:radial-gradient(circle at 75% 20%,#fff1cf77,transparent 60%),linear-gradient(145deg,#f6e5bf,#e4c28c 70%,#cb9e65)!important;border:9px ridge #916730!important;border-radius:19px!important;box-shadow:inset 0 0 0 2px #f9eacc,inset 0 0 35px #87532070,0 13px 32px #000b!important;color:#402917!important}
+.mp-grid>.mp-card.dorath-current::before{border:1px solid #92662b55!important;inset:9px}
+.mp-grid>.mp-card.dorath-current h3{font-size:clamp(1.7rem,7vw,2.7rem)!important;text-align:center;color:#4f2f16!important;text-shadow:none!important;border:0!important;padding-bottom:12px!important;border-bottom:1px solid #95703f!important}
+.mp-grid>.mp-card.dorath-current h4{color:#51331d!important;text-shadow:none!important}
+.mp-grid>.mp-card.dorath-current p,.mp-grid>.mp-card.dorath-current label,.mp-grid>.mp-card.dorath-current li{color:#3f2a19!important}
+.mp-grid>.mp-card.dorath-current b,.mp-grid>.mp-card.dorath-current strong{color:#492d14!important}
+.mp-grid>.mp-card.dorath-current .mp-chip{background:#ead0a8!important;color:#402815!important;border-color:#ad8757!important}
+.mp-grid>.mp-card.dorath-current .mp-chip b{color:#432716!important}
+.mp-grid>.mp-card.dorath-current input:not([type=checkbox]):not([type=range]),.mp-grid>.mp-card.dorath-current select{background:#fff2d9!important;color:#402815!important;border:1px solid #997144!important}
+.mp-grid>.mp-card.dorath-current button{background:linear-gradient(#7b5b36,#412c1a)!important;color:#fce7c0!important;border:1px solid #b28d54!important;box-shadow:inset 0 1px #fff5d633,0 3px 7px #0004!important}
+.mp-grid>.mp-card.dorath-current button.primary{background:linear-gradient(#e9bd5d,#b87e28)!important;color:#271500!important}
+.mp-grid>.mp-card.dorath-current .dice button{background:linear-gradient(#a77a36,#513416)!important;color:#fff1ca!important;font-size:1.1rem!important}
+.mp-grid>.mp-card.dorath-current#missions>p:nth-of-type(1){background:#fff0ce!important;border-color:#ba915f}
+.mp-grid>.mp-card.dorath-current#world p:nth-of-type(1){background:#dec194!important;border-color:#b18a53}
+.dorath-dock{position:sticky;bottom:0;z-index:17;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;margin:17px -5px 0;padding:9px 4px max(10px,env(safe-area-inset-bottom));background:linear-gradient(#281f18,#120e0d);border:1px solid #896639;border-radius:14px;box-shadow:0 -4px 20px #0009}
+.dorath-dock .dorath-tab{background:linear-gradient(#4c3826,#261c17)!important;border:1px solid #b38b51!important;border-radius:9px;color:#e9d0a7!important;min-width:0;padding:9px 2px!important;min-height:65px;display:grid;place-content:center;gap:4px;font-family:Georgia,serif!important}
+.dorath-tab span{display:block;font-size:1.45rem;color:#e8bf76}.dorath-tab small{font-size:.68rem}
+.dorath-dock .dorath-tab.selected{background:linear-gradient(#74542c,#342518)!important;box-shadow:inset 0 0 0 1px #dab270,0 0 11px #bd8b4570!important}
+.dorath-extras{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:#281d16;border:1px solid #987141;border-radius:10px;margin-top:6px}
+.dorath-extras[hidden]{display:none!important}
+.dorath-extras button{flex:1 1 105px;background:#45321f!important;color:#efdbb8;border:1px solid #9d743e}
+.mp-shell>main{width:100%}
+body:has(#board:not([hidden])) #game>.muted{font-size:.7rem!important}
+body:has(#board:not([hidden])) .topbar{padding-top:9px!important}
+body:has(#board:not([hidden])) .mp-shell>section.mp-card{padding:12px!important}
+@media(max-width:540px){.mp-shell{padding:9px 9px 110px!important}.topbar h1{font-size:2.45rem!important}.dorath-card-mini{padding:7px;gap:7px;min-height:68px}.dorath-card-mini>span{font-size:1.4rem}.dorath-card-mini strong{font-size:.74rem}.mp-grid>.mp-card.dorath-current{padding:22px 17px!important;border-width:6px!important}.dorath-dock .dorath-tab{min-height:62px}.dorath-tab small{font-size:.59rem}}
+@media(prefers-reduced-motion:reduce){.dorath-dock *{transition:none!important}}

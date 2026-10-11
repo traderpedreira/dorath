@@ -1,0 +1,23 @@
+/* Escape seguro para o layout de painéis V2 já homologado no playtest. */
+#dorathModeToggle{margin:8px 0 12px;min-height:42px;border:1px solid #d5af69;background:#2a231d;color:#f6d89e;padding:10px 14px;border-radius:10px;font-family:system-ui,sans-serif;font-weight:650;cursor:pointer}
+.dorath-classic .dorath-card-strip,.dorath-classic .dorath-step,.dorath-classic .dorath-dock,.dorath-classic .dorath-extras{display:none!important}
+.dorath-classic .mp-shell{max-width:1080px!important}
+.dorath-classic #summary{background:linear-gradient(105deg,#113b59e8,#092440f5 55%,#18334de0)!important;color:#f4ead5!important;border:1px solid #b68c4e!important;border-radius:18px!important}
+.dorath-classic #summary h2{color:#ffdfa2!important;text-shadow:none!important}
+.dorath-classic #summary p{color:#daeaf2!important}
+.dorath-classic .mp-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:16px!important;margin-top:17px!important}
+.dorath-classic .mp-grid>.mp-card{display:block!important;min-height:0!important;padding:clamp(16px,3vw,24px)!important;background:linear-gradient(155deg,rgba(9,36,58,.96),rgba(4,21,39,.98))!important;border:1px solid #ad803e!important;border-radius:17px!important;color:#f4ead5!important;box-shadow:inset 0 0 0 1px #fce6b11b,0 14px 32px #0009!important}
+.dorath-classic .mp-grid>.mp-card h3{font-size:1.17rem!important;text-align:left!important;color:#ffe0a1!important;text-shadow:0 1px 7px #03101b!important;padding:0 0 11px!important;border-bottom:1px solid #cc9d4b70!important}
+.dorath-classic .mp-grid>.mp-card h4{color:#ffe0a1!important}
+.dorath-classic .mp-grid>.mp-card p,.dorath-classic .mp-grid>.mp-card label,.dorath-classic .mp-grid>.mp-card li{color:#f4ead5!important}
+.dorath-classic .mp-grid>.mp-card b,.dorath-classic .mp-grid>.mp-card strong{color:#f5ddaa!important}
+.dorath-classic .mp-grid>.mp-card button{background:linear-gradient(#16639b,#093e6e)!important;color:#f3faff!important;border:1px solid #609dc8!important}
+.dorath-classic .mp-grid>.mp-card input:not([type=checkbox]):not([type=range]),.dorath-classic .mp-grid>.mp-card select,.dorath-classic .mp-grid>.mp-card textarea{background:#061f35!important;color:#ecf8ff!important;border:1px solid #467b9b!important}
+.dorath-classic .mp-grid>.mp-card#movement{border:2px solid #38bfff!important;box-shadow:0 0 26px #23aefb48,0 8px 28px #0008!important}
+.dorath-classic .mp-grid>.mp-card#missions>p:nth-of-type(1){background:linear-gradient(145deg,#f8e6c5,#e3c493)!important;color:#392411!important}
+.dorath-classic .mp-grid>.mp-card#missions>p:nth-of-type(1) b{color:#41280c!important}
+.dorath-classic .dorath-personal-history{border-top-color:#8c744b}
+.dorath-classic .dorath-personal-history h4,.dorath-classic .dorath-personal-history label{color:#f4dba8!important}
+.dorath-classic .dorath-personal-history input,.dorath-classic .dorath-personal-history textarea{background:#061f35!important;color:#ecf8ff!important}
+.dorath-classic #dorathPersonalStatus{color:#c8baa1}
+@media(max-width:760px){.dorath-classic .mp-grid{grid-template-columns:minmax(0,1fr)!important;gap:13px!important}}
