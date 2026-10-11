@@ -47,10 +47,10 @@ function openCard(card){
     const source=document.getElementById('dorathPersonalHistory');
     const stored=(()=>{try{return JSON.parse(localStorage.getItem('dorath.visual.profile.v1.'+(document.getElementById('accountEmail')?.textContent?.trim()||'local'))||'{}')}catch{return {}}})();
     const form=document.createElement('form');form.className='dv4-card-editor-form';
-    const titles=[['nome','Nome na Carta',60],['historia','Experiência',600],['origem','Origem / trajetória',120],['notas','Anotações pessoais',600],['anoBatismo','Ano de batismo',40],['tempoServico','Tempo de serviço',60],['congregacaoCidade','Congregação / Cidade',100]];
+    const titles=[['nome','Nome na Carta',60],['historia','Experiência',600]];
     for(const [id,label,max] of titles){
       const row=document.createElement('label');row.textContent=label;
-      const field=document.createElement(id==='historia'||id==='notas'?'textarea':'input');
+      const field=document.createElement(id==='historia'?'textarea':'input');
       field.name=id;field.maxLength=max;field.value=stored[id]||'';if(field.tagName==='TEXTAREA')field.rows=4;
       row.append(field);form.append(row);
     }
