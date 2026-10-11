@@ -3,7 +3,7 @@ import { EDGE_FUNCTION_URL, SUPABASE_PUBLISHABLE_KEY } from './supabase-config.j
 import { supabase, validSession, accountTokenKey } from './auth.js';
 const $=id=>document.getElementById(id), esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const label={conhecimento:'Conhecimento',influencia:'Influência',provisoes:'Provisões',heranca:'Herança'};
-let token='',view=null,busy=false,stream=null,currentUser=null;
+let token='',view=null,busy=false,stream=null,currentUser=null,sessionAccessToken='';
 let historyKey='',commonKey='';
 const audio=new DorathAudio();
 audio.status=message=>{const el=document.getElementById('audioStatus');if(el)el.textContent=message};
@@ -14,9 +14,10 @@ document.getElementById('audioEffects').addEventListener('change',e=>{audio.effe
 function say(t,error=false){$('status').textContent=t;$('status').classList.toggle('mp-error',error)}
 async function api(route,data={}){
  if(!/^https:\/\/[^/]+\.supabase\.co\/functions\/v1\/dorath-p1$/.test(EDGE_FUNCTION_URL))throw Error('Configure site/supabase-config.js antes de usar o app');
- const {data: {session},error}=await supabase.auth.getSession();
- if(error||!session?.access_token)throw Error('Entre na sua conta para continuar');
- const response=await fetch(EDGE_FUNCTION_URL,{method:'POST',headers:{'content-type':'application/json','authorization':`Bearer ${session.access_token}`,'apikey':SUPABASE_PUBLISHABLE_KEY},body:JSON.stringify({route,...data})});
+ // A sessão já foi obtida no login/INITIAL_SESSION. Não consultar getSession()
+ // a cada requisição: isso pode bloquear no lock interno durante refresh de token.
+ if(!sessionAccessToken)throw Error('Sessão indisponível. Entre na sua conta novamente.');
+ const response=await fetch(EDGE_FUNCTION_URL,{method:'POST',headers:{'content-type':'application/json','authorization':`Bearer ${sessionAccessToken}`,'apikey':SUPABASE_PUBLISHABLE_KEY},body:JSON.stringify({route,...data})});
  let body;try{body=await response.json()}catch{throw Error('Resposta inválida do servidor')}
  if(!response.ok)throw Error(body.error||`Erro ${response.status}`);return body;
 }
@@ -112,7 +113,7 @@ const withAuthDeadline=(promise,ms=15000)=>Promise.race([promise,new Promise((_,
 async function showAccount(session){
  authReady=true;
  const user=session?.user&&!session.user.is_anonymous?session.user:null;
- currentUser=user;view=null;token='';
+ currentUser=user;sessionAccessToken=session?.access_token||'';view=null;token='';
  $('board').hidden=true;
  $('account').hidden=!!user;
  $('game').hidden=!user;
@@ -156,6 +157,7 @@ $('signout').onclick=async()=>{
 // INITIAL_SESSION entrega o estado local sem disparar uma segunda consulta concorrente.
 // SIGNED_IN e SIGNED_OUT são tratados pelo formulário e botão, evitando corridas.
 supabase.auth.onAuthStateChange((event,session)=>{
+ if(event==='TOKEN_REFRESHED'&&session?.access_token)sessionAccessToken=session.access_token;
  if(event==='INITIAL_SESSION'){
   if(!authBusy)void showAccount(session).catch(error=>say('Falha ao restaurar partida: '+error.message,true));
  }
