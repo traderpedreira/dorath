@@ -7,7 +7,8 @@ const ui=document.createElement('section');ui.id='dv4';ui.innerHTML='<div class=
 board.insertBefore(ui,host);const cards=ui.querySelector('#dv4cards'),nav=ui.querySelector('.dv4-nav'),modal=ui.querySelector('#dv4modal');
 const navItems=[['movement','Jogar','◈'],['missions','Missão','✦'],['world','Evento','❢'],['player','Jogador','♛'],['history','Mais','☰']];
 for(const [id,label,icon] of navItems){const b=document.createElement('button');b.type='button';b.dataset.dv4=id;b.innerHTML='<span aria-hidden="true">'+icon+'</span><small>'+label+'</small>';nav.append(b)}
-const extras=document.createElement('div');extras.id='dv4extras';extras.hidden=true;for(const [id,label] of [['rooms','Salas'],['threats','Ameaças'],['trades','Trocas'],['history','Histórico'],['player','Carta do Jogador']]){let b=document.createElement('button');b.type='button';b.dataset.dv4=id;b.textContent=label;extras.append(b)}ui.insertBefore(extras,nav);
+const extras=document.createElement('div');extras.id='dv4extras';extras.hidden=true;for(const [id,label] of [['rooms','Salas'],['threats','Ameaças'],['trades','Trocas'],['history','Histórico'],['player','Carta do Jogador']]){let b=document.createElement('button');b.type='button';b.dataset.dv4=id;b.textContent=label;extras.append(b)}ui.insertBefore(extras,nav);const accountMenu=document.createElement('div');accountMenu.className='dv4-account-menu';accountMenu.innerHTML='<small>Conectado como <span id="dv4menuEmail"></span></small><button type="button" id="dv4menuSignout">Sair da conta</button>';extras.append(accountMenu);
+accountMenu.querySelector('#dv4menuSignout').addEventListener('click',()=>{if(window.confirm('Deseja realmente sair da conta?'))document.getElementById('signout')?.click()});
 const text=(el)=>el?.textContent?.trim()||'';
 const escapeHTML=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const files={'adao':'01_ADAO.webp','eva':'02_EVA.webp','caim':'03_CAIM.webp','abel':'04_ABEL.webp','sete':'05_SETE.webp','noe':'15_NOE.webp','sem':'16_SEM.webp','jafe':'18_JAFE.webp','enos':'11_ENOS.webp','jabal':'08_JABAL.webp','jubal':'09_JUBAL.webp','tubalc a im':'10_TUBALCAIM.webp'};
@@ -17,7 +18,7 @@ let selected='movement',sig='',manual=false,oldNames='',playerPhoto='';
 try{playerPhoto=localStorage.getItem('dorath.visual.photo.v1.'+(document.getElementById('accountEmail')?.textContent?.trim()||'local'))||''}catch{}
 document.addEventListener('dorath-photo-update',e=>{playerPhoto=e.detail?.photo||'';oldNames='';renderCards()});
 function select(id,user=false){if(!panels.includes(id))return;selected=id;manual=user;for(const key of panels)active(key)?.classList.toggle('dv4-current',key===id);for(const b of nav.querySelectorAll('button'))b.classList.toggle('dv4-selected',b.dataset.dv4===(navItems.some(n=>n[0]===id)?id:'history'));ui.querySelector('#dv4label').textContent=({'movement':'SEU PRÓXIMO PASSO','missions':'MISSÃO','world':'EVENTO E ARCA','player':'CARTA DO JOGADOR','rooms':'SALAS DA PARTIDA','threats':'AMEAÇAS COLETIVAS','trades':'TROCAS','history':'HISTÓRICO'})[id];extras.hidden=true}
-nav.addEventListener('click',e=>{const id=e.target.closest('button[data-dv4]')?.dataset.dv4;if(!id)return;if(id==='history'){extras.hidden=!extras.hidden;return}select(id,true)});
+nav.addEventListener('click',e=>{const id=e.target.closest('button[data-dv4]')?.dataset.dv4;if(!id)return;if(id==='history'){extras.hidden=!extras.hidden;if(!extras.hidden)accountMenu.querySelector('#dv4menuEmail').textContent=text(document.getElementById('accountEmail'));return}select(id,true)});
 extras.addEventListener('click',e=>{const id=e.target.closest('[data-dv4]')?.dataset.dv4;if(id)select(id,true)});
 function openCard(card){
  const body=ui.querySelector('#dv4content');body.replaceChildren();
@@ -98,13 +99,10 @@ function renderCards(){
  const b=document.createElement('button');b.className='dv4-card';b.type='button';b.setAttribute('aria-label','Abrir carta: '+c.title);
  if(c.kind==='JOGADOR'){
   b.classList.add('dv4-player-card');
-  const stats=[...player.querySelectorAll('p')][0]?.textContent||'';
-  const resourceNames=['Conhecimento','Influência','Provisões','Herança'];
-  const bits=resourceNames.map(n=>{const entry=stats.split('·').find(x=>x.trim().toLowerCase().startsWith(n.toLowerCase()+':'));const m=entry?.match(/[0-9]+/);return '<span><small>'+n+'</small><b>'+(m?m[0]:'—')+'</b></span>'}).join('');
-  b.innerHTML='<span class="dv4-card-type">JOGADOR</span><span class="dv4-portrait">'+(c.src?'<img src="'+escapeHTML(c.src)+'" alt="">':'<span class="dv4-card-symbol" aria-hidden="true">♛</span>')+'</span><strong>'+escapeHTML(c.title)+'</strong><span class="dv4-card-stats">'+bits+'</span><span class="dv4-card-foot">TOCAR PARA ABRIR</span>';
+  b.innerHTML='<span class="dv4-mini-art"><img class="dv4-mini-base" src="assets/ui/Cart%C3%A3o%20Dorath%20com%20miss%C3%A3o%20secreta.png" alt="Carta do Jogador">'+(c.src?'<img class="dv4-mini-selfie" src="'+escapeHTML(c.src)+'" alt="">':'')+'</span><span class="dv4-card-foot">TOQUE PARA ABRIR</span>';
  }else{
   b.classList.add('dv4-character-card');
-  b.innerHTML='<span class="dv4-card-type">'+c.kind+'</span>'+(c.src?'<img loading="lazy" alt="" src="'+escapeHTML(c.src)+'">':'<span class="dv4-card-symbol" aria-hidden="true">✦</span>')+'<strong>'+escapeHTML(c.title)+'</strong><span class="dv4-card-foot">TOCAR PARA ABRIR</span>';
+  b.innerHTML=(c.src?'<img class="dv4-character-art" loading="lazy" alt="Carta de '+escapeHTML(c.title)+'" src="'+escapeHTML(c.src)+'">':'<span class="dv4-empty-card" aria-label="Personagem não selecionado">✦</span>')+'<span class="dv4-card-foot">TOQUE PARA ABRIR</span>';
  }
  b.onclick=()=>openCard(c);cards.append(b)
  }
@@ -124,7 +122,7 @@ function fingerprint(){return panels.map(id=>[id,[...active(id)?.querySelectorAl
 function update(){
  if(board.hidden)return;
  const s=fingerprint();renderCards();
- const summary=text(document.querySelector('#summary h2'));ui.querySelector('#dv4house').textContent=summary.split('·')[0]||'CASA —';
+ const summary=text(document.querySelector('#summary h2'));const code=(summary.match(/P[1-8]-(\d{3})/)||[])[1];ui.querySelector('#dv4house').textContent=code?'CASA '+String(Math.round(Number(code)/10)).padStart(2,'0'):'CASA —';
  const raw=text(document.querySelector('#summary p'));const rd=raw.match(/Rodada\s+(\d+)/i);ui.querySelector('#dv4round').textContent=rd?'RODADA '+rd[1]:'RODADA —';
  if(sig!==s){sig=s;select(priority(),false)}else if(!manual)select(selected,false);
 }
