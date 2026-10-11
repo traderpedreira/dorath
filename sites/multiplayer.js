@@ -1,9 +1,16 @@
+import { DorathAudio } from './dorath-audio.js';
 import { EDGE_FUNCTION_URL, SUPABASE_PUBLISHABLE_KEY } from './supabase-config.js';
 import { supabase, validSession, accountTokenKey } from './auth.js';
 const $=id=>document.getElementById(id), esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const label={conhecimento:'Conhecimento',influencia:'Influência',provisoes:'Provisões',heranca:'Herança'};
 let token='',view=null,busy=false,stream=null,currentUser=null;
 let historyKey='',commonKey='';
+const audio=new DorathAudio();
+audio.status=message=>{const el=document.getElementById('audioStatus');if(el)el.textContent=message};
+document.getElementById('audioToggle').addEventListener('click',async()=>{if(audio.enabled){audio.disable();document.getElementById('audioToggle').textContent='Ativar experiência sonora'}else{await audio.activate();document.getElementById('audioToggle').textContent='Desativar áudio'}});
+document.getElementById('audioVolume').addEventListener('input',e=>audio.setVolume(Number(e.target.value)/100));
+document.getElementById('audioAmbient').addEventListener('change',e=>{audio.ambient=e.target.checked;if(audio.last)audio.render(audio.last)});
+document.getElementById('audioEffects').addEventListener('change',e=>{audio.effects=e.target.checked});
 function say(t,error=false){$('status').textContent=t;$('status').classList.toggle('mp-error',error)}
 async function api(route,data={}){
  if(!/^https:\/\/[^/]+\.supabase\.co\/functions\/v1\/dorath-p1$/.test(EDGE_FUNCTION_URL))throw Error('Configure site/supabase-config.js antes de usar o app');
@@ -14,8 +21,8 @@ async function api(route,data={}){
  if(!response.ok)throw Error(body.error||`Erro ${response.status}`);return body;
 }
 function saveCommon(){if(view?.me?.missionHistory)localStorage.setItem(commonKey,JSON.stringify(view.me.missionHistory))}
-async function refresh(){if(!token||!currentUser)return;try{const next=await api('state',{token});const changed=!view||next.revision!==view.revision;view=next;saveCommon();$('login').hidden=true;$('board').hidden=false;if(changed)draw();say(`Conectado · Partida-Mãe ${view.motherCode} · revisão ${view.revision}`)}catch(e){say(e.message,true);if(/sessão inválida|outra conta/i.test(e.message)){token='';localStorage.removeItem(accountTokenKey(currentUser.id));$('login').hidden=false;$('board').hidden=true}}}
-async function action(type,data={}){if(busy)return;busy=true;try{view=await api('action',{token,expectedRevision:view.revision,type,...data});saveCommon();draw();say(`Ação registrada · rodada ${view.round}`)}catch(e){const msg=e.message;await refresh();say(msg,true)}finally{busy=false}}
+async function refresh(){if(!token||!currentUser)return;try{const next=await api('state',{token});const changed=!view||next.revision!==view.revision;view=next;void audio.update(view);saveCommon();$('login').hidden=true;$('board').hidden=false;if(changed)draw();say(`Conectado · Partida-Mãe ${view.motherCode} · revisão ${view.revision}`)}catch(e){say(e.message,true);if(/sessão inválida|outra conta/i.test(e.message)){token='';localStorage.removeItem(accountTokenKey(currentUser.id));$('login').hidden=false;$('board').hidden=true}}}
+async function action(type,data={}){if(busy)return;busy=true;try{view=await api('action',{token,expectedRevision:view.revision,type,...data});saveCommon();void audio.update(view);draw();say(`Ação registrada · rodada ${view.round}`)}catch(e){const msg=e.message;await refresh();say(msg,true)}finally{busy=false}}
 async function enter(route){try{const secretHistory=JSON.parse(localStorage.getItem(historyKey)||'[]'),commonHistory=JSON.parse(localStorage.getItem(commonKey)||'[]');const res=await api(route,{name:$('name').value,team:$('team').value,code:$('code').value,secretHistory,commonHistory});token=res.token;localStorage.setItem(accountTokenKey(currentUser.id),token);await refresh();if(view?.me.secretMissionId){localStorage.setItem(historyKey,JSON.stringify([...secretHistory,view.me.secretMissionId].slice(-160)))}}catch(e){say(e.message,true)}}
 const die=(type,max,extra={})=>`<div class="dice">${Array.from({length:max},(_,i)=>`<button data-action="${type}" data-roll="${i+1}" ${Object.entries(extra).map(([k,v])=>`data-${k}="${esc(v)}"`).join(' ')}>${i+1}</button>`).join('')}</div>`;
 const names=()=>view.rooms.flatMap(r=>r.players);
