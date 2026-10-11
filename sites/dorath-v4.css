@@ -271,3 +271,23 @@ html .mp-grid #movement.dv4-current button[data-action="setup"]{
  color:#ffe7b2!important;letter-spacing:.09em;font-weight:700;
  text-transform:uppercase;box-shadow:0 4px 10px #47270f38;
 }
+
+/* Preparação: controles de confirmação e início em linha, sem alterar validação do motor. */
+html .mp-grid #movement .dv4-setup-actions{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;
+ margin-top:12px;align-items:stretch;
+}
+html .mp-grid #movement .dv4-setup-actions:has(>button:only-child){grid-template-columns:1fr}
+html .mp-grid #movement.dv4-current .dv4-setup-actions button[data-action="setup"],
+html .mp-grid #movement.dv4-current .dv4-setup-actions button[data-action="start"]{
+ display:block;width:100%;margin:0!important;min-width:0;
+ min-height:48px;padding:10px 7px!important;
+ font:700 clamp(.75rem,3vw,1rem)/1.2 Georgia,serif!important;
+ text-transform:uppercase;letter-spacing:.045em;
+ border:2px ridge #c3985a!important;border-radius:10px!important;
+ color:#ffe7b2!important;background:linear-gradient(#80552c,#442812)!important;
+ box-shadow:0 4px 10px #47270f38;
+}
+html .mp-grid #movement.dv4-current .dv4-setup-actions button[data-action="start"]{
+ background:linear-gradient(#a87937,#67401b)!important;
+}
