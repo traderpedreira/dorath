@@ -24,18 +24,18 @@ function openCard(card){
  if(card.kind==='JOGADOR'){
   const player=active('player');
   const resources=text(player?.querySelector('p'));
-  const value=(name)=>{const rx=new RegExp(name+'\\s*:\\s*(\\d+)','i');return resources.match(rx)?.[1]||'0'};
+  const value=name=>resources.match(new RegExp(name+'\\\\s*:\\\\s*(\\\\d+)','i'))?.[1]||'0';
   let personal={};try{personal=JSON.parse(localStorage.getItem('dorath.visual.profile.v1.'+(document.getElementById('accountEmail')?.textContent?.trim()||'local'))||'{}')}catch{}
-  const cv=(str)=>escapeHTML(str||'Não preenchido');
-  const sheet=document.createElement('article');sheet.className='dv4-full-player';
-  sheet.innerHTML='<header class="dv4-fp-head"><span class="dv4-fp-decoration" aria-hidden="true">❧ ✦ ❧</span><h2>'+escapeHTML(card.title)+'</h2><p>Período 1 · Carta do Jogador</p></header>'+
-   '<div class="dv4-fp-main"><div class="dv4-fp-photo">'+(playerPhoto?'<img alt="Selfie do jogador" src="'+playerPhoto+'">':'<div class="dv4-fp-placeholder">♛<small>Tire sua selfie</small></div>')+'</div>'+
-   '<div class="dv4-fp-testimony"><h3>MINHA HISTÓRIA</h3><p>'+cv(personal.historia)+'</p><h4>ORIGEM / TRAJETÓRIA</h4><p>'+cv(personal.origem)+'</p></div></div>'+
-   '<div class="dv4-fp-stats">'+[['Conhecimento','Conhecimento'],['Influência','Influência'],['Provisões','Provisões'],['Herança','Herança']].map(([name,key])=>'<section><span>'+name+'</span><strong>'+value(key)+'</strong></section>').join('')+'</div>'+
-   '<section class="dv4-fp-notes"><h3>ANOTAÇÕES PESSOAIS</h3><p>'+cv(personal.notas)+'</p></section>'+
-   '<footer class="dv4-fp-footer">DORATH · DA CRIAÇÃO À RESTAURAÇÃO</footer>';
+  const cv=str=>escapeHTML(str||'A definir');
+  const sheet=document.createElement('article');sheet.className='dv4pc-master';
+  sheet.innerHTML='<header class="dv4pc-header"><div class="dv4pc-ornament" aria-hidden="true">❦ ── ❧ ── ❦</div><h2>'+escapeHTML(card.title)+'</h2><p>PERÍODO 1 · JOGADOR</p><div class="dv4pc-rule" aria-hidden="true">✦</div></header>'+
+   '<div class="dv4pc-story"><div class="dv4pc-portrait">'+(playerPhoto?'<img alt="Selfie do jogador" src="'+playerPhoto+'">':'<div class="dv4pc-placeholder">♛<small>Retrato pendente</small></div>')+'</div><div class="dv4pc-testimony"><h3>HISTÓRICO DO JOGADOR</h3><div class="dv4pc-flourish">❧ ─── ❧</div><p>'+cv(personal.historia)+'</p></div></div>'+
+   '<div class="dv4pc-identity"><span>JOGADOR</span><span>·</span><span>'+cv(personal.origem)+'</span></div>'+
+   '<div class="dv4pc-resources">'+[['Herança','♛'],['Conhecimento','✧'],['Provisões','❦'],['Influência','♟']].map(([name,icon])=>'<div class="dv4pc-resource"><h4>'+name+'</h4><div class="dv4pc-resource-medal"><i aria-hidden="true">'+icon+'</i><strong>'+value(name)+'</strong></div></div>').join('')+'</div>'+
+   '<div class="dv4pc-storyfoot"><h3>ANOTAÇÕES PESSOAIS</h3><p>'+cv(personal.notas)+'</p></div>'+
+   '<footer class="dv4pc-footer" aria-hidden="true">❧ ✦ ❧</footer>';
   body.append(sheet);
-  const action=document.createElement('button');action.type='button';action.className='dv4-edit-card';action.textContent='Editar minha carta / tirar selfie';action.addEventListener('click',()=>{modal.close();select('player',true);active('player')?.scrollIntoView({block:'start',behavior:'smooth'})});body.append(action);
+  const action=document.createElement('button');action.type='button';action.className='dv4pc-edit';action.textContent='Editar carta · Tirar selfie';action.addEventListener('click',()=>{modal.close();select('player',true);active('player')?.scrollIntoView({block:'start',behavior:'smooth'})});body.append(action);
  }else{
   const title=document.createElement('h2');title.textContent=card.title;body.append(title);
   if(card.src){const img=document.createElement('img');img.src=card.src;img.alt=card.title;img.loading='eager';body.append(img)}
