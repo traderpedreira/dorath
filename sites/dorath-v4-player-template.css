@@ -48,27 +48,24 @@
 #dv4modal .dv4tpl-tags{top:55.5%;left:9.8%;width:80.4%;height:3%;background:#f7e2b7}
 #dv4modal .dv4tpl-secret{top:73.6%;height:8%;background:linear-gradient(110deg,#f5dfb4,#f9e6c1,#f1d5a5)}
 
-/* Dorath Carta do Jogador: coordenadas do pacote homologado para integração V4.
-   Arte-base limpa: assets/ui/player-card-background.png */
-#dv4modal .dv4tpl-v5{aspect-ratio:3 / 4;container-type:inline-size;overflow:hidden;background:#f0d8a5}
+
+/* Carta v5: geometria consolidada. Valores ancorados pelo CENTRO do medalhão. */
+#dv4modal .dv4tpl-v5{aspect-ratio:3/4;container-type:inline-size;position:relative;overflow:hidden;background:#f0d8a5}
 #dv4modal .dv4tpl-v5 .dv4tpl-base{width:100%;height:100%;object-fit:fill}
 #dv4modal .dv4tpl-v5 .dv4tpl-name{position:absolute;left:17%;top:3%;width:66%;height:4.7%;background:transparent;border:0;display:block;overflow:auto;font-size:4.2cqw;line-height:1.12;text-align:center;font-weight:bold;padding:0}
 #dv4modal .dv4tpl-v5 .dv4tpl-subtitle{position:absolute;left:17%;top:8%;width:66%;height:3.2%;background:transparent;border:0;display:block;overflow:hidden;font-size:2.4cqw;line-height:1.25;text-align:center;letter-spacing:0;padding:0}
 #dv4modal .dv4tpl-v5 .dv4tpl-portrait{position:absolute;left:5%;top:14%;width:56%;height:39%;border:0;border-radius:2%;background:transparent;overflow:hidden}
 #dv4modal .dv4tpl-v5 .dv4tpl-portrait img{height:100%;width:100%;object-fit:cover;object-position:center 30%;display:block}
 #dv4modal .dv4tpl-v5 .dv4tpl-placeholder{font-size:3cqw;display:grid;place-items:center;width:100%;height:100%;background:transparent}
-#dv4modal .dv4tpl-v5 .dv4tpl-history{position:absolute;left:65%;top:24%;width:29%;height:25%;padding:0;background:transparent;border:0;font-size:2.5cqw;line-height:1.4;white-space:pre-wrap;text-align:left;overflow:auto}
+#dv4modal .dv4tpl-v5 .dv4tpl-history{position:absolute;left:65%;top:24%;width:29%;height:26%;padding:0;background:transparent;border:0;font-size:2.35cqw;line-height:1.35;white-space:pre-wrap;text-align:left;overflow-x:hidden;overflow-y:auto;overflow-wrap:anywhere;word-break:break-word;scrollbar-width:thin}
 #dv4modal .dv4tpl-v5 .dv4tpl-stats{position:static;display:contents;background:transparent}
-#dv4modal .dv4tpl-v5 .dv4tpl-stat{position:absolute;top:65%;height:5%;width:10%;display:block;text-align:center;padding:0;margin:0;border:0;border-radius:0;box-shadow:none;background:transparent;font-size:3.5cqw;line-height:1.6;font-family:Georgia,serif;font-weight:bold;color:#291606}
-#dv4modal .dv4tpl-v5 .dv4tpl-knowledge{left:10.5%}
-#dv4modal .dv4tpl-v5 .dv4tpl-influence{left:33.5%}
-#dv4modal .dv4tpl-v5 .dv4tpl-heritage{left:56.5%}
-#dv4modal .dv4tpl-v5 .dv4tpl-provisions{left:79.5%}
-#dv4modal .dv4tpl-v5 .dv4tpl-secret{position:absolute;left:12%;top:79%;width:76%;height:13%;padding:0;margin:0;display:block;border:0;box-shadow:none;background:transparent;color:#291606;font-size:2.6cqw;line-height:1.4;text-align:left;white-space:pre-wrap;overflow:auto}
+#dv4modal .dv4tpl-v5 .dv4tpl-stat{position:absolute;top:65.1%;width:9%;height:5.2%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;text-align:center;padding:0;margin:0;border:0;border-radius:0;box-shadow:none;background:transparent;font-size:3.65cqw;line-height:1;font-family:Georgia,serif;font-weight:bold;color:#291606}
+#dv4modal .dv4tpl-v5 .dv4tpl-knowledge{left:15.5%}
+#dv4modal .dv4tpl-v5 .dv4tpl-influence{left:38.7%}
+#dv4modal .dv4tpl-v5 .dv4tpl-heritage{left:61.5%}
+#dv4modal .dv4tpl-v5 .dv4tpl-provisions{left:84.7%}
+#dv4modal .dv4tpl-v5 .dv4tpl-secret{position:absolute;left:12%;top:77.5%;width:76%;height:15.8%;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;align-items:stretch;padding:3% 2.2% 1%;margin:0;border:0;box-shadow:none;background:transparent;color:#291606;font-size:2.6cqw;line-height:1.42;text-align:left;white-space:pre-wrap;overflow-y:auto;overflow-wrap:anywhere}
 #dv4modal .dv4tpl-v5 .dv4tpl-tags,#dv4modal .dv4tpl-v5 .dv4tpl-bottom{display:none}
-
-/* V4: centralizar os saldos exatamente no interior dos medalhões do master. */
-#dv4modal .dv4tpl-v5 .dv4tpl-stat{top:67.8%;height:5.4%;font-size:3.65cqw;line-height:1;display:flex;align-items:center;justify-content:center}
 #dv4modal .dv4-card-editor{padding:20px 14px;background:#f2dcaf;color:#3b2512;border-radius:9px}
 #dv4modal .dv4-card-editor-form{display:flex;flex-direction:column;gap:14px}
 #dv4modal .dv4-card-editor-form label{display:flex;flex-direction:column;gap:5px;font:700 15px Georgia,serif;color:#3b2512}
@@ -76,55 +73,3 @@
 #dv4modal .dv4-card-editor-form button{padding:13px;background:#66421f;color:#fff3d6;border:1px solid #ae814c;border-radius:8px;font:700 16px Georgia,serif}
 #dorathPersonalHistory[hidden]{display:none!important}
 
-/* Final mobile corrections: medallion centers and wrapping long testimony. */
-#dv4modal .dv4tpl-v5 .dv4tpl-stat{
-  top:62.35%;
-  height:5.2%;
-  line-height:1;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-#dv4modal .dv4tpl-v5 .dv4tpl-history{
-  overflow-x:hidden;
-  overflow-y:auto;
-  overflow-wrap:anywhere;
-  word-break:break-word;
-  white-space:pre-wrap;
-  scrollbar-width:thin;
-  height:26%;
-  font-size:2.35cqw;
-  line-height:1.35;
-}
-
-/* Ajustes homologação mobile: centros das medalhas e bloco da missão. */
-#dv4modal .dv4tpl-v5 .dv4tpl-heritage{left:58.2%}
-#dv4modal .dv4tpl-v5 .dv4tpl-provisions{left:81.2%}
-#dv4modal .dv4tpl-v5 .dv4tpl-secret{
-  top:81.8%;
-  height:10.2%;
-  padding:0;
-  line-height:1.4;
-  overflow-y:auto;
-}
-
-/* Correção geométrica final: centros obtidos dos quatro medalhões na arte-base.
-   A coordenada left indica a borda do output, não o seu centro. */
-#dv4modal .dv4tpl-v5 .dv4tpl-heritage{left:56.1%}
-#dv4modal .dv4tpl-v5 .dv4tpl-provisions{left:77.7%}
-/* Missão: texto centralizado verticalmente na área vazia abaixo do cabeçalho impresso. */
-#dv4modal .dv4tpl-v5 .dv4tpl-secret{
- top:77.5%;
- left:12%;
- width:76%;
- height:15.8%;
- box-sizing:border-box;
- display:flex;
- flex-direction:column;
- justify-content:center;
- align-items:stretch;
- padding:3% 2.2% 1%;
- text-align:left;
- line-height:1.42;
- overflow-y:auto;
-}
