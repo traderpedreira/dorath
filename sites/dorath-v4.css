@@ -52,25 +52,24 @@ body>.mp-shell>section.mp-card input[type=range]{width:120px}
 @media(max-width:450px){.dv4-player-card .dv4-portrait{height:78px}.dv4-card-stats small{font-size:.39rem}.dv4-card-stats b{font-size:.69rem}}
 /* DORATH V4 - visual de jogo, camada unicamente de apresentação */
 :root{--v4-gold:#c99a57;--v4-parch:#f4ddab;--v4-ink:#432b17}
-body:not(:has(.dorath-classic)){}
-html:not(.dorath-classic) body{background:radial-gradient(circle at 50% 22%,#59402a,#1c1612 63%,#100d0c 100%)!important}
-html:not(.dorath-classic) .mp-shell{max-width:720px!important;padding:8px 12px 96px!important}
-html:not(.dorath-classic) .topbar{padding:12px 0!important;margin:0!important}
-html:not(.dorath-classic) .topbar h1{font-size:clamp(1.5rem,6vw,2.4rem)!important;line-height:1.08!important}
-html:not(.dorath-classic) .topbar .muted{display:none!important}
-html:not(.dorath-classic) .topbar::after{display:none}
-html:not(.dorath-classic) .mp-shell>section.mp-card{padding:12px!important;margin:5px 0 8px!important;border-radius:12px!important}
-html:not(.dorath-classic) .mp-shell>section.mp-card>strong{display:block;font-size:.8rem}
-html:not(.dorath-classic) .mp-shell>section.mp-card label{display:inline-flex!important;align-items:center;gap:5px;margin:4px!important}
-html:not(.dorath-classic) #status{padding:7px 9px!important;margin:6px 0!important;position:relative!important;font-size:.7rem!important}
-html:not(.dorath-classic) #dorathModeToggle{display:block;width:100%;font-size:.75rem;padding:7px 11px;min-height:38px}
-html:not(.dorath-classic) #summary{display:none!important}
-html:not(.dorath-classic) .dorath-card-strip,
-html:not(.dorath-classic) .dorath-step,
-html:not(.dorath-classic) .dorath-dock,
-html:not(.dorath-classic) .dorath-extras{display:none!important}
+
+html body{background:radial-gradient(circle at 50% 22%,#59402a,#1c1612 63%,#100d0c 100%)!important}
+html .mp-shell{max-width:720px!important;padding:8px 12px 96px!important}
+html .topbar{padding:12px 0!important;margin:0!important}
+html .topbar h1{font-size:clamp(1.5rem,6vw,2.4rem)!important;line-height:1.08!important}
+html .topbar .muted{display:none!important}
+html .topbar::after{display:none}
+html .mp-shell>section.mp-card{padding:12px!important;margin:5px 0 8px!important;border-radius:12px!important}
+html .mp-shell>section.mp-card>strong{display:block;font-size:.8rem}
+html .mp-shell>section.mp-card label{display:inline-flex!important;align-items:center;gap:5px;margin:4px!important}
+html #status{padding:7px 9px!important;margin:6px 0!important;position:relative!important;font-size:.7rem!important}
+html #dorathModeToggle{display:block;width:100%;font-size:.75rem;padding:7px 11px;min-height:38px}
+html #summary{display:none!important}
+html .dorath-card-strip,
+html .dorath-step,
+html .dorath-dock,
+html .dorath-extras{display:none!important}
 #dv4{display:block}
-.dorath-classic #dv4{display:none!important}
 .dv4-meta{display:grid;grid-template-columns:1.05fr .8fr 1fr;align-items:stretch;background:linear-gradient(100deg,#d5af77,#f9e5bd 43%,#cba06a);color:#3e2918;border:3px ridge #926432;border-radius:7px;margin:9px 0 13px;box-shadow:inset 0 0 13px #7b492a66,0 5px 18px #0008;overflow:hidden}
 .dv4-meta span{font-size:.79rem;text-align:center;padding:10px 4px;font-weight:700;align-self:center;min-width:0}
 .dv4-meta span+span{border-left:1px solid #957044}
@@ -84,24 +83,24 @@ html:not(.dorath-classic) .dorath-extras{display:none!important}
 .dv4-card strong{position:relative;z-index:1;font-size:clamp(.72rem,3.2vw,.97rem);line-height:1.1;overflow-wrap:anywhere}
 .dv4-card-foot{font-size:.48rem;letter-spacing:.07em;opacity:.7}
 .dv4-label{text-align:center;letter-spacing:.3em;font-size:.71rem;color:#d6b47a;margin:10px 0 14px}
-html:not(.dorath-classic) .mp-grid{display:block!important;margin:0!important}
-html:not(.dorath-classic) .mp-grid>.mp-card{display:none!important}
-html:not(.dorath-classic) .mp-grid>.mp-card.dv4-current{display:block!important;background:linear-gradient(150deg,#f7e8c4,#eacb94 72%,#c8985c)!important;color:var(--v4-ink)!important;border:7px ridge #996a35!important;border-radius:20px!important;padding:clamp(20px,5vw,37px)!important;min-height:330px;box-shadow:inset 0 0 0 2px #fff0c8,inset 0 0 40px #8c50295c,0 13px 29px #000b!important}
-html:not(.dorath-classic) .mp-grid>.mp-card.dv4-current h3{font-size:clamp(1.6rem,6vw,2.6rem)!important;line-height:1.2;text-align:center!important;color:#462a12!important;text-shadow:none!important;border-bottom:1px solid #ac8453!important;padding:0 0 12px!important;margin:0 0 18px!important}
-html:not(.dorath-classic) .mp-grid>.mp-card.dv4-current h4{color:#563618!important;text-shadow:none!important}
-html:not(.dorath-classic) .mp-grid>.mp-card.dv4-current p,
-html:not(.dorath-classic) .mp-grid>.mp-card.dv4-current label,
-html:not(.dorath-classic) .mp-grid>.mp-card.dv4-current li{color:#4a321e!important}
-html:not(.dorath-classic) .mp-grid>.mp-card.dv4-current b,
-html:not(.dorath-classic) .mp-grid>.mp-card.dv4-current strong{color:#39220e!important}
-html:not(.dorath-classic) .mp-grid>.mp-card.dv4-current button{background:linear-gradient(#745431,#402c19)!important;border:1px solid #af844b!important;color:#ffeacc!important;box-shadow:inset 0 1px #f9e0ab55,0 3px 6px #0004!important}
-html:not(.dorath-classic) .mp-grid>.mp-card.dv4-current .dice button{min-width:48px!important;min-height:56px!important;flex:1 1 50px;background:linear-gradient(#a67b43,#654121)!important}
-html:not(.dorath-classic) .mp-grid>.mp-card.dv4-current input:not([type=checkbox]):not([type=range]),
-html:not(.dorath-classic) .mp-grid>.mp-card.dv4-current select,
-html:not(.dorath-classic) .mp-grid>.mp-card.dv4-current textarea{background:#fff2d5!important;border:1px solid #a17c4a!important;color:#382615!important}
-html:not(.dorath-classic) .mp-grid>.mp-card.dv4-current .mp-chip{background:#dfbb82!important;color:#412911!important}
-html:not(.dorath-classic) #missions>p:nth-of-type(1){background:#fff4d9!important;color:#422a15!important}
-html:not(.dorath-classic) #player .dorath-personal-history label{color:#422a15!important}
+html .mp-grid{display:block!important;margin:0!important}
+html .mp-grid>.mp-card{display:none!important}
+html .mp-grid>.mp-card.dv4-current{display:block!important;background:linear-gradient(150deg,#f7e8c4,#eacb94 72%,#c8985c)!important;color:var(--v4-ink)!important;border:7px ridge #996a35!important;border-radius:20px!important;padding:clamp(20px,5vw,37px)!important;min-height:330px;box-shadow:inset 0 0 0 2px #fff0c8,inset 0 0 40px #8c50295c,0 13px 29px #000b!important}
+html .mp-grid>.mp-card.dv4-current h3{font-size:clamp(1.6rem,6vw,2.6rem)!important;line-height:1.2;text-align:center!important;color:#462a12!important;text-shadow:none!important;border-bottom:1px solid #ac8453!important;padding:0 0 12px!important;margin:0 0 18px!important}
+html .mp-grid>.mp-card.dv4-current h4{color:#563618!important;text-shadow:none!important}
+html .mp-grid>.mp-card.dv4-current p,
+html .mp-grid>.mp-card.dv4-current label,
+html .mp-grid>.mp-card.dv4-current li{color:#4a321e!important}
+html .mp-grid>.mp-card.dv4-current b,
+html .mp-grid>.mp-card.dv4-current strong{color:#39220e!important}
+html .mp-grid>.mp-card.dv4-current button{background:linear-gradient(#745431,#402c19)!important;border:1px solid #af844b!important;color:#ffeacc!important;box-shadow:inset 0 1px #f9e0ab55,0 3px 6px #0004!important}
+html .mp-grid>.mp-card.dv4-current .dice button{min-width:48px!important;min-height:56px!important;flex:1 1 50px;background:linear-gradient(#a67b43,#654121)!important}
+html .mp-grid>.mp-card.dv4-current input:not([type=checkbox]):not([type=range]),
+html .mp-grid>.mp-card.dv4-current select,
+html .mp-grid>.mp-card.dv4-current textarea{background:#fff2d5!important;border:1px solid #a17c4a!important;color:#382615!important}
+html .mp-grid>.mp-card.dv4-current .mp-chip{background:#dfbb82!important;color:#412911!important}
+html #missions>p:nth-of-type(1){background:#fff4d9!important;color:#422a15!important}
+html #player .dorath-personal-history label{color:#422a15!important}
 .dv4-nav{position:sticky;bottom:0;z-index:24;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;padding:9px 5px max(9px,env(safe-area-inset-bottom));margin:15px -7px 0;border-radius:13px;border:1px solid #a87d46;background:linear-gradient(#35251c,#1a1310);box-shadow:0 -5px 24px #000b}
 .dv4-nav button{min-width:0;min-height:66px;border-radius:9px;border:2px ridge #987243!important;background:linear-gradient(#6c4a2b,#312118)!important;color:#f5d9a8!important;padding:5px 2px!important;display:grid;place-content:center;gap:3px;font-family:Georgia,serif!important}
 .dv4-nav button span{font-size:1.65rem}.dv4-nav button small{font-size:.63rem}
@@ -115,5 +114,37 @@ html:not(.dorath-classic) #player .dorath-personal-history label{color:#422a15!i
 #dv4modal img{display:block;max-width:100%;max-height:67vh;object-fit:contain;margin:0 auto}
 #dv4modal p{color:#412916}
 #dv4close{position:absolute;right:10px;top:6px;background:#573618;color:#fff0cd;border:1px solid #96692f;border-radius:8px;padding:7px 12px}
-.dorath-classic .mp-grid>.mp-card{display:block!important}
 @media(max-width:430px){.dv4-card{min-height:138px!important}.dv4-card img{height:78px}.dv4-card-type{font-size:.5rem}.dv4-nav button span{font-size:1.4rem}.dv4-meta span{font-size:.68rem}}
+
+/* Contraste e legibilidade — V4 */
+/* V4.1: leitura e criação da carta pessoal — corrige CSS herdado V2/V3 */
+html #board .mp-grid>.mp-card.dv4-current,
+html #board .mp-grid>.mp-card.dv4-current#player,
+html #board .mp-grid>.mp-card.dv4-current#missions,
+html #board .mp-grid>.mp-card.dv4-current#movement,
+html #board .mp-grid>.mp-card.dv4-current#world{
+ background:linear-gradient(154deg,#f9e9c5 0%,#efd6a5 66%,#c89d68 100%)!important;color:#372412!important}
+html #board .mp-grid>.mp-card.dv4-current h3,
+html #board .mp-grid>.mp-card.dv4-current h4,
+html #board .mp-grid>.mp-card.dv4-current p,
+html #board .mp-grid>.mp-card.dv4-current li,
+html #board .mp-grid>.mp-card.dv4-current label,
+html #board .mp-grid>.mp-card.dv4-current .dorath-personal-history h4,
+html #board .mp-grid>.mp-card.dv4-current .dorath-personal-history label,
+html #board .mp-grid>.mp-card.dv4-current .dorath-personal-history p,
+html #board .mp-grid>.mp-card.dv4-current #dorathPersonalStatus,
+html #board .mp-grid>.mp-card.dv4-current #dorathPhotoStatus{color:#3b2513!important;text-shadow:none!important;opacity:1!important}
+html #board .mp-grid>.mp-card.dv4-current b,
+html #board .mp-grid>.mp-card.dv4-current strong{color:#3f2611!important}
+html #board .mp-grid>.mp-card.dv4-current .dorath-personal-history>p{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important}
+html #board .mp-grid>.mp-card.dv4-current#player>p:first-of-type{background:#f6dfb5!important;border:1px solid #a68556!important;padding:13px!important;color:#3b2513!important}
+.dorath-photo-editor{background:#f0d7a9;border:2px solid #ad844d;border-radius:13px;padding:14px;margin:0 0 16px;box-shadow:inset 0 1px #fff7df}
+.dorath-photo-editor h4{margin:0 0 6px!important}
+.dorath-photo-editor p{font-size:.85rem;line-height:1.5}
+.dorath-photo-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.dorath-photo-button{display:flex!important;align-items:center;justify-content:center;min-height:47px;background:linear-gradient(#75502d,#422916);color:#fff0cb!important;border:1px solid #a67e48;border-radius:10px;padding:10px 8px;cursor:pointer;text-align:center;font-weight:700}
+.dorath-photo-button input{display:none!important}
+.dorath-photo-actions button{grid-column:span 2;width:100%}
+html .dv4-card img{width:100%;height:96px;object-fit:cover;object-position:center 30%}
+#dv4modal #dv4content>button{display:block;width:100%;min-height:48px;margin:8px 0 15px;border-radius:9px;border:1px solid #966b32;background:#583c22;color:#fce5b7;font-weight:bold}
+@media(max-width:420px){.dorath-photo-actions{grid-template-columns:1fr 1fr}.dorath-photo-button{font-size:.8rem}}
