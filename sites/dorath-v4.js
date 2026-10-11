@@ -39,7 +39,7 @@ function openCard(card){
    '<div class="dv4tpl-name">'+escapeHTML(displayName)+'</div>'+
    '<div class="dv4tpl-subtitle">Período '+period+' · Rodada '+round+' · Casa '+displayHouse+'</div>'+
    '<div class="dv4tpl-portrait">'+(playerPhoto?'<img alt="Selfie do jogador" src="'+escapeHTML(playerPhoto)+'">':'<div class="dv4tpl-placeholder">SUA FOTO AQUI</div>')+'</div>'+
-   '<section class="dv4tpl-history dv4tpl-controls" aria-label="Controles da partida"><strong>PARTIDA CONECTADA</strong><span class="dv4tpl-connection">'+escapeHTML(text(document.getElementById('status')).split(' · ')[0]||'Conectado')+'</span><span class="dv4tpl-room">'+escapeHTML(text(active('rooms')?.querySelector('h3'))||'Partida conectada')+'</span><span class="dv4tpl-roomname">'+escapeHTML(text(active('rooms')?.querySelector('p b'))||'')+'</span><button type="button" class="dv4tpl-audio-toggle">Áudio</button><label class="dv4tpl-volume-label">Volume <input type="range" min="0" max="100" class="dv4tpl-volume"></label></section>'+
+   '<section class="dv4tpl-history dv4tpl-controls" aria-label="Controles da partida"><strong>PARTIDA CONECTADA</strong><span class="dv4tpl-connection">'+escapeHTML(text(document.getElementById('status')).split(' · ')[0]||'Conectado')+'</span><span class="dv4tpl-room">'+escapeHTML(text(active('rooms')?.querySelector('h3'))||'Partida conectada')+'</span><span class="dv4tpl-roomname">'+escapeHTML(text(active('rooms')?.querySelector('p b'))||'')+'</span><button type="button" class="dv4tpl-audio-toggle">Áudio</button><label class="dv4tpl-volume-label">Volume <input type="range" min="0" max="100" class="dv4tpl-volume"></label><div class="dv4tpl-audio-flags"><label><input type="checkbox" class="dv4tpl-ambient"> Ambiente</label><label><input type="checkbox" class="dv4tpl-effects"> Efeitos</label></div></section>'+
    '<div class="dv4tpl-stats">'+[['knowledge','Conhecimento'],['influence','Influência'],['heritage','Herança'],['provisions','Provisões']].map(([key,name])=>'<output class="dv4tpl-stat dv4tpl-'+key+'">'+value(name)+'</output>').join('')+'</div>'+
    '<div class="dv4tpl-secret">'+escapeHTML(secret||'Aguardando atribuição da missão.')+'</div>';
   body.append(sheet);
@@ -49,6 +49,12 @@ function openCard(card){
   volume.value=nativeVolume?.value||'50';
   audioButton.addEventListener('click',()=>{nativeAudio?.click();requestAnimationFrame(()=>{audioButton.textContent=nativeAudio?.textContent?.includes('Desativar')?'Desativar áudio':'Ativar áudio'})});
   volume.addEventListener('input',()=>{if(!nativeVolume)return;nativeVolume.value=volume.value;nativeVolume.dispatchEvent(new Event('input',{bubbles:true}))});
+  for(const [cls,id] of [['dv4tpl-ambient','audioAmbient'],['dv4tpl-effects','audioEffects']]){
+    const box=sheet.querySelector('.'+cls),native=document.getElementById(id);
+    box.checked=Boolean(native?.checked);
+    box.disabled=!native;
+    box.addEventListener('change',()=>{if(!native)return;native.checked=box.checked;native.dispatchEvent(new Event('change',{bubbles:true}))});
+  }
   const action=document.createElement('button');action.type='button';action.className='dv4tpl-edit';action.textContent='Editar carta · Tirar selfie';action.addEventListener('click',()=>{
     body.replaceChildren();
     const editor=document.createElement('section');editor.className='dv4-card-editor';
