@@ -60,3 +60,74 @@ button:disabled{opacity:.54;cursor:not-allowed}
 #account,#login{box-shadow:0 15px 45px rgba(0,0,0,.32)}
 @media(max-width:760px){.mp-shell{padding:10px 11px 90px!important}.mp-grid{grid-template-columns:minmax(0,1fr)!important;gap:13px!important}.mp-card{padding:18px!important}.topbar{padding-top:14px}.topbar h1{font-size:2.35rem}#summary{padding:16px}.mp-status{font-size:.75rem!important}.mp-card button{min-height:46px}.dice button{flex:1 1 43px}.mp-card input,.mp-card select{font-size:16px!important}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+
+
+/* v2 — visual inspirado no mockup Dorath aprovado em 11/10.
+   SOMENTE CSS. Mantém a hierarquia, IDs, ordem DOM, botões e interações reais.
+   As artes narrativas serão aplicadas apenas quando existir arquivo homologado. */
+:root{--dor-navy:#05192c;--dor-blue:#0b3156;--dor-azure:#1db4ff;--dor-parchment:#f4ddb0;--dor-parchment-ink:#382617}
+body{
+ background:
+  radial-gradient(ellipse 90% 40% at 50% -8%,#20618a66,transparent 75%),
+  radial-gradient(circle at 95% 55%,#75502430,transparent 48%),
+  radial-gradient(ellipse 120% 100% at 50% 100%,#051b30,#020e1c 80%)!important;
+}
+body::before{opacity:.21;background-image:
+ radial-gradient(#e4bc7140 .6px,transparent 1px),
+ repeating-linear-gradient(45deg,transparent 0 22px,#ddaf5520 23px 24px);background-size:27px 27px,auto}
+.mp-shell{max-width:1080px!important}
+.topbar{margin:0 0 16px!important;border-bottom:1px solid #a87b39!important;background:linear-gradient(90deg,transparent,#06223aa8,transparent);border-radius:4px;padding:25px 12px 19px!important}
+.topbar .eyebrow{color:#f1d59a!important}
+.topbar h1{text-transform:uppercase;letter-spacing:.075em!important;font-weight:700!important;font-size:clamp(2.5rem,7vw,4.2rem)!important;color:#f9d883!important;text-shadow:0 2px 0 #684118,0 4px 20px #db9b4070!important}
+.topbar .muted{color:#d0e4ed!important}
+.mp-card{background:
+ linear-gradient(155deg,rgba(9,36,58,.96),rgba(4,21,39,.98))!important;
+ border:1px solid #ad803e!important;border-radius:17px!important;
+ box-shadow:inset 0 0 0 1px #fce6b11b,0 14px 32px #0009,0 0 0 1px #010d20!important;
+}
+.mp-card::before{border-color:#e7bb6230!important}
+.mp-card h2,.mp-card h3,.mp-card h4{color:#ffe0a1!important;text-shadow:0 1px 7px #03101b}
+.mp-card h3{border-bottom-color:#cc9d4b70!important}
+.mp-status{background:linear-gradient(90deg,#063354ed,#03172ced)!important;border-color:#3aa7c080!important;color:#c9edff!important;box-shadow:0 5px 22px #0008!important}
+#summary{background:
+ linear-gradient(105deg,#113b59e8,#092440f5 55%,#18334de0)!important;
+ border:1px solid #b68c4e!important;border-radius:18px;box-shadow:inset 0 0 0 1px #f3d18e42,0 9px 22px #0007!important}
+#summary h2{color:#ffdfa2!important}
+#summary p{color:#daeaf2!important}
+#rooms{border-top:3px solid #188eb9!important}
+#player{background:linear-gradient(160deg,#142f41,#09293a 48%,#071a2d)!important;border-top:3px solid #1c92db!important}
+#movement{background:linear-gradient(150deg,#114e79,#052842 78%)!important;border:2px solid #38bfff!important;
+box-shadow:inset 0 0 20px #37a9e318,0 0 0 1px #d2f3ff44,0 0 26px #23aefb48,0 8px 28px #0008!important}
+#movement h3{color:#dff6ff!important}
+#missions{background:linear-gradient(140deg,#56301b,#321e17 57%,#161c2d)!important;border-top:3px solid #f3a04e!important}
+#world{background:linear-gradient(150deg,#512b26,#261b24 60%,#10192d)!important;border-top:3px solid #df4e4e!important}
+#threats{background:linear-gradient(155deg,#34204e,#191832 64%,#0a1a2a)!important;border-top:3px solid #a67fff!important}
+#trades{background:linear-gradient(160deg,#194b42,#0b262d 80%)!important;border-top:3px solid #40bf96!important}
+#history{background:linear-gradient(150deg,#24304b,#111d30 80%)!important;border-top:3px solid #7e91c5!important}
+#player p{line-height:1.9}
+#player p:nth-of-type(1){background:linear-gradient(90deg,#173c61,#132c41);border:1px solid #42739f;border-radius:11px;padding:13px;color:#f9e6bc}
+#player p:nth-of-type(1) b{background:linear-gradient(#f1d597,#a57837);color:#291900;padding:4px 8px;border-radius:6px;white-space:nowrap}
+#missions p:nth-of-type(1){background:linear-gradient(145deg,#f8e6c5,#e3c493);color:#392411!important;padding:17px;border-radius:9px;border:2px solid #aa7737;box-shadow:inset 0 0 0 3px #ffefce70}
+#missions p:nth-of-type(1) b{color:#41280c!important}
+#world p:nth-of-type(1){border-left:4px solid #ed7d53;padding:9px 12px;background:#ffc9820d}
+#movement .dice button,.dice button{font-size:1.15rem!important;min-height:53px!important;min-width:51px!important;border:1px solid #b7e9ff!important;color:#fff!important;background:linear-gradient(#178bc7,#07558d)!important;box-shadow:inset 0 1px #b8edff66,0 3px #052542!important;border-radius:11px!important}
+.mp-card button{border:1px solid #609dc8!important;background:linear-gradient(#16639b,#093e6e)!important;color:#f3faff!important;box-shadow:inset 0 1px #bfeaff3c,0 4px 8px #0005!important}
+.mp-card button.primary,.primary{background:linear-gradient(#e9bd5d,#b87e28)!important;color:#271500!important;border-color:#ffe6a0!important}
+.mp-card button.secondary,.secondary{background:linear-gradient(#386a66,#164a4b)!important;border-color:#58b2a6!important;color:#eafff9!important}
+.mp-card input:not([type=checkbox]):not([type=range]),.mp-card select,.mp-card textarea{background:#061f35!important;border:1px solid #467b9b!important;color:#ecf8ff!important}
+.mp-chip{background:#115076!important;border-color:#3684a7!important;color:#eefaff}
+#account,#login{background:linear-gradient(155deg,#0e3958,#08192e)!important}
+.mp-card label{color:#d9e8f1!important}
+.card-preview{border:3px solid #b89660;border-radius:9px;background:#0b2234;padding:4px}
+#audioToggle{background:linear-gradient(#186b88,#104c6b)!important;border-color:#3ec1cf!important}
+#audioStatus{color:#a9e4e8!important}
+::selection{background:#d5a656;color:#081e2c}
+@media(max-width:760px){
+ .mp-shell{padding:10px 10px 90px!important}
+ .topbar{padding:19px 8px 15px!important}
+ .topbar h1{font-size:2.7rem!important}
+ .mp-grid{gap:13px!important}
+ .mp-card{padding:16px!important}
+ #movement{box-shadow:inset 0 0 20px #37a9e318,0 0 22px #23aefb35,0 8px 22px #0008!important}
+ .mp-status{font-size:.79rem!important}
+}
