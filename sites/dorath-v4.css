@@ -101,7 +101,7 @@ html .mp-grid>.mp-card.dv4-current textarea{background:#fff2d5!important;border:
 html .mp-grid>.mp-card.dv4-current .mp-chip{background:#dfbb82!important;color:#412911!important}
 html #missions>p:nth-of-type(1){background:#fff4d9!important;color:#422a15!important}
 html #player .dorath-personal-history label{color:#422a15!important}
-.dv4-nav{position:sticky;bottom:0;z-index:24;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;padding:9px 5px max(9px,env(safe-area-inset-bottom));margin:15px -7px 0;border-radius:13px;border:1px solid #a87d46;background:linear-gradient(#35251c,#1a1310);box-shadow:0 -5px 24px #000b}
+.dv4-nav{position:relative;bottom:auto;z-index:24;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;padding:9px 5px max(9px,env(safe-area-inset-bottom));margin:15px -7px 0;border-radius:13px;border:1px solid #a87d46;background:linear-gradient(#35251c,#1a1310);box-shadow:0 -5px 24px #000b}
 .dv4-nav button{min-width:0;min-height:66px;border-radius:9px;border:2px ridge #987243!important;background:linear-gradient(#6c4a2b,#312118)!important;color:#f5d9a8!important;padding:5px 2px!important;display:grid;place-content:center;gap:3px;font-family:Georgia,serif!important}
 .dv4-nav button span{font-size:1.65rem}.dv4-nav button small{font-size:.63rem}
 .dv4-nav button.dv4-selected{background:linear-gradient(#a07336,#5c3c22)!important;box-shadow:0 0 12px #d8ac6455!important}
@@ -200,3 +200,7 @@ html .topbar .dv4-brand-logo{display:block;width:min(84%,430px);max-height:150px
 #dv4modal.dv4-character-modal #dv4close{display:none!important}
 #dv4modal.dv4-character-modal{padding:12px;max-width:min(95vw,560px)}
 #dv4modal.dv4-character-modal #dv4content>img{max-height:80vh}
+
+/* Ordem do tabuleiro V4: cartas -> ação ativa -> menu de navegação. */
+#board>.dv4-nav{margin-top:14px;margin-bottom:10px}
+#board>#dv4extras{margin-top:14px}
