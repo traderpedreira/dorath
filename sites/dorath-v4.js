@@ -32,13 +32,13 @@ function openCard(card){
   const fields=[['Conhecimento',value('Conhecimento')],['Provisões',value('Provisões')],['Influência',value('Influência')],['Herança',value('Herança')]];
   sheet.innerHTML='<img class="dv4tpl-base" src="assets/ui/player-card-template.png" alt="Ornamentos originais da Carta do Jogador Dorath">'+
    '<div class="dv4tpl-name">'+escapeHTML(card.title)+'</div>'+
-   '<div class="dv4tpl-subtitle">'+escapeHTML(((text(document.querySelector('#summary h2')).match(/P([1-8])-\d{3}/)||[])[1]||'1'))+' · '+escapeHTML((text(document.querySelector('#summary p')).match(/Rodada\s+(\d+)/)||[])[1]||'—')+' · '+escapeHTML((text(document.querySelector('#summary h2')).match(/P[1-8]-\d{3}/)||[])[0]||'P1-010')+'</div>'+
+   '<div class="dv4tpl-subtitle">PERÍODO '+escapeHTML(((text(document.querySelector('#summary h2')).match(/P([1-8])-\d{3}/)||[])[1]||'1'))+' · RODADA '+escapeHTML((text(document.querySelector('#summary p')).match(/Rodada\s+(\d+)/)||[])[1]||'—')+' · CASA '+escapeHTML((text(document.querySelector('#summary h2')).match(/P[1-8]-\d{3}/)||[])[0]||'P1-010')+'</div>'+
    '<div class="dv4tpl-portrait">'+(playerPhoto?'<img alt="Selfie do jogador" src="'+escapeHTML(playerPhoto)+'">':'<div class="dv4tpl-placeholder">TIRE SUA SELFIE</div>')+'</div>'+
    '<div class="dv4tpl-history"><h3>TESTEMUNHO BREVE</h3><p>'+cv(personal.historia||'Escreva seu testemunho em Editar carta.')+'</p></div>'+
    '<div class="dv4tpl-tags" aria-hidden="true"></div>'+
    '<div class="dv4tpl-stats">'+fields.map(([k,v])=>'<div class="dv4tpl-stat"><b>'+k+'</b><strong>'+v+'</strong></div>').join('')+'</div>'+
    '<div class="dv4tpl-secret"><h3>MISSÃO SECRETA</h3><p>'+escapeHTML(secret||'Aguardando atribuição da missão.')+'</p></div>'+
-   '<div class="dv4tpl-bottom"><span>'+cv(personal.anoBatismo||'—')+'</span><span>'+cv(personal.tempoServico||'—')+'</span><span>'+cv(personal.congregacaoCidade||'—')+'</span></div>';
+   '<div class="dv4tpl-bottom"><div><b>ANO DE BATISMO</b><span>'+cv(personal.anoBatismo||'—')+'</span></div><div><b>TEMPO DE SERVIÇO</b><span>'+cv(personal.tempoServico||'—')+'</span></div><div><b>CONGREGAÇÃO / CIDADE</b><span>'+cv(personal.congregacaoCidade||'—')+'</span></div></div>';
   body.append(sheet);
   const action=document.createElement('button');action.type='button';action.className='dv4tpl-edit';action.textContent='Editar carta · Tirar selfie';action.addEventListener('click',()=>{modal.close();select('player',true);active('player')?.scrollIntoView({block:'start',behavior:'smooth'})});body.append(action);
  }else{
