@@ -148,3 +148,35 @@ html #board .mp-grid>.mp-card.dv4-current#player>p:first-of-type{background:#f6d
 html .dv4-card img{width:100%;height:96px;object-fit:cover;object-position:center 30%}
 #dv4modal #dv4content>button{display:block;width:100%;min-height:48px;margin:8px 0 15px;border-radius:9px;border:1px solid #966b32;background:#583c22;color:#fce5b7;font-weight:bold}
 @media(max-width:420px){.dorath-photo-actions{grid-template-columns:1fr 1fr}.dorath-photo-button{font-size:.8rem}}
+
+
+/* Carta pessoal ampliada — template completo em pergaminho */
+#dv4modal{width:min(96vw,640px);max-height:94dvh;padding:7px!important;overflow-y:auto;background:#b68b4d!important;border:3px solid #dcb878!important}
+#dv4modal #dv4content{padding-top:24px}
+#dv4modal .dv4-full-player{position:relative;isolation:isolate;padding:20px 12px 15px;color:#402612!important;border:3px double #a16b2c;border-radius:10px;background:
+ radial-gradient(circle at 50% 16%,#fff3d4 0,#efdaaf 43%,#cca16a 100%);box-shadow:inset 0 0 32px #85532644,0 5px 19px #49301b55;min-width:0}
+.dv4-full-player::before{content:"";position:absolute;inset:7px;border:1px solid #ad7636a0;border-radius:7px;pointer-events:none;z-index:-1}
+.dv4-fp-head{text-align:center;border-bottom:2px solid #ac753d;padding:0 0 13px;margin-bottom:14px}
+#dv4modal .dv4-fp-head h2{margin:0!important;padding:0;font-size:clamp(1.75rem,8vw,3rem)!important;color:#3e220c!important;line-height:1.05;text-transform:uppercase;overflow-wrap:anywhere}
+.dv4-fp-head p{font-size:.85rem;margin:4px 0!important;color:#65421f!important}
+.dv4-fp-decoration{display:block;color:#95672c;font-size:1.35rem;margin-bottom:5px;letter-spacing:.2em}
+.dv4-fp-main{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);gap:10px;align-items:stretch}
+.dv4-fp-photo{border:5px ridge #a8783d;background:linear-gradient(120deg,#d4b77f,#f5e6c7);border-radius:11px;min-height:210px;overflow:hidden;box-shadow:inset 0 0 0 2px #7f532a}
+#dv4modal .dv4-fp-photo img{width:100%;height:100%;max-height:none;aspect-ratio:3/4;object-fit:cover;object-position:center center;margin:0}
+.dv4-fp-placeholder{height:100%;min-height:225px;display:flex;flex-direction:column;justify-content:center;align-items:center;color:#855a23;font-size:3rem}
+.dv4-fp-placeholder small{font-size:.75rem}
+.dv4-fp-testimony{min-width:0;color:#402612;padding:3px}
+.dv4-fp-testimony h3,.dv4-fp-notes h3{font-size:clamp(.85rem,3.5vw,1.2rem);text-align:center;color:#482910;margin:3px 0 9px;border-bottom:1px solid #a27946;padding-bottom:5px}
+#dv4modal .dv4-fp-testimony h4{color:#593a1c;margin:10px 0 3px;font-size:.8rem}
+#dv4modal .dv4-fp-testimony p,#dv4modal .dv4-fp-notes p{font-size:clamp(.77rem,2.75vw,.98rem);line-height:1.43;color:#4b3018!important;overflow-wrap:anywhere;white-space:pre-wrap;margin:0}
+.dv4-fp-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin:13px 0 11px}
+.dv4-fp-stats section{border:2px double #a8773a;text-align:center;border-radius:8px;background:#f9e5ba99;padding:9px 2px}
+.dv4-fp-stats span{display:block;font-size:clamp(.51rem,2vw,.75rem);word-break:break-word}
+.dv4-fp-stats strong{display:block;font-size:clamp(1.25rem,5vw,1.9rem);color:#5e3916}
+.dv4-fp-notes{padding:12px;border:1px solid #b38b55;border-radius:8px;background:#f8e6c699;margin:0 0 13px}
+.dv4-fp-footer{text-align:center;font-size:.68rem;letter-spacing:.12em;color:#6a4826;border-top:1px solid #a87a45;padding-top:10px}
+#dv4modal .dv4-edit-card{width:100%;display:block;margin:12px 0 5px;border:1px solid #ac7c45;background:linear-gradient(#674724,#3a2917);color:#fbe5ba;border-radius:9px;padding:13px;font-weight:bold}
+#dv4modal #dv4close{z-index:5;right:8px;top:8px}
+@media(max-width:400px){.dv4-fp-main{gap:6px}.dv4-full-player{padding:14px 9px!important}.dv4-fp-photo{min-height:185px;border-width:3px}.dv4-fp-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.dorath-photo-actions{grid-template-columns:1fr}
+.dorath-photo-actions button{grid-column:auto}
