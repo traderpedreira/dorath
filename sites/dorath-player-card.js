@@ -2,7 +2,7 @@
 (()=>{
  const board=document.getElementById('board'),root=document.getElementById('player');
  if(!board||!root)return;
- const fields=[['origem','Origem / trajetória',120],['historia','História do jogador',600],['notas','Anotações pessoais',600],['tag1','Tag 1',50],['tag2','Tag 2',50],['tag3','Tag 3',50],['anoBatismo','Ano de batismo',40],['tempoServico','Tempo de serviço',60],['congregacaoCidade','Congregação / Cidade',100]];
+ const fields=[['origem','Origem / trajetória',120],['historia','Experiência',600],['notas','Anotações pessoais',600],['anoBatismo','Ano de batismo',40],['tempoServico','Tempo de serviço',60],['congregacaoCidade','Congregação / Cidade',100]];
  const key=()=> 'dorath.visual.profile.v1.'+(document.getElementById('accountEmail')?.textContent?.trim()||'local');
  let stored={},lastAccount='';
  const section=document.createElement('section');section.id='dorathPersonalHistory';section.className='dorath-personal-history';
@@ -11,7 +11,7 @@
  const status=document.createElement('small');status.id='dorathPersonalStatus';status.textContent='Salvo somente neste aparelho';section.append(status);
  function load(){const account=key();if(account===lastAccount)return;lastAccount=account;try{stored=JSON.parse(localStorage.getItem(account)||'{}')||{}}catch{stored={}}for(const [id] of fields){section.querySelector('#dorath-profile-'+id).value=stored[id]||''}}
  section.addEventListener('input',e=>{const id=e.target.id.replace('dorath-profile-','');if(!fields.some(x=>x[0]===id))return;stored[id]=e.target.value;try{localStorage.setItem(key(),JSON.stringify(stored));status.textContent='Salvo somente neste aparelho'}catch{status.textContent='Não foi possível salvar; espaço insuficiente'}});
- function mount(){if(board.hidden)return;if(!root.contains(section))root.append(section);load()}
+ function mount(){if(board.hidden)return;if(!root.contains(section))root.append(section);load();section.hidden=true}
  new MutationObserver(mount).observe(root,{childList:true});
  new MutationObserver(mount).observe(board,{attributes:true,attributeFilter:['hidden']});mount();
 })();
