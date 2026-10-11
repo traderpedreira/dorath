@@ -51,7 +51,7 @@ export function newPlayer(name,room,team,history=[],commonHistory=[]){
  house:1,resources:{conhecimento:2,influencia:2,provisoes:2,heranca:0},characters:['adao'],
  secretMissionId:sid,secretCompletedAt:null,setupDone:false,preserved:false,preservedCharacterId:null,
  arkFinalized:false,preservationBonus:null,consequences:[],mission:null,missionRewardPending:null,
- specialChoices:{},mandamentoChoice:null,lastChanceUsed:false,
+ specialChoices:{},mandamentoChoice:null,lastChanceUsed:false,houseOccurrences:{},
  missionHistory:Array.isArray(commonHistory)?commonHistory.filter(id=>master.commonMissions.some(m=>m.id===id)).slice(-100):[],missionUsedRound:0,missionSuccesses:0,difficultMissionSuccess:false,
  threatAttempts:{},threatContributions:0,consequenceCount:0,tradeCount:0,donatedAmount:0,
  conversionCount:0,convertedRound:0,tradedRound:0,firstRuptures:0,marcoPersonal:{},
@@ -65,7 +65,7 @@ export function publicView(g,p){return {
  rooms:g.rooms.map(r=>({...r,players:g.players.filter(x=>x.room===r.code).map(x=>({id:x.id,name:x.name,house:x.house,team:x.team,preserved:x.preserved,arkFinalized:x.arkFinalized}))})),
  me:p,house:byHouse.get(p.house),availableCharacters:unlocked(p).map(c=>({id:c.id,name:c.name,asset:c.asset})),globalStates:g.globalStates,violence:g.violence,
  arkOpened:g.arkOpened,preparationClosed:g.preparationClosed,rupturesResolved:g.rupturesResolved,
- pendingMarco:g.pendingMarco,pendingRupture:g.pendingRupture,
+ pendingMarco:g.pendingMarco,pendingRupture:g.pendingRupture,pendingHouseOccurrence:g.pendingHouseOccurrence?.initiator===p.id?g.pendingHouseOccurrence:null,
  pendingConsequencePlayers:g.pendingConsequencePlayers||[],pendingThreat:g.pendingThreat,
  pendingThreatResult:g.pendingThreatResult||null,
  activeThreats:g.activeThreats.map(t=>({id:t.id,card:t.card,name:`Nefilim ${t.card}`,successes:t.successes,aggravated:t.aggravated})),
@@ -132,6 +132,7 @@ function nextPending(g){
  g.pendingMarco=null;
  if(g.pendingThreat){g.phase='threat-spawn';return}
  if(g.pendingConsequencePlayers?.length){g.phase='consequence-draw';return}
+ if(g.pendingHouseOccurrence){g.phase='house-occurrence';return}
  if(g.pendingRupture){g.phase='rupture-prep';return}
  g.phase='active';
 }
@@ -144,12 +145,31 @@ function afterMove(g,p,old,n){
   g.pendingThreat={card:pick(threats.filter(t=>!g.seenThreats.includes(t))),reason:'escalada',initiator:p.id};
  }
  if(master.consequences.houses.includes(n)&&n<50)g.pendingConsequencePlayers=[p.id];
+ const occurrence=byHouse.get(n)?.occurrence;
+ p.houseOccurrences ||= {};
+ if(occurrence?.trigger==='exactLanding'&&!p.houseOccurrences[n])g.pendingHouseOccurrence={house:n,initiator:p.id,id:occurrence.id};
  if(n===47){p.readyAt47=p.preserved||arkReady(p);log(g,'arca',`${p.name}: ${p.readyAt47?'PRONTO':'EM RISCO'}`,{privateFor:p.id})}
  if(n===49&&!arkReady(p))log(g,'arca',`${p.name}: Última Oportunidade disponível`,{privateFor:p.id});
  if(n===50){p.checkpointProvisions=p.resources.provisoes;log(g,'arca',`${p.name} chegou ao fechamento da Arca`,{privateFor:p.id})}
  if(g.pendingRupture){g.pendingRupture.prepared=[p.id];p.firstRuptures++}
  nextPending(g);
 }
+function resolveHouseOccurrence(g,p,a){
+ const pending=g.pendingHouseOccurrence;if(!pending||pending.initiator!==p.id)fail('Ocorrência de casa indisponível');
+ const h=byHouse.get(pending.house),o=h?.occurrence;if(!o||p.house!==pending.house)fail('Ocorrência inválida');
+ p.houseOccurrences ||= {};if(p.houseOccurrences[pending.house])fail('Ocorrência já resolvida');
+ if(o.type==='resourceChoice'){
+  const choice=String(a.choice||'');if(!o.choices.includes(choice))fail('Escolha um recurso válido');
+  gain(g,p,choice,o.amount||1);
+  log(g,'ocorrencia',`${p.name}: ${h.name} — +${o.amount||1} ${influenceLabel(choice)}`,{privateFor:p.id});
+  p.houseOccurrences[pending.house]={choice,round:g.round};
+ }else if(o.type==='narrative'){
+  p.houseOccurrences[pending.house]={acknowledged:true,round:g.round};
+  log(g,'ocorrencia',`${p.name}: ${h.name} — ocorrência narrativa concluída`,{privateFor:p.id});
+ }else fail('Tipo de ocorrência não suportado');
+ g.pendingHouseOccurrence=null;nextPending(g);
+}
+function influenceLabel(k){return {conhecimento:'Conhecimento',influencia:'Influência',provisoes:'Provisões',heranca:'Herança'}[k]||k}
 function arkReady(p){return p.preserved||p.resources.provisoes>=3&&p.characters.length>0}
 function enterArk(g,p,id){
  if(!arkReady(p)||!p.characters.includes(id))fail('Faltam 3 Provisões ou Personagem próprio');
@@ -337,6 +357,7 @@ export function applyAction(g,p,a){
  case 'start':if(p.id!==g.hostPlayerId||g.phase!=='lobby'||g.players.length<2||g.players.some(q=>!q.setupDone))fail('O anfitrião inicia após todos prepararem os recursos');g.phase='active';log(g,'partida','Partida iniciada');break;
  case 'move':move(g,p,a);break;
  case 'endTurn':endTurn(g,p);break;
+ case 'houseOccurrence':resolveHouseOccurrence(g,p,a);break;
  case 'missionOffer':activeTurn(g,p);missionOffer(g,p,!!a.replace);break;
  case 'missionDecline':activeTurn(g,p);if(!missionEligible(g,p))fail('Oportunidade indisponível');p.offeredMove=g.round+':'+p.house;break;
  case 'missionAttempt':activeTurn(g,p);missionAttempt(g,p,a);break;
