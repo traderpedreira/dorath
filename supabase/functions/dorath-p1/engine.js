@@ -333,7 +333,7 @@ export function applyAction(g,p,a){
  if(!a||typeof a.type!=='string')fail('Ação inválida');
  switch(a.type){
  case 'roomCreate':if(p.id!==g.hostPlayerId||g.phase!=='lobby'||g.rooms.length>=5)fail('Sala indisponível');{let c=code();while(g.rooms.some(r=>r.code===c)||c===g.motherCode)c=code();g.rooms.push({code:c,name:String(a.name||`Sala ${g.rooms.length+1}`).slice(0,40),team:String(a.team||'').slice(0,30)});log(g,'sala',`Sala ${c} criada`)}break;
- case 'setup':if(g.phase!=='lobby'||p.setupDone)fail('Preparação inicial indisponível');if(!Array.isArray(a.rolls)||a.rolls.length!==3||!Array.isArray(a.order)||new Set(a.order).size!==3||a.order.some(k=>!admin.includes(k)))fail('Informe 3D6 e a distribuição dos recursos');a.order.forEach((k,i)=>p.resources[k]=2+Math.floor((number(a.rolls[i],1,6)-1)/2));p.setupDone=true;break;
+ case 'setup':if(g.phase!=='lobby'||p.setupDone)fail('Preparação inicial indisponível');if(!Array.isArray(a.rolls)||a.rolls.length!==3||!Array.isArray(a.order)||new Set(a.order).size!==3||a.order.some(k=>!admin.includes(k)))fail('Informe 3D6 e a distribuição dos recursos');a.order.forEach((k,i)=>p.resources[k]=2+Math.floor((number(a.rolls[i],1,6)-1)/2));p.setupDone=true;if(g.players.length>=2&&g.players.every(q=>q.setupDone)){g.phase='active';log(g,'partida','Todos os jogadores preparados; partida iniciada automaticamente')}break;
  case 'start':if(p.id!==g.hostPlayerId||g.phase!=='lobby'||g.players.length<2||g.players.some(q=>!q.setupDone))fail('O anfitrião inicia após todos prepararem os recursos');g.phase='active';log(g,'partida','Partida iniciada');break;
  case 'move':move(g,p,a);break;
  case 'endTurn':endTurn(g,p);break;
