@@ -166,3 +166,7 @@ html #dv4nativeAudio,html #dv4accountInfo{display:none!important}
 #dv4 .dv4-account-menu{margin-top:10px;padding:12px;border-top:1px solid #b28c57;display:flex;flex-direction:column;align-items:flex-start;gap:10px;overflow-wrap:anywhere}
 #dv4 .dv4-account-menu small{font-size:.75rem}
 #dv4 .dv4-account-menu button{border:1px solid #af8554;background:#3b291c;color:#f5dbac;padding:9px 15px;border-radius:7px}
+
+/* Identidade oficial do Dorath no topo da interface V4. */
+html .topbar .dv4-brand{margin:5px 0 0!important;line-height:1!important}
+html .topbar .dv4-brand-logo{display:block;width:min(84%,430px);max-height:150px;height:auto;object-fit:contain;margin:0 auto;filter:drop-shadow(0 3px 10px #100a07a6)}
