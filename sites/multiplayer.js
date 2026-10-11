@@ -79,34 +79,23 @@ $('create').onclick=()=>enter('create');$('join').onclick=()=>enter('join');
 document.addEventListener('change',e=>{if(e.target.id==='consequenceCard'&&$('consequencePreview'))$('consequencePreview').src='assets/consequencias/'+e.target.selectedOptions[0].dataset.asset});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b||!view)return;const t=b.dataset.action,r=Number(b.dataset.roll);const val=id=>$(id)?.value;
  const map={roomCreate:()=>action('roomCreate',{name:val('roomName')}),setup:()=>action('setup',{rolls:[0,1,2].map(i=>Number(val('setupRoll'+i))),order:[0,1,2].map(i=>val('setupDest'+i))}),start:()=>action('start'),move:()=>action('move',{roll:r}),endTurn:()=>action('endTurn'),missionOffer:()=>action('missionOffer',{replace:!!view.me.mission}),missionDecline:()=>action('missionDecline'),missionAttempt:()=>action('missionAttempt',{roll:r,bonus:Number(val('missionBonus'))}),missionD4:()=>action('missionD4',{d4:r,otherId:val('missionOther'),rewardOption:val('missionRewardOption')}),characters:()=>action('characters',{ids:[...document.querySelectorAll('.char-check:checked')].map(x=>x.value)}),convert:()=>action('convert',{rate:Number(val('conversionRate'))}),marcoD4:()=>action('marcoD4',{d4:r}),marcoIndividualD4:()=>action('marcoIndividualD4',{d4:r}),ruptureD4:()=>action('ruptureD4',{d4:r}),preparePass:()=>action('prepare',{option:'pass'}),prepareMission:()=>action('prepare',{option:'mission',roll:Number(prompt('D6 físico da Missão:')),bonus:0}),prepareConvert:()=>action('prepare',{option:'convert',rate:Number(prompt('Índice da taxa de conversão (0–5):'))}),consequence:()=>action('consequence',{card:val('consequenceCard'),d4:Number(val('consequenceD4'))}),threatSpawnD4:()=>action('threatSpawnD4',{d4:r}),threatAttempt:()=>action('threatAttempt',{threatId:b.dataset.threat,attribute:val('attr-'+b.dataset.threat),roll:r}),threatD4:()=>action('threatD4',{d4:r,attribute:val('threatRewardAttr')}),dominatorD8:()=>action('dominatorD8',{roll:r}),dominatorTierD4:()=>action('dominatorTierD4',{d4:r}),dominatorChoice:()=>action('dominatorChoice',{option:Number(b.dataset.option),otherId:val('dominatorOther')}),arkEnter:()=>action('arkEnter',{characterId:val('arkEarlyCharacter')}),arkConfirm:()=>action('arkFinalize',{enter:true}),arkFinalEnter:()=>action('arkFinalize',{enter:true,characterId:val('arkCharacter')}),arkFinalOutside:()=>action('arkFinalize',{enter:false}),lastChance:()=>action('lastChance',{roll:r}),mandamentoRefuse:()=>action('mandamentoChoice',{refuse:true}),mandamentoOpen:()=>action('mandamentoChoice',{refuse:false}),vidaHeranca:()=>action('specialChoice',{card:'vida',option:'heranca'}),vidaProvisoes:()=>action('specialChoice',{card:'vida',option:'provisoes'}),conhecimentoAceitar:()=>action('specialChoice',{card:'conhecimento',option:'aceitar'}),conhecimentoRecusar:()=>action('specialChoice',{card:'conhecimento',option:'recusar'}),preservationD6:()=>action('preservationD6',{roll:r}),advanceFinal:()=>action('advanceFinal'),correctPosition:()=>action('correctPosition',{house:Number(val('correctHouse')),reason:val('correctReason')}),tradePropose:()=>action('tradePropose',{toId:val('tradeTo'),offerKey:val('offerKey'),offer:Number(val('offerQty')),wantKey:val('wantKey'),want:Number(val('wantQty'))}),tradeAccept:()=>action('tradeAnswer',{tradeId:b.dataset.trade,accept:true}),tradeDecline:()=>action('tradeAnswer',{tradeId:b.dataset.trade,accept:false})};map[t]?.()});
-let authDisplayRevision=0;
 let authBusy=false;
-const withAuthDeadline=(promise,ms=12000)=>Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error('Tempo limite de autenticação excedido. Verifique a conexão com o Supabase.')),ms))]);
-async function showAccount(){
- if(authBusy)return;
- const revision=++authDisplayRevision;
+let authReady=false;
+const withAuthDeadline=(promise,ms=15000)=>Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error('Tempo limite da autenticação excedido.')),ms))]);
+async function showAccount(session){
+ authReady=true;
+ const user=session?.user&&!session.user.is_anonymous?session.user:null;
+ currentUser=user;view=null;token='';
  $('board').hidden=true;
- $('login').hidden=true;
- try{
-  const identity=await withAuthDeadline(validSession(),12000);
-  if(revision!==authDisplayRevision)return;
-  currentUser=identity?.user||null;view=null;token='';
-  $('account').hidden=!!currentUser;
-  $('game').hidden=!currentUser;
-  if(!currentUser){say('Entre na sua conta para abrir o playtest.');return}
-  $('accountEmail').textContent=currentUser.email||'Conta conectada';
-  historyKey=`dorath.p1.secretHistory.${currentUser.id}`;
-  commonKey=`dorath.p1.commonHistory.${currentUser.id}`;
-  token=localStorage.getItem(accountTokenKey(currentUser.id))||'';
-  if(token)await refresh();
-  else{$('login').hidden=false;say('Crie uma Partida-Mãe ou entre pelo código da sala.')}
- }catch(error){
-  if(revision!==authDisplayRevision)return;
-  currentUser=null;view=null;token='';
-  $('board').hidden=true;$('game').hidden=true;$('account').hidden=false;
-  say('Falha ao recuperar sessão: '+(error?.message||'Erro desconhecido')+'. Você pode tentar entrar novamente.',true);
-  console.warn('Dorath: falha de inicialização da sessão',error);
- }
+ $('account').hidden=!!user;
+ $('game').hidden=!user;
+ if(!user){$('login').hidden=true;say('Entre na sua conta para abrir o playtest.');return}
+ $('accountEmail').textContent=user.email||'Conta conectada';
+ historyKey=`dorath.p1.secretHistory.${user.id}`;
+ commonKey=`dorath.p1.commonHistory.${user.id}`;
+ token=localStorage.getItem(accountTokenKey(user.id))||'';
+ if(token)await refresh();
+ else{$('login').hidden=false;say('Crie uma Partida-Mãe ou entre pelo código da sala.')}
 }
 $('accountForm').onsubmit=async e=>{
  e.preventDefault();
@@ -116,23 +105,38 @@ $('accountForm').onsubmit=async e=>{
  $('accountSubmit').disabled=true;
  $('accountSubmit').textContent='Entrando…';
  say('Validando sua conta…');
- let signedIn=false;
  try{
   const result=await withAuthDeadline($('accountMode').value==='signup'
    ?supabase.auth.signUp({email,password,options:{emailRedirectTo:location.href}})
-   :supabase.auth.signInWithPassword({email,password}),15000);
+   :supabase.auth.signInWithPassword({email,password}));
   if(result.error)throw result.error;
-  if(!result.data.session){say('Conta criada. Confirme o e-mail recebido e depois entre.',false);return}
-  signedIn=true;
+  if(!result.data.session){say('Conta criada. Confirme o e-mail recebido e depois entre.');return}
   say('Conta autenticada. Recuperando sua partida…');
- }catch(error){
-  say('Não foi possível entrar: '+(error?.message||'Erro desconhecido'),true);
- }finally{
-  authBusy=false;$('accountSubmit').disabled=false;$('accountSubmit').textContent='Continuar';
- }
- if(signedIn)await showAccount();
+  await showAccount(result.data.session);
+ }catch(error){say('Não foi possível entrar: '+(error?.message||'Erro desconhecido'),true)}
+ finally{authBusy=false;$('accountSubmit').disabled=false;$('accountSubmit').textContent='Continuar'}
 };
-$('signout').onclick=async()=>{const {error}=await supabase.auth.signOut();if(error)say(error.message,true);else await showAccount()};
-supabase.auth.onAuthStateChange((event)=>{if(event==='SIGNED_IN'||event==='SIGNED_OUT')setTimeout(()=>{if(!authBusy)showAccount()},0)});
-showAccount();
+$('signout').onclick=async()=>{
+ if(authBusy)return;
+ authBusy=true;
+ try{
+  const {error}=await withAuthDeadline(supabase.auth.signOut());
+  if(error)throw error;
+  await showAccount(null);
+ }catch(error){say('Falha ao sair: '+(error?.message||'Erro desconhecido'),true)}
+ finally{authBusy=false}
+};
+// INITIAL_SESSION entrega o estado local sem disparar uma segunda consulta concorrente.
+// SIGNED_IN e SIGNED_OUT são tratados pelo formulário e botão, evitando corridas.
+supabase.auth.onAuthStateChange((event,session)=>{
+ if(event==='INITIAL_SESSION'){
+  if(!authBusy)void showAccount(session).catch(error=>say('Falha ao restaurar partida: '+error.message,true));
+ }
+});
+setTimeout(()=>{
+ if(!authReady&&!authBusy){
+  $('account').hidden=false;$('game').hidden=true;
+  say('A sessão demorou para inicializar. Tente entrar com sua conta.',true);
+ }
+},12000);
 setInterval(()=>{if(currentUser&&token&&!busy)refresh()},2000);
