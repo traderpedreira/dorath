@@ -11,7 +11,7 @@ export class DorathAudio {
  async play(id,gain,loop=false){if(!this.enabled||document.hidden)return;if(this.players.has(id)){this.players.get(id).gain=gain;this.setVolume(this.volume);return}
  const src=await this.source(id);if(!src)return;const el=new Audio(src);el.loop=loop;el.preload='auto';el.volume=this.volume*gain;el.onerror=()=>{this.players.delete(id);this.status('Algumas camadas sonoras não foram carregadas')};this.players.set(id,{el,gain});try{await el.play()}catch{this.players.delete(id)}if(!loop)el.onended=()=>this.players.delete(id);}
  stop(id){const p=this.players.get(id);if(p){p.el.pause();p.el.src='';this.players.delete(id)}}
- async render(v){if(!this.enabled||document.hidden)return;const fallen=!!v.rupturesResolved?.R1||Object.values(v.rupturesResolved||{}).some(x=>x?.house===12);const isFall=fallen||this.fallen;
+ async render(v){if(!this.enabled||document.hidden)return;const fallen=!!v.rupturesResolved?.R12;const isFall=fallen||this.fallen;
  // Global ruptures are read from the existing server state, never derived from local movement.
  if(fallen)this.fallen=true;
  const house=Number(v.me?.house||1);const next=new Map();
@@ -27,7 +27,7 @@ export class DorathAudio {
  this.last=v;const detected=[];
  if(v.marcos?.[6])detected.push(['marco-6','command']);
  if(v.marcos?.[10])detected.push(['marco-10','eve']);
- const fallKey=Object.keys(v.rupturesResolved||{}).find(k=>/queda|fall|^R1$|^R01$/i.test(k));
+ const fallKey=v.rupturesResolved?.R12?'R12':null;
  if(fallKey)detected.push(['rupture-12','fall']);
  // On joining, historical events must never replay.
  if(this.firstSnapshot){for(const [key] of detected)this.seen.add(key);this.firstSnapshot=false}
