@@ -21,3 +21,21 @@
 .dv4tpl-bottom{top:90.5%;left:6.5%;width:87%;height:4.2%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4%;align-items:center;text-align:center;font-size:2.1cqw}
 .dv4tpl-bottom span{overflow-wrap:anywhere;max-height:100%;overflow:auto}
 .dv4tpl-edit{display:block;width:100%;margin:10px 0;padding:13px;border-radius:10px;border:1px solid #d5b477;background:#63421f;color:#fff1d1;font-weight:700}
+
+/* V4 refinement: content replaces printed placeholders, never overlays the originals. */
+#dv4modal .dv4tpl-name{top:2.9%;left:10%;width:80%;height:4.8%;background:#f7e7c5;font-size:5cqw}
+#dv4modal .dv4tpl-subtitle{top:7.9%;left:13%;width:74%;height:2.9%;background:#f6e5c3;font-size:2.35cqw}
+#dv4modal .dv4tpl-portrait{top:14.2%;left:5.2%;width:52.4%;height:38.2%;border-radius:0;background:#ebd5ac}
+#dv4modal .dv4tpl-portrait img{width:100%;height:100%;object-fit:cover;object-position:center 30%}
+#dv4modal .dv4tpl-history{top:16.5%;left:62.5%;width:30.3%;height:35.5%;padding:3% 1%;background:#f7e7c5;overflow:auto;font-size:2.3cqw;line-height:1.3}
+#dv4modal .dv4tpl-history h3{margin:0 0 10%;font-size:2.9cqw;line-height:1.05;text-align:center;color:#46260d}
+#dv4modal .dv4tpl-history p{margin:0!important;color:#46260d}
+#dv4modal .dv4tpl-tags{top:55.1%;left:17%;width:65%;height:3.5%;background:#f8e4ba}
+#dv4modal .dv4tpl-stats{top:60.9%;left:5%;width:90%;height:12.1%;gap:.65%;background:#f7e3bc}
+#dv4modal .dv4tpl-stat{padding-top:4%;border:2px solid #a37330;background:linear-gradient(#fbe7bf,#f1d5a4);box-shadow:inset 0 0 0 1px #fff5db}
+#dv4modal .dv4tpl-stat b{font-size:2.15cqw;min-height:20%}
+#dv4modal .dv4tpl-stat strong{font-size:4.5cqw;width:58%;margin-top:5%}
+#dv4modal .dv4tpl-secret{top:74%;left:8.3%;width:83.6%;height:7.5%;border:0;box-shadow:none;background:#f6e1b8;padding:1.2% 5%;overflow:auto}
+#dv4modal .dv4tpl-secret h3{font-size:2.8cqw;margin:0 0 1%;line-height:1.1}
+#dv4modal .dv4tpl-secret p{font-size:2cqw;line-height:1.24;overflow-wrap:anywhere}
+#dv4modal .dv4tpl-bottom{top:86.8%;left:8.5%;width:83%;height:4.8%;gap:5%;font-size:2.3cqw}
