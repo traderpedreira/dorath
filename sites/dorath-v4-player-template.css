@@ -107,3 +107,24 @@
   line-height:1.4;
   overflow-y:auto;
 }
+
+/* Correção geométrica final: centros obtidos dos quatro medalhões na arte-base.
+   A coordenada left indica a borda do output, não o seu centro. */
+#dv4modal .dv4tpl-v5 .dv4tpl-heritage{left:56.1%}
+#dv4modal .dv4tpl-v5 .dv4tpl-provisions{left:77.7%}
+/* Missão: texto centralizado verticalmente na área vazia abaixo do cabeçalho impresso. */
+#dv4modal .dv4tpl-v5 .dv4tpl-secret{
+ top:77.5%;
+ left:12%;
+ width:76%;
+ height:15.8%;
+ box-sizing:border-box;
+ display:flex;
+ flex-direction:column;
+ justify-content:center;
+ align-items:stretch;
+ padding:3% 2.2% 1%;
+ text-align:left;
+ line-height:1.42;
+ overflow-y:auto;
+}
