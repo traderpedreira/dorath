@@ -22,9 +22,22 @@ extras.addEventListener('click',e=>{const id=e.target.closest('[data-dv4]')?.dat
 function openCard(card){const body=ui.querySelector('#dv4content');body.replaceChildren();let title=document.createElement('h2');title.textContent=card.title;body.append(title);if(card.kind==='JOGADOR'){const action=document.createElement('button');action.type='button';action.textContent='Editar carta e escolher selfie';action.addEventListener('click',()=>{modal.close();select('player',true);active('player')?.scrollIntoView({block:'start',behavior:'smooth'})});body.append(action)}if(card.src){const img=document.createElement('img');img.src=card.src;img.alt=card.title;img.loading='eager';body.append(img)}else{let p=document.createElement('p');p.textContent=card.info||'';body.append(p);let player=active('player');let details=player?.querySelectorAll('p');for(const el of [...(details||[])].slice(0,4)){let q=document.createElement('p');q.textContent=el.textContent;body.append(q)}}modal.showModal()}
 ui.querySelector('#dv4close').addEventListener('click',()=>modal.close());modal.addEventListener('click',e=>{if(e.target===modal)modal.close()});
 function renderCards(){
- const player=active('player');const label=text(player?.querySelector('h3')).split('·')[0].trim()||'Jogador';const chars=text(player?.querySelectorAll('p')[2]).replace(/^Personagens \(até 2\):\s*/,'');const available=[...player?.querySelectorAll('.char-check')||[]];const people=chars.split(',').map(x=>x.trim()).filter(Boolean).slice(0,2).map(id=>({id,name:text(available.find(c=>c.value===id)?.closest('label'))||id}));const key=label+'|'+people.map(p=>p.name).join('|');if(oldNames===key)return;oldNames=key;cards.replaceChildren();
+ const player=active('player');const label=text(player?.querySelector('h3')).split('·')[0].trim()||'Jogador';const chars=text(player?.querySelectorAll('p')[2]).replace(/^Personagens \(até 2\):\s*/,'');const available=[...player?.querySelectorAll('.char-check')||[]];const people=chars.split(',').map(x=>x.trim()).filter(Boolean).slice(0,2).map(id=>({id,name:text(available.find(c=>c.value===id)?.closest('label'))||id}));const statLine=text(player?.querySelector('p'));const key=label+'|'+statLine+'|'+people.map(p=>p.name).join('|');if(oldNames===key)return;oldNames=key;cards.replaceChildren();
  const set=[{title:label,kind:'JOGADOR',src:playerPhoto||null,info:'Toque em Editar carta para inserir sua foto, origem e história.'},...Array.from({length:2},(_,i)=>({kind:'PERSONAGEM',title:people[i]?.name||'Não selecionado',src: mapped[slug(people[i]?.name||'')]?'assets/personagens/'+mapped[slug(people[i].name)]:null}))];
- for(const c of set){const b=document.createElement('button');b.className='dv4-card';b.type='button';b.setAttribute('aria-label','Abrir carta: '+c.title);let img=c.src?'<img loading="lazy" alt="" src="'+escapeHTML(c.src)+'">':'<span class="dv4-card-symbol" aria-hidden="true">'+(c.kind==='JOGADOR'?'♛':'✦')+'</span>';b.innerHTML='<span class="dv4-card-type">'+c.kind+'</span>'+img+'<strong>'+escapeHTML(c.title)+'</strong><span class="dv4-card-foot">TOCAR PARA AMPLIAR</span>';b.onclick=()=>openCard(c);cards.append(b)}
+ for(const c of set){
+ const b=document.createElement('button');b.className='dv4-card';b.type='button';b.setAttribute('aria-label','Abrir carta: '+c.title);
+ if(c.kind==='JOGADOR'){
+  b.classList.add('dv4-player-card');
+  const stats=[...player.querySelectorAll('p')][0]?.textContent||'';
+  const resourceNames=['Conhecimento','Influência','Provisões','Herança'];
+  const bits=resourceNames.map(n=>{const m=stats.match(new RegExp(n+'\\\\s*:\\\\s*(\\\\d+)','i'));return '<span><small>'+n+'</small><b>'+(m?m[1]:'—')+'</b></span>'}).join('');
+  b.innerHTML='<span class="dv4-card-type">JOGADOR</span><span class="dv4-portrait">'+(c.src?'<img src="'+escapeHTML(c.src)+'" alt="">':'<span class="dv4-card-symbol" aria-hidden="true">♛</span>')+'</span><strong>'+escapeHTML(c.title)+'</strong><span class="dv4-card-stats">'+bits+'</span><span class="dv4-card-foot">TOCAR PARA ABRIR</span>';
+ }else{
+  b.classList.add('dv4-character-card');
+  b.innerHTML='<span class="dv4-card-type">'+c.kind+'</span>'+(c.src?'<img loading="lazy" alt="" src="'+escapeHTML(c.src)+'">':'<span class="dv4-card-symbol" aria-hidden="true">✦</span>')+'<strong>'+escapeHTML(c.title)+'</strong><span class="dv4-card-foot">TOCAR PARA ABRIR</span>';
+ }
+ b.onclick=()=>openCard(c);cards.append(b)
+ }
 }
 const priority=()=>{
  const set=[
