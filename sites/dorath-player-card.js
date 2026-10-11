@@ -2,7 +2,7 @@
 (()=>{
  const board=document.getElementById('board'),root=document.getElementById('player');
  if(!board||!root)return;
- const fields=[['origem','Origem / trajetória',120],['historia','História do jogador',600],['notas','Anotações pessoais',600]];
+ const fields=[['origem','Origem / trajetória',120],['historia','História do jogador',600],['notas','Anotações pessoais',600],['tag1','Tag 1',50],['tag2','Tag 2',50],['tag3','Tag 3',50],['anoBatismo','Ano de batismo',40],['tempoServico','Tempo de serviço',60],['congregacaoCidade','Congregação / Cidade',100]];
  const key=()=> 'dorath.visual.profile.v1.'+(document.getElementById('accountEmail')?.textContent?.trim()||'local');
  let stored={},lastAccount='';
  const section=document.createElement('section');section.id='dorathPersonalHistory';section.className='dorath-personal-history';
