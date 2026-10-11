@@ -195,3 +195,8 @@ html .topbar .dv4-brand-logo{display:block;width:min(84%,430px);max-height:150px
  white-space:normal;overflow-wrap:anywhere;text-overflow:clip;
  display:flex;align-items:center;justify-content:center;
 }
+
+/* Carta de personagem: arte sem título externo ou botão X. */
+#dv4modal.dv4-character-modal #dv4close{display:none!important}
+#dv4modal.dv4-character-modal{padding:12px;max-width:min(95vw,560px)}
+#dv4modal.dv4-character-modal #dv4content>img{max-height:80vh}
