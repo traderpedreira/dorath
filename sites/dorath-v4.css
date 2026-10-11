@@ -302,3 +302,50 @@ html .mp-grid #movement.dv4-current .dv4-setup-actions button[data-action="start
  width:auto!important;min-width:112px;max-width:calc(50% - 5px);
  flex:0 1 auto;margin:0!important;padding:10px 13px!important;
 }
+
+/* Missão comum — hierarquia editorial e entradas no padrão Dorath. */
+html #missions.dv4-current .dv4-mission-details{
+ padding:12px 14px;margin:12px 0 18px;
+ border:1px solid #b18a58;border-radius:8px;
+ background:linear-gradient(145deg,#fff4d8,#f2dfb6);
+ box-shadow:inset 0 1px 0 #fff9e8;
+}
+html #missions.dv4-current .dv4-mission-details p{
+ margin:0 0 8px!important;padding:0!important;
+ font-size:clamp(.95rem,3.5vw,1.15rem)!important;line-height:1.4!important;
+ background:transparent!important;color:#452b15!important;
+}
+html #missions.dv4-current .dv4-mission-details p:last-child{margin-bottom:0!important}
+html #missions.dv4-current .dv4-mission-details b{font-size:.87em;letter-spacing:.045em}
+html #missions.dv4-current .dv4-mission-bonus{
+ display:flex;justify-content:space-between;align-items:center;gap:12px;margin:10px 0 3px;
+}
+html #missions.dv4-current .dv4-mission-bonus label{
+ margin:0!important;font:700 clamp(.79rem,3vw,1rem)/1.25 Georgia,serif!important;
+ letter-spacing:.045em;color:#503316;
+}
+html #missions.dv4-current .dv4-mission-bonus select{
+ appearance:none;-webkit-appearance:none;flex:0 0 90px;
+ width:90px!important;min-height:44px!important;margin:0!important;
+ padding:8px 24px 8px 12px!important;text-align:center;text-align-last:center;
+ color:#3f260f!important;border:2px solid #9b6c34!important;border-radius:8px!important;
+ font:700 1rem Georgia,serif!important;
+ background:linear-gradient(45deg,transparent 50%,#744923 50%) right 13px top 18px/6px 6px no-repeat,linear-gradient(135deg,#fff4d7,#e7c38b)!important;
+ box-shadow:inset 0 1px 1px #fff9e4,0 2px 5px #56301330!important;
+}
+html #missions.dv4-current .dv4-mission-hint{display:block;font-size:.72rem;color:#73512f;line-height:1.35}
+html #missions.dv4-current .dv4-mission-roll-title{
+ text-align:center!important;font-weight:700!important;letter-spacing:.08em;
+ margin:18px 0 12px!important;
+}
+html #missions.dv4-current .dv4-mission-dice .dice{
+ display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr));gap:clamp(3px,1.4vw,8px);
+ width:100%;margin:0;
+}
+html #missions.dv4-current .dv4-mission-dice .dice button{
+ box-sizing:border-box;display:grid;place-items:center;
+ width:100%!important;min-width:0!important;min-height:0!important;
+ aspect-ratio:1/1;flex:none!important;margin:0!important;
+ padding:0!important;border-radius:8px!important;
+ font-size:clamp(.95rem,4vw,1.35rem)!important;
+}
