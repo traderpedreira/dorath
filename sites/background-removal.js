@@ -1,22 +1,29 @@
 /* Recorte de fundo da selfie: MediaPipe local, sem upload da imagem. */
 (()=>{
 'use strict';
-const base=new URL('vendor/mediapipe/',document.currentScript.src).href;
+const localBase=new URL('vendor/mediapipe/',document.currentScript.src).href;
+const cdnBase='https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation@0.1.1675465747/';
+let activeBase=localBase;
 let promise;
 function load(){
  if(window.SelfieSegmentation)return Promise.resolve();
- if(!promise)promise=new Promise((resolve,reject)=>{
-  const s=document.createElement('script');s.src=base+'selfie_segmentation.js';
-  s.onload=()=>window.SelfieSegmentation?resolve():reject(new Error('Motor de recorte indisponível'));
-  s.onerror=()=>reject(new Error('Arquivos MediaPipe ausentes'));
-  document.head.appendChild(s);
- }).catch(e=>{promise=null;throw e});
+ if(!promise)promise=(async()=>{
+  const tryScript=base=>new Promise((resolve,reject)=>{
+   const el=document.createElement('script');el.src=base+'selfie_segmentation.js';
+   el.onload=()=>window.SelfieSegmentation?resolve():reject(Error('Segmentation indisponível'));
+   el.onerror=()=>{el.remove();reject(Error('Falha no carregamento'))};
+   document.head.appendChild(el);
+  });
+  try {await tryScript(localBase);activeBase=localBase}
+  catch {await tryScript(cdnBase);activeBase=cdnBase}
+ })().catch(e=>{promise=null;throw e});
+
  return promise;
 }
 let queue=Promise.resolve();
 async function remove(src){
  await load();
- const engine=new window.SelfieSegmentation({locateFile:file=>base+file});
+ const engine=new window.SelfieSegmentation({locateFile:file=>activeBase+file});
  engine.setOptions({modelSelection:0,selfieMode:false});
  try{
   const result=new Promise((resolve,reject)=>{
