@@ -93,11 +93,11 @@ function openCard(card){
 }
 ui.querySelector('#dv4close').addEventListener('click',()=>modal.close());modal.addEventListener('click',e=>{if(e.target===modal)modal.close()});
 function renderCards(){
- const player=active('player');const label=text(player?.querySelector('h3')).split('·')[0].trim()||'Jogador';const chars=text(player?.querySelectorAll('p')[2]).replace(/^Personagens \\(até 2\\):\\s*/,'');const available=[...player?.querySelectorAll('.char-check')||[]];const people=chars.split(',').map(x=>x.trim()).filter(Boolean).slice(0,2).map(id=>({id,name:text(available.find(c=>c.value===id)?.closest('label'))||id}));
- const statLine=text(player?.querySelector('p'));const secret=text(player?.querySelectorAll('p')[1]).replace(/^Missão Secreta\\s*/i,'').trim();
+ const player=active('player');const label=text(player?.querySelector('h3')).split('·')[0].trim()||'Jogador';const chars=text(player?.querySelectorAll('p')[2]).replace(/^Personagens \(até 2\):\s*/,'');const available=[...player?.querySelectorAll('.char-check')||[]];const people=chars.split(',').map(x=>x.trim()).filter(Boolean).slice(0,2).map(id=>({id,name:text(available.find(c=>c.value===id)?.closest('label'))||id}));
+ const statLine=text(player?.querySelector('p'));const secret=text(player?.querySelectorAll('p')[1]).replace(/^Missão Secreta\s*/i,'').trim();
  let personal={};try{personal=JSON.parse(localStorage.getItem('dorath.visual.profile.v1.'+(document.getElementById('accountEmail')?.textContent?.trim()||'local'))||'{}')}catch{}
  const summary=text(document.querySelector('#summary h2')),raw=text(document.querySelector('#summary p'));
- const code=(summary.match(/P[1-8]-(\\d{3})/)||[])[1],period=(summary.match(/P([1-8])-/)||[])[1]||'1',round=(raw.match(/Rodada\\s+(\\d+)/i)||[])[1]||'—';
+ const code=(summary.match(/P[1-8]-(\d{3})/)||[])[1],period=(summary.match(/P([1-8])-/)||[])[1]||'1',round=(raw.match(/Rodada\s+(\d+)/i)||[])[1]||'—';
  const house=code?String(Math.round(Number(code)/10)).padStart(2,'0'):'—';
  const miniName=personal.nome?.trim()||label;
  const key=[label,statLine,secret,miniName,period,round,house,people.map(p=>p.name).join('|')].join('|');if(oldNames===key)return;oldNames=key;cards.replaceChildren();
