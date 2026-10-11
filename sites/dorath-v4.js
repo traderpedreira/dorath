@@ -32,10 +32,12 @@ function openCard(card){
   const houseCode=(text(document.querySelector('#summary h2')).match(/P[1-8]-\d{3}/)||[])[0]||'P1-010';
   const period=(houseCode.match(/^P([1-8])/)||[])[1]||'1';
   const round=(text(document.querySelector('#summary p')).match(/Rodada\s+(\d+)/i)||[])[1]||'—';
+  const boardHouse=(Number((houseCode.match(/-(\d{3})$/)||[])[1])||10)/10;
+  const displayHouse=String(Math.max(1,Math.round(boardHouse))).padStart(2,'0');
   const sheet=document.createElement('article');sheet.className='dv4tpl-card dv4tpl-v5';
   sheet.innerHTML='<img class="dv4tpl-base" src="assets/ui/player-card-background.png" alt="Arte-base homologada da Carta do Jogador">'+
    '<div class="dv4tpl-name">'+escapeHTML(displayName)+'</div>'+
-   '<div class="dv4tpl-subtitle">Período '+period+' · Rodada '+round+' · Casa '+escapeHTML(houseCode)+'</div>'+
+   '<div class="dv4tpl-subtitle">Período '+period+' · Rodada '+round+' · Casa '+displayHouse+'</div>'+
    '<div class="dv4tpl-portrait">'+(playerPhoto?'<img alt="Selfie do jogador" src="'+escapeHTML(playerPhoto)+'">':'<div class="dv4tpl-placeholder">SUA FOTO AQUI</div>')+'</div>'+
    '<div class="dv4tpl-history">'+cv(personal.historia||'')+'</div>'+
    '<div class="dv4tpl-stats">'+[['knowledge','Conhecimento'],['influence','Influência'],['heritage','Herança'],['provisions','Provisões']].map(([key,name])=>'<output class="dv4tpl-stat dv4tpl-'+key+'">'+value(name)+'</output>').join('')+'</div>'+
