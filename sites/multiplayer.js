@@ -116,23 +116,21 @@ $('accountForm').onsubmit=async e=>{
  $('accountSubmit').disabled=true;
  $('accountSubmit').textContent='Entrando…';
  say('Validando sua conta…');
+ let signedIn=false;
  try{
   const result=await withAuthDeadline($('accountMode').value==='signup'
    ?supabase.auth.signUp({email,password,options:{emailRedirectTo:location.href}})
    :supabase.auth.signInWithPassword({email,password}),15000);
   if(result.error)throw result.error;
   if(!result.data.session){say('Conta criada. Confirme o e-mail recebido e depois entre.',false);return}
+  signedIn=true;
   say('Conta autenticada. Recuperando sua partida…');
  }catch(error){
   say('Não foi possível entrar: '+(error?.message||'Erro desconhecido'),true);
  }finally{
   authBusy=false;$('accountSubmit').disabled=false;$('accountSubmit').textContent='Continuar';
  }
- // Recupera a sessão apenas depois de liberar o fluxo de autenticação.
- if(!authBusy){
-  const {data}=await withAuthDeadline(supabase.auth.getSession()).catch(()=>({data:null}));
-  if(data?.session)await showAccount();
- }
+ if(signedIn)await showAccount();
 };
 $('signout').onclick=async()=>{const {error}=await supabase.auth.signOut();if(error)say(error.message,true);else await showAccount()};
 supabase.auth.onAuthStateChange((event)=>{if(event==='SIGNED_IN'||event==='SIGNED_OUT')setTimeout(()=>{if(!authBusy)showAccount()},0)});
