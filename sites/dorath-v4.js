@@ -27,14 +27,14 @@ function openCard(card){
   const value=name=>{const entry=resources.split('·').find(x=>x.trim().toLowerCase().startsWith(name.toLowerCase()+':'));return entry?.match(/[0-9]+/)?.[0]||'0'};
   let personal={};try{personal=JSON.parse(localStorage.getItem('dorath.visual.profile.v1.'+(document.getElementById('accountEmail')?.textContent?.trim()||'local'))||'{}')}catch{}
   const cv=str=>escapeHTML(String(str||'').trim());
-  const secret=text(player?.querySelectorAll('p')[1]).replace(/^Missão Secreta\\s*/i,'').trim();
+  const secret=text(player?.querySelectorAll('p')[1]).replace(/^Missão Secreta\s*/i,'').trim();
   const sheet=document.createElement('article');sheet.className='dv4tpl-card';
-  const fields=[['Herança',value('Herança')],['Conhecimento',value('Conhecimento')],['Provisões',value('Provisões')],['Influência',value('Influência')]];
+  const fields=[['Conhecimento',value('Conhecimento')],['Provisões',value('Provisões')],['Influência',value('Influência')],['Herança',value('Herança')]];
   sheet.innerHTML='<img class="dv4tpl-base" src="assets/ui/player-card-template.png" alt="Ornamentos originais da Carta do Jogador Dorath">'+
    '<div class="dv4tpl-name">'+escapeHTML(card.title)+'</div>'+
    '<div class="dv4tpl-subtitle">'+escapeHTML(((text(document.querySelector('#summary h2')).match(/P([1-8])-\d{3}/)||[])[1]||'1'))+' · '+escapeHTML((text(document.querySelector('#summary p')).match(/Rodada\s+(\d+)/)||[])[1]||'—')+' · '+escapeHTML((text(document.querySelector('#summary h2')).match(/P[1-8]-\d{3}/)||[])[0]||'P1-010')+'</div>'+
    '<div class="dv4tpl-portrait">'+(playerPhoto?'<img alt="Selfie do jogador" src="'+escapeHTML(playerPhoto)+'">':'<div class="dv4tpl-placeholder">TIRE SUA SELFIE</div>')+'</div>'+
-   '<div class="dv4tpl-history"><p>'+cv(personal.historia||'Sua história será exibida aqui.')+'</p></div>'+
+   '<div class="dv4tpl-history"><h3>TESTEMUNHO BREVE</h3><p>'+cv(personal.historia||'Escreva seu testemunho em Editar carta.')+'</p></div>'+
    '<div class="dv4tpl-tags" aria-hidden="true"></div>'+
    '<div class="dv4tpl-stats">'+fields.map(([k,v])=>'<div class="dv4tpl-stat"><b>'+k+'</b><strong>'+v+'</strong></div>').join('')+'</div>'+
    '<div class="dv4tpl-secret"><h3>MISSÃO SECRETA</h3><p>'+escapeHTML(secret||'Aguardando atribuição da missão.')+'</p></div>'+
