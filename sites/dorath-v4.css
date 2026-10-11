@@ -1,0 +1,67 @@
+/* DORATH V4 - visual de jogo, camada unicamente de apresentação */
+:root{--v4-gold:#c99a57;--v4-parch:#f4ddab;--v4-ink:#432b17}
+body:not(:has(.dorath-classic)){}
+html:not(.dorath-classic) body{background:radial-gradient(circle at 50% 22%,#59402a,#1c1612 63%,#100d0c 100%)!important}
+html:not(.dorath-classic) .mp-shell{max-width:720px!important;padding:8px 12px 96px!important}
+html:not(.dorath-classic) .topbar{padding:12px 0!important;margin:0!important}
+html:not(.dorath-classic) .topbar h1{font-size:clamp(1.5rem,6vw,2.4rem)!important;line-height:1.08!important}
+html:not(.dorath-classic) .topbar .muted{display:none!important}
+html:not(.dorath-classic) .topbar::after{display:none}
+html:not(.dorath-classic) .mp-shell>section.mp-card{padding:12px!important;margin:5px 0 8px!important;border-radius:12px!important}
+html:not(.dorath-classic) .mp-shell>section.mp-card>strong{display:block;font-size:.8rem}
+html:not(.dorath-classic) .mp-shell>section.mp-card label{display:inline-flex!important;align-items:center;gap:5px;margin:4px!important}
+html:not(.dorath-classic) #status{padding:7px 9px!important;margin:6px 0!important;position:relative!important;font-size:.7rem!important}
+html:not(.dorath-classic) #dorathModeToggle{display:block;width:100%;font-size:.75rem;padding:7px 11px;min-height:38px}
+html:not(.dorath-classic) #summary{display:none!important}
+html:not(.dorath-classic) .dorath-card-strip,
+html:not(.dorath-classic) .dorath-step,
+html:not(.dorath-classic) .dorath-dock,
+html:not(.dorath-classic) .dorath-extras{display:none!important}
+#dv4{display:block}
+.dorath-classic #dv4{display:none!important}
+.dv4-meta{display:grid;grid-template-columns:1.05fr .8fr 1fr;align-items:stretch;background:linear-gradient(100deg,#d5af77,#f9e5bd 43%,#cba06a);color:#3e2918;border:3px ridge #926432;border-radius:7px;margin:9px 0 13px;box-shadow:inset 0 0 13px #7b492a66,0 5px 18px #0008;overflow:hidden}
+.dv4-meta span{font-size:.79rem;text-align:center;padding:10px 4px;font-weight:700;align-self:center;min-width:0}
+.dv4-meta span+span{border-left:1px solid #957044}
+.dv4-meta small{display:block;font-weight:400;font-size:.66rem}
+.dv4-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 0 14px}
+.dv4-card{appearance:none;position:relative;min-width:0;min-height:158px;display:flex;flex-direction:column;gap:5px;align-items:center;justify-content:flex-end;padding:7px 5px!important;background:linear-gradient(145deg,#f4dcb0,#cea06b 70%,#a77a40)!important;border:3px ridge #bf914d!important;border-radius:12px!important;box-shadow:inset 0 0 0 2px #f6e0ad88,0 5px 13px #0009!important;font-family:Georgia,serif!important;color:#352012!important;text-align:center;overflow:hidden}
+.dv4-card::before{content:"";position:absolute;inset:5px;border:1px solid #7851236b;border-radius:6px;pointer-events:none}
+.dv4-card-type{position:relative;z-index:1;display:block;letter-spacing:.08em;font-size:.59rem;font-weight:800;text-transform:uppercase}
+.dv4-card img{width:100%;height:96px;object-fit:cover;object-position:center 22%;border-radius:4px;border:1px solid #936b32}
+.dv4-card-symbol{flex:1;display:grid;place-items:center;font-size:3.4rem;color:#8c5a25}
+.dv4-card strong{position:relative;z-index:1;font-size:clamp(.72rem,3.2vw,.97rem);line-height:1.1;overflow-wrap:anywhere}
+.dv4-card-foot{font-size:.48rem;letter-spacing:.07em;opacity:.7}
+.dv4-label{text-align:center;letter-spacing:.3em;font-size:.71rem;color:#d6b47a;margin:10px 0 14px}
+html:not(.dorath-classic) .mp-grid{display:block!important;margin:0!important}
+html:not(.dorath-classic) .mp-grid>.mp-card{display:none!important}
+html:not(.dorath-classic) .mp-grid>.mp-card.dv4-current{display:block!important;background:linear-gradient(150deg,#f7e8c4,#eacb94 72%,#c8985c)!important;color:var(--v4-ink)!important;border:7px ridge #996a35!important;border-radius:20px!important;padding:clamp(20px,5vw,37px)!important;min-height:330px;box-shadow:inset 0 0 0 2px #fff0c8,inset 0 0 40px #8c50295c,0 13px 29px #000b!important}
+html:not(.dorath-classic) .mp-grid>.mp-card.dv4-current h3{font-size:clamp(1.6rem,6vw,2.6rem)!important;line-height:1.2;text-align:center!important;color:#462a12!important;text-shadow:none!important;border-bottom:1px solid #ac8453!important;padding:0 0 12px!important;margin:0 0 18px!important}
+html:not(.dorath-classic) .mp-grid>.mp-card.dv4-current h4{color:#563618!important;text-shadow:none!important}
+html:not(.dorath-classic) .mp-grid>.mp-card.dv4-current p,
+html:not(.dorath-classic) .mp-grid>.mp-card.dv4-current label,
+html:not(.dorath-classic) .mp-grid>.mp-card.dv4-current li{color:#4a321e!important}
+html:not(.dorath-classic) .mp-grid>.mp-card.dv4-current b,
+html:not(.dorath-classic) .mp-grid>.mp-card.dv4-current strong{color:#39220e!important}
+html:not(.dorath-classic) .mp-grid>.mp-card.dv4-current button{background:linear-gradient(#745431,#402c19)!important;border:1px solid #af844b!important;color:#ffeacc!important;box-shadow:inset 0 1px #f9e0ab55,0 3px 6px #0004!important}
+html:not(.dorath-classic) .mp-grid>.mp-card.dv4-current .dice button{min-width:48px!important;min-height:56px!important;flex:1 1 50px;background:linear-gradient(#a67b43,#654121)!important}
+html:not(.dorath-classic) .mp-grid>.mp-card.dv4-current input:not([type=checkbox]):not([type=range]),
+html:not(.dorath-classic) .mp-grid>.mp-card.dv4-current select,
+html:not(.dorath-classic) .mp-grid>.mp-card.dv4-current textarea{background:#fff2d5!important;border:1px solid #a17c4a!important;color:#382615!important}
+html:not(.dorath-classic) .mp-grid>.mp-card.dv4-current .mp-chip{background:#dfbb82!important;color:#412911!important}
+html:not(.dorath-classic) #missions>p:nth-of-type(1){background:#fff4d9!important;color:#422a15!important}
+html:not(.dorath-classic) #player .dorath-personal-history label{color:#422a15!important}
+.dv4-nav{position:sticky;bottom:0;z-index:24;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;padding:9px 5px max(9px,env(safe-area-inset-bottom));margin:15px -7px 0;border-radius:13px;border:1px solid #a87d46;background:linear-gradient(#35251c,#1a1310);box-shadow:0 -5px 24px #000b}
+.dv4-nav button{min-width:0;min-height:66px;border-radius:9px;border:2px ridge #987243!important;background:linear-gradient(#6c4a2b,#312118)!important;color:#f5d9a8!important;padding:5px 2px!important;display:grid;place-content:center;gap:3px;font-family:Georgia,serif!important}
+.dv4-nav button span{font-size:1.65rem}.dv4-nav button small{font-size:.63rem}
+.dv4-nav button.dv4-selected{background:linear-gradient(#a07336,#5c3c22)!important;box-shadow:0 0 12px #d8ac6455!important}
+#dv4extras{display:flex;flex-wrap:wrap;gap:8px;background:#2c1e16;padding:10px;border:1px solid #9e7849;border-radius:10px;margin:8px 0}
+#dv4extras[hidden]{display:none!important}
+#dv4extras button{flex:1 1 90px;background:#624525!important;color:#f6e1bf;border:1px solid #9b793d;border-radius:7px;padding:10px}
+#dv4modal{max-width:min(95vw,560px);max-height:88vh;border:3px ridge #ac8248;background:linear-gradient(#f5e3bb,#d1a673);border-radius:13px;color:#3e2616;padding:25px 15px;box-shadow:0 15px 45px #000e}
+#dv4modal::backdrop{background:#000d}
+#dv4modal h2{text-align:center;color:#422913;font-size:1.4rem;margin:16px 12px}
+#dv4modal img{display:block;max-width:100%;max-height:67vh;object-fit:contain;margin:0 auto}
+#dv4modal p{color:#412916}
+#dv4close{position:absolute;right:10px;top:6px;background:#573618;color:#fff0cd;border:1px solid #96692f;border-radius:8px;padding:7px 12px}
+.dorath-classic .mp-grid>.mp-card{display:block!important}
+@media(max-width:430px){.dv4-card{min-height:138px!important}.dv4-card img{height:78px}.dv4-card-type{font-size:.5rem}.dv4-nav button span{font-size:1.4rem}.dv4-meta span{font-size:.68rem}}
