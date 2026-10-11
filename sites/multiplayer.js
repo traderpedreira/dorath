@@ -103,6 +103,28 @@ function draw(){const v=view,p=v.me,host=p.id===v.hostPlayerId,turn=v.turnPlayer
 }
 const retry=document.createElement('button');retry.type='button';retry.id='dv4RetryConnection';retry.textContent='Tentar reconectar à partida';retry.className='primary';retry.addEventListener('click',async()=>{if(!currentUser||!token){say('Entre na conta e informe o código da partida.');return}retry.disabled=true;say('Reconectando à partida…');await refresh();retry.disabled=false});
 $('login').insertBefore(retry,$('login').firstChild);
+// Escolha explícita de partida sem apagar o token da partida anterior.
+const savedPartyChoice=document.createElement('div');
+savedPartyChoice.id='dv4SavedPartyChoice';
+savedPartyChoice.hidden=true;
+savedPartyChoice.innerHTML='<p>Você tem uma partida anterior neste aparelho.</p><button type="button" id="dv4ReturnParty">Voltar à partida anterior</button>';
+$('login').insertBefore(savedPartyChoice,$('login').firstChild);
+$('dv4ReturnParty').onclick=async()=>{
+ if(!currentUser)return;
+ const saved=localStorage.getItem(accountTokenKey(currentUser.id))||'';
+ if(!saved){say('Nenhuma partida anterior encontrada. Entre usando o código.');return}
+ token=saved;await refresh();
+};
+function showPartyChooser(){
+ if(!currentUser)return;
+ const saved=localStorage.getItem(accountTokenKey(currentUser.id))||'';
+ token='';view=null;
+ $('board').hidden=true;$('game').hidden=false;$('login').hidden=false;
+ savedPartyChoice.hidden=!saved;
+ $('dv4RetryConnection').hidden=true;
+ say(saved?'Escolha: voltar à partida anterior ou entrar em outra pelo código.':'Crie ou entre em uma partida.');
+}
+document.addEventListener('dorath-choose-party',showPartyChooser);
 $('create').onclick=()=>enter('create');$('join').onclick=()=>enter('join');
 document.addEventListener('change',e=>{if(e.target.id==='consequenceCard'&&$('consequencePreview'))$('consequencePreview').src='assets/consequencias/'+e.target.selectedOptions[0].dataset.asset});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b||!view)return;const t=b.dataset.action,r=Number(b.dataset.roll);const val=id=>$(id)?.value;
@@ -110,7 +132,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-action]');
 let authBusy=false;
 let authReady=false;
 const withAuthDeadline=(promise,ms=15000)=>Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error('Tempo limite da autenticação excedido.')),ms))]);
-async function showAccount(session){
+async function showAccount(session,chooseParty=false){
  authReady=true;
  const user=session?.user&&!session.user.is_anonymous?session.user:null;
  currentUser=user;sessionAccessToken=session?.access_token||'';view=null;token='';
@@ -122,6 +144,7 @@ async function showAccount(session){
  historyKey=`dorath.p1.secretHistory.${user.id}`;
  commonKey=`dorath.p1.commonHistory.${user.id}`;
  token=localStorage.getItem(accountTokenKey(user.id))||'';
+ if(chooseParty){showPartyChooser();return}
  if(token)await refresh();
  else{$('login').hidden=false;say('Crie uma Partida-Mãe ou entre pelo código da sala.')}
 }
@@ -140,7 +163,7 @@ $('accountForm').onsubmit=async e=>{
   if(result.error)throw result.error;
   if(!result.data.session){say('Conta criada. Confirme o e-mail recebido e depois entre.');return}
   say('Conta autenticada. Recuperando sua partida…');
-  await showAccount(result.data.session);
+  await showAccount(result.data.session,true);
  }catch(error){say('Não foi possível entrar: '+(error?.message||'Erro desconhecido'),true)}
  finally{authBusy=false;$('accountSubmit').disabled=false;$('accountSubmit').textContent='Continuar'}
 };
