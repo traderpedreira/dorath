@@ -222,3 +222,52 @@ html .mp-grid #movement .dv4-setup-row select{
    O conteúdo continua rolando normalmente. */
 html,body{overscroll-behavior-y:none}
 html{touch-action:pan-x pan-y}
+
+/* DORATH V4 — Turno e Movimento / preparação D6: acabamento pergaminho e bronze. */
+html .mp-grid #movement.dv4-current{background:linear-gradient(155deg,#f8e9c7 0%,#e9ce9a 62%,#d4ab71 100%)!important}
+html .mp-grid #movement.dv4-current>h3{
+ text-transform:uppercase!important;letter-spacing:.075em!important;
+ font-size:clamp(1.25rem,5.3vw,1.85rem)!important;
+ color:#4b2d12!important;text-shadow:0 1px 0 #ffefcb!important;
+}
+html .mp-grid #movement.dv4-current>p:first-of-type{
+ font-size:clamp(.89rem,3.4vw,1.05rem)!important;
+ line-height:1.5!important;color:#57391c!important;
+ margin:0 0 12px!important;text-align:center;
+}
+html .mp-grid #movement .dv4-setup-rolls{
+ display:grid;gap:8px;margin:13px 0 18px;
+ padding:12px 11px;border:1px solid #ab7f46;border-radius:12px;
+ background:linear-gradient(140deg,#f7e4b9,#ebcc91);
+ box-shadow:inset 0 1px 0 #fff3d8,inset 0 0 18px #a8732d24,0 3px 10px #54311220;
+}
+html .mp-grid #movement .dv4-setup-row{
+ display:grid!important;grid-template-columns:minmax(0,1fr) 88px;
+ align-items:center;gap:10px;margin:0!important;padding:7px 5px!important;
+ border-bottom:1px solid #aa835343;
+ color:#4c2c11!important;font:700 clamp(.82rem,3.5vw,1.06rem)/1.3 Georgia,serif!important;
+ letter-spacing:.045em;text-transform:uppercase;
+}
+html .mp-grid #movement .dv4-setup-row:last-of-type{border-bottom:0}
+html .mp-grid #movement .dv4-setup-row select{
+ appearance:none;-webkit-appearance:none;
+ width:100%!important;min-height:45px!important;
+ margin:0!important;padding:8px 28px 8px 10px!important;
+ text-align:center;text-align-last:center;
+ color:#3f260f!important;background:
+ linear-gradient(45deg,transparent 50%,#744923 50%) right 15px top 19px/6px 6px no-repeat,
+ linear-gradient(135deg,#fff4d7,#e7c38b)!important;
+ border:2px solid #9b6c34!important;border-radius:8px!important;
+ box-shadow:inset 0 1px 1px #fff9e4,0 2px 5px #56301330!important;
+ font:700 1.05rem Georgia,serif!important;
+}
+html .mp-grid #movement .dv4-setup-row select:focus-visible{
+ outline:3px solid #6f481f!important;outline-offset:3px;
+}
+html .mp-grid #movement.dv4-current button[data-action="setup"]{
+ display:block;width:100%;margin:12px 0 0!important;min-height:48px;
+ background:linear-gradient(#80552c,#442812)!important;
+ border:2px ridge #c3985a!important;border-radius:10px!important;
+ color:#ffe7b2!important;letter-spacing:.09em;font-weight:700;
+ text-transform:uppercase;box-shadow:0 4px 10px #47270f38;
+}
