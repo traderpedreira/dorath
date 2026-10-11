@@ -24,7 +24,7 @@ function openCard(card){
  if(card.kind==='JOGADOR'){
   const player=active('player');
   const resources=text(player?.querySelector('p'));
-  const value=name=>resources.match(new RegExp(name+'\\\\s*:\\\\s*(\\\\d+)','i'))?.[1]||'0';
+  const value=name=>{const entry=resources.split('·').find(x=>x.trim().toLowerCase().startsWith(name.toLowerCase()+':'));return entry?.match(/[0-9]+/)?.[0]||'0'};
   let personal={};try{personal=JSON.parse(localStorage.getItem('dorath.visual.profile.v1.'+(document.getElementById('accountEmail')?.textContent?.trim()||'local'))||'{}')}catch{}
   const cv=str=>escapeHTML(str||'A definir');
   const sheet=document.createElement('article');sheet.className='dv4pc-master';
@@ -53,7 +53,7 @@ function renderCards(){
   b.classList.add('dv4-player-card');
   const stats=[...player.querySelectorAll('p')][0]?.textContent||'';
   const resourceNames=['Conhecimento','Influência','Provisões','Herança'];
-  const bits=resourceNames.map(n=>{const m=stats.match(new RegExp(n+'\\s*:\\s*(\\d+)','i'));return '<span><small>'+n+'</small><b>'+(m?m[1]:'—')+'</b></span>'}).join('');
+  const bits=resourceNames.map(n=>{const entry=stats.split('·').find(x=>x.trim().toLowerCase().startsWith(n.toLowerCase()+':'));const m=entry?.match(/[0-9]+/);return '<span><small>'+n+'</small><b>'+(m?m[0]:'—')+'</b></span>'}).join('');return '<span><small>'+n+'</small><b>'+(m?m[1]:'—')+'</b></span>'}).join('');
   b.innerHTML='<span class="dv4-card-type">JOGADOR</span><span class="dv4-portrait">'+(c.src?'<img src="'+escapeHTML(c.src)+'" alt="">':'<span class="dv4-card-symbol" aria-hidden="true">♛</span>')+'</span><strong>'+escapeHTML(c.title)+'</strong><span class="dv4-card-stats">'+bits+'</span><span class="dv4-card-foot">TOCAR PARA ABRIR</span>';
  }else{
   b.classList.add('dv4-character-card');
