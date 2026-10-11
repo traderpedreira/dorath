@@ -66,3 +66,12 @@
 #dv4modal .dv4tpl-v5 .dv4tpl-provisions{left:79.5%}
 #dv4modal .dv4tpl-v5 .dv4tpl-secret{position:absolute;left:12%;top:79%;width:76%;height:13%;padding:0;margin:0;display:block;border:0;box-shadow:none;background:transparent;color:#291606;font-size:2.6cqw;line-height:1.4;text-align:left;white-space:pre-wrap;overflow:auto}
 #dv4modal .dv4tpl-v5 .dv4tpl-tags,#dv4modal .dv4tpl-v5 .dv4tpl-bottom{display:none}
+
+/* V4: centralizar os saldos exatamente no interior dos medalhões do master. */
+#dv4modal .dv4tpl-v5 .dv4tpl-stat{top:67.8%;height:5.4%;font-size:3.65cqw;line-height:1;display:flex;align-items:center;justify-content:center}
+#dv4modal .dv4-card-editor{padding:20px 14px;background:#f2dcaf;color:#3b2512;border-radius:9px}
+#dv4modal .dv4-card-editor-form{display:flex;flex-direction:column;gap:14px}
+#dv4modal .dv4-card-editor-form label{display:flex;flex-direction:column;gap:5px;font:700 15px Georgia,serif;color:#3b2512}
+#dv4modal .dv4-card-editor-form input,#dv4modal .dv4-card-editor-form textarea{display:block;width:100%;box-sizing:border-box;background:#fff5db;border:1px solid #a78048;border-radius:7px;padding:11px;font:16px/1.4 Georgia,serif;color:#291a0b}
+#dv4modal .dv4-card-editor-form button{padding:13px;background:#66421f;color:#fff3d6;border:1px solid #ae814c;border-radius:8px;font:700 16px Georgia,serif}
+#dorathPersonalHistory[hidden]{display:none!important}
