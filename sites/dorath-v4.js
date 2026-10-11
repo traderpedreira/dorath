@@ -39,20 +39,26 @@ function openCard(card){
    '<div class="dv4tpl-name">'+escapeHTML(displayName)+'</div>'+
    '<div class="dv4tpl-subtitle">Período '+period+' · Rodada '+round+' · Casa '+displayHouse+'</div>'+
    '<div class="dv4tpl-portrait">'+(playerPhoto?'<img alt="Selfie do jogador" src="'+escapeHTML(playerPhoto)+'">':'<div class="dv4tpl-placeholder">SUA FOTO AQUI</div>')+'</div>'+
-   '<div class="dv4tpl-history">'+cv(personal.historia||'')+'</div>'+
+   '<section class="dv4tpl-history dv4tpl-controls" aria-label="Controles da partida"><strong>PARTIDA CONECTADA</strong><span class="dv4tpl-connection">'+escapeHTML(text(document.getElementById('status')).split(' · ')[0]||'Conectado')+'</span><span class="dv4tpl-room">'+escapeHTML(text(active('rooms')?.querySelector('h3'))||'Partida conectada')+'</span><span class="dv4tpl-roomname">'+escapeHTML(text(active('rooms')?.querySelector('p b'))||'')+'</span><button type="button" class="dv4tpl-audio-toggle">Áudio</button><label class="dv4tpl-volume-label">Volume <input type="range" min="0" max="100" class="dv4tpl-volume"></label></section>'+
    '<div class="dv4tpl-stats">'+[['knowledge','Conhecimento'],['influence','Influência'],['heritage','Herança'],['provisions','Provisões']].map(([key,name])=>'<output class="dv4tpl-stat dv4tpl-'+key+'">'+value(name)+'</output>').join('')+'</div>'+
    '<div class="dv4tpl-secret">'+escapeHTML(secret||'Aguardando atribuição da missão.')+'</div>';
   body.append(sheet);
+  const audioButton=sheet.querySelector('.dv4tpl-audio-toggle'),volume=sheet.querySelector('.dv4tpl-volume');
+  const nativeAudio=document.getElementById('audioToggle'),nativeVolume=document.getElementById('audioVolume');
+  audioButton.textContent=nativeAudio?.textContent?.includes('Desativar')?'Desativar áudio':'Ativar áudio';
+  volume.value=nativeVolume?.value||'50';
+  audioButton.addEventListener('click',()=>{nativeAudio?.click();requestAnimationFrame(()=>{audioButton.textContent=nativeAudio?.textContent?.includes('Desativar')?'Desativar áudio':'Ativar áudio'})});
+  volume.addEventListener('input',()=>{if(!nativeVolume)return;nativeVolume.value=volume.value;nativeVolume.dispatchEvent(new Event('input',{bubbles:true}))});
   const action=document.createElement('button');action.type='button';action.className='dv4tpl-edit';action.textContent='Editar carta · Tirar selfie';action.addEventListener('click',()=>{
     body.replaceChildren();
     const editor=document.createElement('section');editor.className='dv4-card-editor';
     const source=document.getElementById('dorathPersonalHistory');
     const stored=(()=>{try{return JSON.parse(localStorage.getItem('dorath.visual.profile.v1.'+(document.getElementById('accountEmail')?.textContent?.trim()||'local'))||'{}')}catch{return {}}})();
     const form=document.createElement('form');form.className='dv4-card-editor-form';
-    const titles=[['nome','Nome na Carta',60],['historia','Experiência',600]];
+    const titles=[['nome','Nome na Carta',60]];
     for(const [id,label,max] of titles){
       const row=document.createElement('label');row.textContent=label;
-      const field=document.createElement(id==='historia'?'textarea':'input');
+      const field=document.createElement('input');
       field.name=id;field.maxLength=max;field.value=stored[id]||'';if(field.tagName==='TEXTAREA')field.rows=4;
       row.append(field);form.append(row);
     }
