@@ -32,10 +32,10 @@ function openCard(card){
   const fields=[['Herança',value('Herança')],['Conhecimento',value('Conhecimento')],['Provisões',value('Provisões')],['Influência',value('Influência')]];
   sheet.innerHTML='<img class="dv4tpl-base" src="assets/ui/player-card-template.png" alt="Ornamentos originais da Carta do Jogador Dorath">'+
    '<div class="dv4tpl-name">'+escapeHTML(card.title)+'</div>'+
-   '<div class="dv4tpl-subtitle">PERÍODO 1 · JOGADOR</div>'+
+   '<div class="dv4tpl-subtitle">'+escapeHTML(((text(document.querySelector('#summary h2')).match(/P([1-8])-\d{3}/)||[])[1]||'1'))+' · '+escapeHTML((text(document.querySelector('#summary p')).match(/Rodada\s+(\d+)/)||[])[1]||'—')+' · '+escapeHTML((text(document.querySelector('#summary h2')).match(/P[1-8]-\d{3}/)||[])[0]||'P1-010')+'</div>'+
    '<div class="dv4tpl-portrait">'+(playerPhoto?'<img alt="Selfie do jogador" src="'+escapeHTML(playerPhoto)+'">':'<div class="dv4tpl-placeholder">TIRE SUA SELFIE</div>')+'</div>'+
    '<div class="dv4tpl-history"><p>'+cv(personal.historia||'Sua história será exibida aqui.')+'</p></div>'+
-   '<div class="dv4tpl-tags"><span>'+cv(personal.tag1||'JOGADOR')+'</span><span>•</span><span>'+cv(personal.tag2||'DORATH')+'</span><span>•</span><span>'+cv(personal.tag3||'PERÍODO 1')+'</span></div>'+
+   '<div class="dv4tpl-tags" aria-hidden="true"></div>'+
    '<div class="dv4tpl-stats">'+fields.map(([k,v])=>'<div class="dv4tpl-stat"><b>'+k+'</b><strong>'+v+'</strong></div>').join('')+'</div>'+
    '<div class="dv4tpl-secret"><h3>MISSÃO SECRETA</h3><p>'+escapeHTML(secret||'Aguardando atribuição da missão.')+'</p></div>'+
    '<div class="dv4tpl-bottom"><span>'+cv(personal.anoBatismo||'—')+'</span><span>'+cv(personal.tempoServico||'—')+'</span><span>'+cv(personal.congregacaoCidade||'—')+'</span></div>';
