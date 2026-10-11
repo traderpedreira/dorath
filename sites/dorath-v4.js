@@ -32,7 +32,7 @@ function openCard(card){
    '<div class="dv4pc-story"><div class="dv4pc-portrait">'+(playerPhoto?'<img alt="Selfie do jogador" src="'+playerPhoto+'">':'<div class="dv4pc-placeholder">♛<small>Retrato pendente</small></div>')+'</div><div class="dv4pc-testimony"><h3>HISTÓRICO DO JOGADOR</h3><div class="dv4pc-flourish">❧ ─── ❧</div><p>'+cv(personal.historia)+'</p></div></div>'+
    '<div class="dv4pc-identity"><span>JOGADOR</span><span>·</span><span>'+cv(personal.origem)+'</span></div>'+
    '<div class="dv4pc-resources">'+[['Herança','♛'],['Conhecimento','✧'],['Provisões','❦'],['Influência','♟']].map(([name,icon])=>'<div class="dv4pc-resource"><h4>'+name+'</h4><div class="dv4pc-resource-medal"><i aria-hidden="true">'+icon+'</i><strong>'+value(name)+'</strong></div></div>').join('')+'</div>'+
-   '<div class="dv4pc-storyfoot"><h3>ANOTAÇÕES PESSOAIS</h3><p>'+cv(personal.notas)+'</p></div>'+
+   '<section class="dv4pc-secret"><h3>MISSÃO SECRETA</h3><p>'+escapeHTML(text(player?.querySelectorAll('p')[1]).replace(/^Missão Secreta\s*/i,'')||'Aguardando atribuição da missão.')+'</p></section>'+'<div class="dv4pc-storyfoot"><h3>ANOTAÇÕES PESSOAIS</h3><p>'+cv(personal.notas)+'</p></div>'+
    '<footer class="dv4pc-footer" aria-hidden="true">❧ ✦ ❧</footer>';
   body.append(sheet);
   const action=document.createElement('button');action.type='button';action.className='dv4pc-edit';action.textContent='Editar carta · Tirar selfie';action.addEventListener('click',()=>{modal.close();select('player',true);active('player')?.scrollIntoView({block:'start',behavior:'smooth'})});body.append(action);
