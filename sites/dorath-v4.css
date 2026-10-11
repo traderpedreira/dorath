@@ -291,3 +291,14 @@ html .mp-grid #movement.dv4-current .dv4-setup-actions button[data-action="start
 html .mp-grid #movement.dv4-current .dv4-setup-actions button[data-action="start"]{
  background:linear-gradient(#a87937,#67401b)!important;
 }
+
+/* Ações da preparação: botões compactos e centralizados, sem largura desperdiçada. */
+html .mp-grid #movement .dv4-setup-actions{
+ display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;
+ margin:12px 0 0;
+}
+html .mp-grid #movement.dv4-current .dv4-setup-actions button[data-action="setup"],
+html .mp-grid #movement.dv4-current .dv4-setup-actions button[data-action="start"]{
+ width:auto!important;min-width:112px;max-width:calc(50% - 5px);
+ flex:0 1 auto;margin:0!important;padding:10px 13px!important;
+}
