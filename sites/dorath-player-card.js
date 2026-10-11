@@ -30,7 +30,7 @@
  function updatePortraits(){
   const raw=document.getElementById('dorathCharacters')?.textContent||'';
   if(raw===lastCharacters)return;lastCharacters=raw;
-  const names=raw.split(',').map(s=>s.trim()).filter(x=>x&&x!=='—'&&x!=='Nenhum selecionado').slice(0,2);
+  const names=raw.split(',').map(s=>s.trim()).filter(x=>x&&x!=='—'&&x!=='Nenhum selecionado').slice(0,2).map(id=>{const input=[...root.querySelectorAll('.char-check')].find(el=>el.value===id);return input?.closest('label')?.textContent?.trim()||id});
   portraits.replaceChildren();
   for(const name of names){
    const file=fileFor(name);if(!file)continue;
