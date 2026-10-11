@@ -21,7 +21,32 @@ async function api(route,data={}){
  if(!response.ok)throw Error(body.error||`Erro ${response.status}`);return body;
 }
 function saveCommon(){if(view?.me?.missionHistory)localStorage.setItem(commonKey,JSON.stringify(view.me.missionHistory))}
-async function refresh(){if(!token||!currentUser)return;try{const next=await api('state',{token});const changed=!view||next.revision!==view.revision;view=next;void audio.update(view);saveCommon();$('login').hidden=true;$('board').hidden=false;if(changed)draw();say(`Conectado · Partida-Mãe ${view.motherCode} · revisão ${view.revision}`)}catch(e){say(e.message,true);if(/sessão inválida|outra conta/i.test(e.message)){token='';localStorage.removeItem(accountTokenKey(currentUser.id));$('login').hidden=false;$('board').hidden=true}}}
+let refreshInFlight=false, lastRefreshFailure=0;
+async function refresh(){
+ if(!token||!currentUser||refreshInFlight)return;
+ refreshInFlight=true;
+ try{
+  const next=await api('state',{token});
+  const changed=!view||next.revision!==view.revision;view=next;
+  void audio.update(view);saveCommon();
+  $('login').hidden=true;$('board').hidden=false;
+  if(changed)draw();
+  say(`Conectado · Partida-Mãe ${view.motherCode} · revisão ${view.revision}`);
+  lastRefreshFailure=0;
+ }catch(e){
+  lastRefreshFailure=Date.now();
+  const invalid=/sessão inválida|outra conta/i.test(e?.message||'');
+  if(invalid){
+   token='';localStorage.removeItem(accountTokenKey(currentUser.id));
+   $('login').hidden=false;$('board').hidden=true;
+   say('A sessão da partida expirou. Entre novamente com o código da partida.',true);
+  }else{
+   // Falhas de rede não apagam o token nem deixam a tela sem saída.
+   $('board').hidden=true;$('login').hidden=false;
+   say('Não foi possível recuperar a partida ('+(e?.message||'erro de conexão')+'). Use Tentar reconectar abaixo. Seu vínculo foi preservado.',true);
+  }
+ }finally{refreshInFlight=false}
+}
 async function action(type,data={}){if(busy)return;busy=true;try{view=await api('action',{token,expectedRevision:view.revision,type,...data});saveCommon();void audio.update(view);draw();say(`Ação registrada · rodada ${view.round}`)}catch(e){const msg=e.message;await refresh();say(msg,true)}finally{busy=false}}
 async function enter(route){try{const secretHistory=JSON.parse(localStorage.getItem(historyKey)||'[]'),commonHistory=JSON.parse(localStorage.getItem(commonKey)||'[]');const res=await api(route,{name:$('name').value,team:$('team').value,code:$('code').value,secretHistory,commonHistory});token=res.token;localStorage.setItem(accountTokenKey(currentUser.id),token);await refresh();if(view?.me.secretMissionId){localStorage.setItem(historyKey,JSON.stringify([...secretHistory,view.me.secretMissionId].slice(-160)))}}catch(e){say(e.message,true)}}
 const die=(type,max,extra={})=>`<div class="dice">${Array.from({length:max},(_,i)=>`<button data-action="${type}" data-roll="${i+1}" ${Object.entries(extra).map(([k,v])=>`data-${k}="${esc(v)}"`).join(' ')}>${i+1}</button>`).join('')}</div>`;
@@ -75,6 +100,8 @@ function draw(){const v=view,p=v.me,host=p.id===v.hostPlayerId,turn=v.turnPlayer
  $('trades').innerHTML=trades;
  $('history').innerHTML='<h3>Histórico</h3><ul class="mp-list">'+v.recentHistory.slice().reverse().map(e=>`<li>${esc(e.message)}</li>`).join('')+'</ul>';
 }
+const retry=document.createElement('button');retry.type='button';retry.id='dv4RetryConnection';retry.textContent='Tentar reconectar à partida';retry.className='primary';retry.addEventListener('click',async()=>{if(!currentUser||!token){say('Entre na conta e informe o código da partida.');return}retry.disabled=true;say('Reconectando à partida…');await refresh();retry.disabled=false});
+$('login').insertBefore(retry,$('login').firstChild);
 $('create').onclick=()=>enter('create');$('join').onclick=()=>enter('join');
 document.addEventListener('change',e=>{if(e.target.id==='consequenceCard'&&$('consequencePreview'))$('consequencePreview').src='assets/consequencias/'+e.target.selectedOptions[0].dataset.asset});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b||!view)return;const t=b.dataset.action,r=Number(b.dataset.roll);const val=id=>$(id)?.value;
@@ -139,4 +166,4 @@ setTimeout(()=>{
   say('A sessão demorou para inicializar. Tente entrar com sua conta.',true);
  }
 },12000);
-setInterval(()=>{if(currentUser&&token&&!busy)refresh()},2000);
+setInterval(()=>{if(currentUser&&token&&!busy&&!refreshInFlight&&(!lastRefreshFailure||Date.now()-lastRefreshFailure>10000))refresh()},2000);
