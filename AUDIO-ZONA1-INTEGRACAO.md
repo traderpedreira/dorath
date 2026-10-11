@@ -2,22 +2,9 @@
 
 Esta branch acrescenta controles locais de áudio ao playtest existente, sem alterar a Edge Function, o Supabase, regras, movimento, atributos, missões, Marcos ou Rupturas.
 
-## Assets obrigatórios ainda não publicados nesta branch
+## Assets enviados e verificados
 
-Copiar os arquivos de áudio do pacote **Dorath_Zona1_Biblioteca_v2_Gravacoes_Naturais.zip** para:
-
-`sites/audio/period-01/zone-01/ambience/`
-- eden_field_stream_crickets.ogg / .m4a
-- eden_field_forest.ogg / .m4a
-- eden_tension.ogg / .m4a
-- eden_postfall.ogg / .m4a
-
-`sites/audio/period-01/zone-01/stingers/`
-- stinger_command.ogg / .m4a
-- stinger_eve.ogg / .m4a
-- stinger_fall.ogg / .m4a
-
-Arquivos binários ainda não foram enviados pelo conector GitHub disponível. **A branch não está pronta para merge/publicação até os arquivos serem adicionados e testados**.
+Os 14 arquivos Opus/AAC estão presentes em `sites/audio/period-01/zone-01/ambience/` e `stingers/`. A leitura em base64 de um arquivo Opus confirmou sua presença como binário no GitHub. Ainda são necessários testes no navegador e em aparelhos reais.
 
 ## Integração
 
