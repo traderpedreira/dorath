@@ -113,3 +113,19 @@
  margin-top:12px;background:transparent;color:#71331f;
  border:1px solid #b99a74;font-size:14px;
 }
+
+/* Controle Ambiente / Efeitos, lado a lado abaixo do volume. */
+#dv4modal .dv4tpl-v5 .dv4tpl-audio-flags{
+ display:flex;flex-wrap:wrap;justify-content:space-evenly;align-items:center;
+ gap:.4cqw;width:100%;margin-top:.5cqw;font-size:1.9cqw;
+}
+#dv4modal .dv4tpl-v5 .dv4tpl-audio-flags label{
+ display:inline-flex;align-items:center;justify-content:center;gap:.4cqw;
+ white-space:nowrap;cursor:pointer;line-height:1.1;
+}
+#dv4modal .dv4tpl-v5 .dv4tpl-audio-flags input{
+ width:2cqw;height:2cqw;margin:0;accent-color:#8c5f2a;
+}
+#dv4modal .dv4tpl-v5 .dv4tpl-provisions{
+ transform:translate(-50%,-56%);
+}
