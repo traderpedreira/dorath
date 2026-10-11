@@ -73,3 +73,17 @@
 #dv4modal .dv4-card-editor-form button{padding:13px;background:#66421f;color:#fff3d6;border:1px solid #ae814c;border-radius:8px;font:700 16px Georgia,serif}
 #dorathPersonalHistory[hidden]{display:none!important}
 
+
+/* V4: painel da partida no espaço antes reservado à Experiência. */
+#dv4modal .dv4tpl-v5 .dv4tpl-controls{
+ display:flex;flex-direction:column;justify-content:flex-start;gap:.7cqw;
+ left:65%;top:23%;width:29%;height:27%;
+ overflow-y:auto;overflow-x:hidden;padding:0;
+ background:transparent;color:#35210f;font-size:2.1cqw;line-height:1.2;
+ white-space:normal;text-align:center;
+}
+#dv4modal .dv4tpl-v5 .dv4tpl-controls strong{font-size:2.25cqw;line-height:1.15}
+#dv4modal .dv4tpl-v5 .dv4tpl-controls span{display:block;overflow-wrap:anywhere;font-size:2.1cqw}
+#dv4modal .dv4tpl-v5 .dv4tpl-controls button{border:1px solid #987044;background:#eed8a9;border-radius:4px;color:#3a230d;font:700 2.1cqw Georgia,serif;padding:1.1cqw .5cqw;cursor:pointer}
+#dv4modal .dv4tpl-v5 .dv4tpl-volume-label{display:block;font-size:2.05cqw;line-height:1.1}
+#dv4modal .dv4tpl-v5 .dv4tpl-volume{display:block;width:100%;height:3.5cqw;accent-color:#8c5f2a;margin:0}
