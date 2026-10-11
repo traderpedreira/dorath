@@ -93,13 +93,21 @@ function openCard(card){
 }
 ui.querySelector('#dv4close').addEventListener('click',()=>modal.close());modal.addEventListener('click',e=>{if(e.target===modal)modal.close()});
 function renderCards(){
- const player=active('player');const label=text(player?.querySelector('h3')).split('·')[0].trim()||'Jogador';const chars=text(player?.querySelectorAll('p')[2]).replace(/^Personagens \(até 2\):\s*/,'');const available=[...player?.querySelectorAll('.char-check')||[]];const people=chars.split(',').map(x=>x.trim()).filter(Boolean).slice(0,2).map(id=>({id,name:text(available.find(c=>c.value===id)?.closest('label'))||id}));const statLine=text(player?.querySelector('p'));const key=label+'|'+statLine+'|'+people.map(p=>p.name).join('|');if(oldNames===key)return;oldNames=key;cards.replaceChildren();
+ const player=active('player');const label=text(player?.querySelector('h3')).split('·')[0].trim()||'Jogador';const chars=text(player?.querySelectorAll('p')[2]).replace(/^Personagens \\(até 2\\):\\s*/,'');const available=[...player?.querySelectorAll('.char-check')||[]];const people=chars.split(',').map(x=>x.trim()).filter(Boolean).slice(0,2).map(id=>({id,name:text(available.find(c=>c.value===id)?.closest('label'))||id}));
+ const statLine=text(player?.querySelector('p'));const secret=text(player?.querySelectorAll('p')[1]).replace(/^Missão Secreta\\s*/i,'').trim();
+ let personal={};try{personal=JSON.parse(localStorage.getItem('dorath.visual.profile.v1.'+(document.getElementById('accountEmail')?.textContent?.trim()||'local'))||'{}')}catch{}
+ const summary=text(document.querySelector('#summary h2')),raw=text(document.querySelector('#summary p'));
+ const code=(summary.match(/P[1-8]-(\\d{3})/)||[])[1],period=(summary.match(/P([1-8])-/)||[])[1]||'1',round=(raw.match(/Rodada\\s+(\\d+)/i)||[])[1]||'—';
+ const house=code?String(Math.round(Number(code)/10)).padStart(2,'0'):'—';
+ const miniName=personal.nome?.trim()||label;
+ const key=[label,statLine,secret,miniName,period,round,house,people.map(p=>p.name).join('|')].join('|');if(oldNames===key)return;oldNames=key;cards.replaceChildren();
+ const getValue=name=>{const entry=statLine.split('·').find(x=>x.trim().toLowerCase().startsWith(name.toLowerCase()+':'));return entry?.match(/[0-9]+/)?.[0]||'0'};
  const set=[{title:label,kind:'JOGADOR',src:playerPhoto||null,info:'Toque em Editar carta para inserir sua foto, origem e história.'},...Array.from({length:2},(_,i)=>({kind:'PERSONAGEM',title:people[i]?.name||'Não selecionado',src: mapped[slug(people[i]?.name||'')]?'assets/personagens/'+mapped[slug(people[i].name)]:null}))];
  for(const c of set){
  const b=document.createElement('button');b.className='dv4-card';b.type='button';b.setAttribute('aria-label','Abrir carta: '+c.title);
  if(c.kind==='JOGADOR'){
   b.classList.add('dv4-player-card');
-  b.innerHTML='<span class="dv4-mini-art"><img class="dv4-mini-base" src="assets/ui/Cart%C3%A3o%20Dorath%20com%20miss%C3%A3o%20secreta.png" alt="Carta do Jogador">'+(c.src?'<img class="dv4-mini-selfie" src="'+escapeHTML(c.src)+'" alt="">':'')+'</span><span class="dv4-card-foot">TOQUE PARA ABRIR</span>';
+  b.innerHTML='<span class="dv4-mini-art"><img class="dv4-mini-base" src="assets/ui/Cart%C3%A3o%20Dorath%20com%20miss%C3%A3o%20secreta.png" alt="Carta do Jogador">'+(c.src?'<img class="dv4-mini-selfie" src="'+escapeHTML(c.src)+'" alt="">':'')+'<span class="dv4-mini-name">'+escapeHTML(miniName)+'</span><span class="dv4-mini-meta">Período '+period+' · Rodada '+round+' · Casa '+house+'</span><span class="dv4-mini-session">PARTIDA CONECTADA</span><span class="dv4-mini-medals">'+[['Conhecimento',15.5],['Influência',38.7],['Herança',62.3],['Provisões',85.4]].map(([name,left])=>'<span style="left:'+left+'%">'+getValue(name)+'</span>').join('')+'</span><span class="dv4-mini-mission">'+escapeHTML(secret||'Aguardando missão secreta.')+'</span></span><span class="dv4-card-foot">TOQUE PARA ABRIR</span>';
  }else{
   b.classList.add('dv4-character-card');
   b.innerHTML=(c.src?'<img class="dv4-character-art" loading="lazy" alt="Carta de '+escapeHTML(c.title)+'" src="'+escapeHTML(c.src)+'">':'<span class="dv4-empty-card" aria-label="Personagem não selecionado">✦</span>')+'<span class="dv4-card-foot">TOQUE PARA ABRIR</span>';
