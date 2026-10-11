@@ -362,3 +362,20 @@ html #missions.dv4-current .dv4-mission-dice .dice button{
  color:#ffedc8;border:2px ridge #ae854e;font-weight:700;
 }
 #login #dv4RetryConnection[hidden]{display:none!important}
+
+/* Missão: seis faces do D6 obrigatoriamente na mesma linha em telas estreitas. */
+html body #board #missions.dv4-current .dv4-mission-dice{
+ display:block;width:100%;min-width:0;overflow:visible;
+}
+html body #board #missions.dv4-current .dv4-mission-dice>.dice{
+ display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;
+ grid-auto-flow:column;gap:4px!important;width:100%;min-width:0;
+ flex-wrap:nowrap!important;
+}
+html body #board #missions.dv4-current .dv4-mission-dice>.dice>button{
+ display:grid!important;place-items:center;
+ box-sizing:border-box!important;width:100%!important;max-width:100%!important;
+ min-width:0!important;min-height:0!important;height:auto!important;
+ aspect-ratio:1 / 1;flex:none!important;margin:0!important;padding:0!important;
+ font-size:clamp(.85rem,3.7vw,1.2rem)!important;
+}
