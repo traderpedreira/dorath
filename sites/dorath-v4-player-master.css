@@ -39,3 +39,36 @@
 #dv4modal .dv4pc-master img{cursor:default;pointer-events:none}
 @media(max-width:410px){#dv4modal .dv4pc-master{padding:4% 3% 3%;gap:1.1%}#dv4modal .dv4pc-story{grid-template-columns:1.25fr 1fr}#dv4modal .dv4pc-testimony p{font-size:clamp(.64rem,2.5vw,.8rem)}}
 @media(prefers-reduced-motion:reduce){#dv4modal .dv4pc-master{scroll-behavior:auto}}
+
+/* V4 — espaço HABILIDADE do master visual agora exibe a Missão Secreta.
+   O conteúdo é apenas leitura, vindo do painel privado já renderizado pelo motor. */
+#dv4modal .dv4pc-secret{
+  border:3px double #a57336;
+  border-radius:7px;
+  padding:2.4% 3.2%;
+  min-height:14%;
+  overflow:auto;
+  background:linear-gradient(115deg,#f9e4b9,#ffeed0 45%,#edc68e);
+  box-shadow:inset 0 0 0 2px #fff5d6,0 2px 3px #59331155;
+  color:#3f250f!important;
+}
+#dv4modal .dv4pc-secret h3{
+  text-align:center;
+  margin:0 0 5px!important;
+  padding:0 0 3px;
+  border-bottom:1px solid #a47742;
+  font-size:clamp(.76rem,2.9vw,1.18rem);
+  font-family:Georgia,'Times New Roman',serif;
+  color:#3b210f!important;
+}
+#dv4modal .dv4pc-secret p{
+  margin:0!important;
+  font-size:clamp(.68rem,2.45vw,1rem);
+  line-height:1.36;
+  color:#432914!important;
+  overflow-wrap:anywhere;
+  white-space:normal;
+}
+#dv4modal .dv4pc-master{aspect-ratio:auto;min-height:min(94vw * 1.408,780px)}
+#dv4modal .dv4pc-story{min-height:205px}
+#dv4modal .dv4pc-secret,#dv4modal .dv4pc-storyfoot{flex-shrink:0}
