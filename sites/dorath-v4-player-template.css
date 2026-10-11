@@ -74,16 +74,42 @@
 #dorathPersonalHistory[hidden]{display:none!important}
 
 
-/* V4: painel da partida no espaço antes reservado à Experiência. */
+/* Painel da partida: distribuição vertical no espaço ornamental existente. */
 #dv4modal .dv4tpl-v5 .dv4tpl-controls{
- display:flex;flex-direction:column;justify-content:flex-start;gap:.7cqw;
- left:65%;top:23%;width:29%;height:27%;
- overflow-y:auto;overflow-x:hidden;padding:0;
- background:transparent;color:#35210f;font-size:2.1cqw;line-height:1.2;
- white-space:normal;text-align:center;
+ position:absolute;left:65%;top:22%;width:29%;height:29%;
+ display:flex;flex-direction:column;align-items:stretch;justify-content:space-evenly;
+ gap:.8cqw;box-sizing:border-box;padding:1.2cqw .3cqw;
+ overflow-y:auto;overflow-x:hidden;
+ background:transparent;color:#35210f;
+ font-size:2.12cqw;line-height:1.25;white-space:normal;text-align:center;
 }
-#dv4modal .dv4tpl-v5 .dv4tpl-controls strong{font-size:2.25cqw;line-height:1.15}
-#dv4modal .dv4tpl-v5 .dv4tpl-controls span{display:block;overflow-wrap:anywhere;font-size:2.1cqw}
-#dv4modal .dv4tpl-v5 .dv4tpl-controls button{border:1px solid #987044;background:#eed8a9;border-radius:4px;color:#3a230d;font:700 2.1cqw Georgia,serif;padding:1.1cqw .5cqw;cursor:pointer}
-#dv4modal .dv4tpl-v5 .dv4tpl-volume-label{display:block;font-size:2.05cqw;line-height:1.1}
-#dv4modal .dv4tpl-v5 .dv4tpl-volume{display:block;width:100%;height:3.5cqw;accent-color:#8c5f2a;margin:0}
+#dv4modal .dv4tpl-v5 .dv4tpl-controls strong{
+ display:block;font-size:2.34cqw;line-height:1.15;padding-bottom:1cqw;
+ border-bottom:1px solid #b9996b;
+}
+#dv4modal .dv4tpl-v5 .dv4tpl-controls .dv4tpl-connection{
+ font-size:2.05cqw;font-weight:bold;overflow-wrap:anywhere;
+}
+#dv4modal .dv4tpl-v5 .dv4tpl-controls .dv4tpl-room{
+ font-size:2.2cqw;font-weight:bold;overflow-wrap:anywhere;
+}
+#dv4modal .dv4tpl-v5 .dv4tpl-controls .dv4tpl-roomname{
+ font-size:2cqw;overflow-wrap:anywhere;
+}
+#dv4modal .dv4tpl-v5 .dv4tpl-controls .dv4tpl-audio-toggle{
+ width:100%;min-height:4cqw;
+ border:1px solid #987044;background:#eed8a9;border-radius:4px;
+ color:#3a230d;font:700 2.1cqw Georgia,serif;
+ padding:1cqw .5cqw;cursor:pointer;
+}
+#dv4modal .dv4tpl-v5 .dv4tpl-volume-label{
+ display:flex;flex-direction:column;gap:.6cqw;
+ font-size:2.05cqw;line-height:1.1;
+}
+#dv4modal .dv4tpl-v5 .dv4tpl-volume{
+ display:block;width:100%;height:3.7cqw;accent-color:#8c5f2a;margin:0;
+}
+#dv4modal .dv4-card-editor-form .dv4-editor-signout{
+ margin-top:12px;background:transparent;color:#71331f;
+ border:1px solid #b99a74;font-size:14px;
+}
