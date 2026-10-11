@@ -69,6 +69,6 @@
   overflow-wrap:anywhere;
   white-space:normal;
 }
-#dv4modal .dv4pc-master{aspect-ratio:auto;min-height:min(94vw * 1.408,780px)}
+#dv4modal .dv4pc-master{aspect-ratio:auto;min-height:650px}
 #dv4modal .dv4pc-story{min-height:205px}
 #dv4modal .dv4pc-secret,#dv4modal .dv4pc-storyfoot{flex-shrink:0}
