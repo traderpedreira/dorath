@@ -379,3 +379,9 @@ html body #board #missions.dv4-current .dv4-mission-dice>.dice>button{
  aspect-ratio:1 / 1;flex:none!important;margin:0!important;padding:0!important;
  font-size:clamp(.85rem,3.7vw,1.2rem)!important;
 }
+
+/* Mensagens locais da conferência de posição, incluindo recusas do motor. */
+html #world.dv4-current .dv4-position-hint{font-size:.8rem!important;line-height:1.4;margin:7px 0!important;color:#654627!important}
+html #world.dv4-current .dv4-position-feedback{padding:10px 12px!important;margin:10px 0!important;border:1px solid #8e6c3f;border-radius:8px;background:#fff0c9!important;color:#34220d!important;font-size:.92rem;line-height:1.4}
+html #world.dv4-current .dv4-position-feedback.mp-error{border-color:#ad4935!important;background:#ffe2d3!important;color:#802b1d!important}
+html #world.dv4-current .dv4-position-feedback[hidden]{display:none!important}
