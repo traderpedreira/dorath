@@ -217,3 +217,8 @@ html .mp-grid #movement .dv4-setup-row select{
  margin:0!important;padding:8px 10px!important;min-height:44px;
  font-weight:normal;text-align:center;
 }
+
+/* Android: evita o pull-to-refresh acidental no topo da página.
+   O conteúdo continua rolando normalmente. */
+html,body{overscroll-behavior-y:none}
+html{touch-action:pan-x pan-y}
