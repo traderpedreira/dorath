@@ -80,12 +80,15 @@ document.addEventListener('change',e=>{if(e.target.id==='consequenceCard'&&$('co
 document.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b||!view)return;const t=b.dataset.action,r=Number(b.dataset.roll);const val=id=>$(id)?.value;
  const map={roomCreate:()=>action('roomCreate',{name:val('roomName')}),setup:()=>action('setup',{rolls:[0,1,2].map(i=>Number(val('setupRoll'+i))),order:[0,1,2].map(i=>val('setupDest'+i))}),start:()=>action('start'),move:()=>action('move',{roll:r}),endTurn:()=>action('endTurn'),missionOffer:()=>action('missionOffer',{replace:!!view.me.mission}),missionDecline:()=>action('missionDecline'),missionAttempt:()=>action('missionAttempt',{roll:r,bonus:Number(val('missionBonus'))}),missionD4:()=>action('missionD4',{d4:r,otherId:val('missionOther'),rewardOption:val('missionRewardOption')}),characters:()=>action('characters',{ids:[...document.querySelectorAll('.char-check:checked')].map(x=>x.value)}),convert:()=>action('convert',{rate:Number(val('conversionRate'))}),marcoD4:()=>action('marcoD4',{d4:r}),marcoIndividualD4:()=>action('marcoIndividualD4',{d4:r}),ruptureD4:()=>action('ruptureD4',{d4:r}),preparePass:()=>action('prepare',{option:'pass'}),prepareMission:()=>action('prepare',{option:'mission',roll:Number(prompt('D6 físico da Missão:')),bonus:0}),prepareConvert:()=>action('prepare',{option:'convert',rate:Number(prompt('Índice da taxa de conversão (0–5):'))}),consequence:()=>action('consequence',{card:val('consequenceCard'),d4:Number(val('consequenceD4'))}),threatSpawnD4:()=>action('threatSpawnD4',{d4:r}),threatAttempt:()=>action('threatAttempt',{threatId:b.dataset.threat,attribute:val('attr-'+b.dataset.threat),roll:r}),threatD4:()=>action('threatD4',{d4:r,attribute:val('threatRewardAttr')}),dominatorD8:()=>action('dominatorD8',{roll:r}),dominatorTierD4:()=>action('dominatorTierD4',{d4:r}),dominatorChoice:()=>action('dominatorChoice',{option:Number(b.dataset.option),otherId:val('dominatorOther')}),arkEnter:()=>action('arkEnter',{characterId:val('arkEarlyCharacter')}),arkConfirm:()=>action('arkFinalize',{enter:true}),arkFinalEnter:()=>action('arkFinalize',{enter:true,characterId:val('arkCharacter')}),arkFinalOutside:()=>action('arkFinalize',{enter:false}),lastChance:()=>action('lastChance',{roll:r}),mandamentoRefuse:()=>action('mandamentoChoice',{refuse:true}),mandamentoOpen:()=>action('mandamentoChoice',{refuse:false}),vidaHeranca:()=>action('specialChoice',{card:'vida',option:'heranca'}),vidaProvisoes:()=>action('specialChoice',{card:'vida',option:'provisoes'}),conhecimentoAceitar:()=>action('specialChoice',{card:'conhecimento',option:'aceitar'}),conhecimentoRecusar:()=>action('specialChoice',{card:'conhecimento',option:'recusar'}),preservationD6:()=>action('preservationD6',{roll:r}),advanceFinal:()=>action('advanceFinal'),correctPosition:()=>action('correctPosition',{house:Number(val('correctHouse')),reason:val('correctReason')}),tradePropose:()=>action('tradePropose',{toId:val('tradeTo'),offerKey:val('offerKey'),offer:Number(val('offerQty')),wantKey:val('wantKey'),want:Number(val('wantQty'))}),tradeAccept:()=>action('tradeAnswer',{tradeId:b.dataset.trade,accept:true}),tradeDecline:()=>action('tradeAnswer',{tradeId:b.dataset.trade,accept:false})};map[t]?.()});
 let authDisplayRevision=0;
+let authBusy=false;
+const withAuthDeadline=(promise,ms=12000)=>Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error('Tempo limite de autenticação excedido. Verifique a conexão com o Supabase.')),ms))]);
 async function showAccount(){
+ if(authBusy)return;
  const revision=++authDisplayRevision;
  $('board').hidden=true;
  $('login').hidden=true;
  try{
-  const identity=await Promise.race([validSession(),new Promise((_,reject)=>setTimeout(()=>reject(new Error('Tempo esgotado ao verificar a sessão.')),9000))]);
+  const identity=await withAuthDeadline(validSession(),12000);
   if(revision!==authDisplayRevision)return;
   currentUser=identity?.user||null;view=null;token='';
   $('account').hidden=!!currentUser;
@@ -101,24 +104,37 @@ async function showAccount(){
   if(revision!==authDisplayRevision)return;
   currentUser=null;view=null;token='';
   $('board').hidden=true;$('game').hidden=true;$('account').hidden=false;
-  say('Não foi possível verificar a conexão. Confira sua internet e tente entrar novamente.',true);
+  say('Falha ao recuperar sessão: '+(error?.message||'Erro desconhecido')+'. Você pode tentar entrar novamente.',true);
   console.warn('Dorath: falha de inicialização da sessão',error);
  }
 }
 $('accountForm').onsubmit=async e=>{
  e.preventDefault();
+ if(authBusy)return;
+ authBusy=true;
  const email=$('email').value.trim(),password=$('password').value;
  $('accountSubmit').disabled=true;
+ $('accountSubmit').textContent='Entrando…';
+ say('Validando sua conta…');
  try{
-  const result=$('accountMode').value==='signup'
-   ?await supabase.auth.signUp({email,password,options:{emailRedirectTo:location.href}})
-   :await supabase.auth.signInWithPassword({email,password});
+  const result=await withAuthDeadline($('accountMode').value==='signup'
+   ?supabase.auth.signUp({email,password,options:{emailRedirectTo:location.href}})
+   :supabase.auth.signInWithPassword({email,password}),15000);
   if(result.error)throw result.error;
   if(!result.data.session){say('Conta criada. Confirme o e-mail recebido e depois entre.',false);return}
-  await showAccount();
- }catch(error){say(error.message,true)}finally{$('accountSubmit').disabled=false}
+  say('Conta autenticada. Recuperando sua partida…');
+ }catch(error){
+  say('Não foi possível entrar: '+(error?.message||'Erro desconhecido'),true);
+ }finally{
+  authBusy=false;$('accountSubmit').disabled=false;$('accountSubmit').textContent='Continuar';
+ }
+ // Recupera a sessão apenas depois de liberar o fluxo de autenticação.
+ if(!authBusy){
+  const {data}=await withAuthDeadline(supabase.auth.getSession()).catch(()=>({data:null}));
+  if(data?.session)await showAccount();
+ }
 };
 $('signout').onclick=async()=>{const {error}=await supabase.auth.signOut();if(error)say(error.message,true);else await showAccount()};
-supabase.auth.onAuthStateChange(()=>{setTimeout(showAccount,0)});
+supabase.auth.onAuthStateChange((event)=>{if(event==='SIGNED_IN'||event==='SIGNED_OUT')setTimeout(()=>{if(!authBusy)showAccount()},0)});
 showAccount();
 setInterval(()=>{if(currentUser&&token&&!busy)refresh()},2000);
