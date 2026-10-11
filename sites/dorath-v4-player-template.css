@@ -39,3 +39,11 @@
 #dv4modal .dv4tpl-secret h3{font-size:2.8cqw;margin:0 0 1%;line-height:1.1}
 #dv4modal .dv4tpl-secret p{font-size:2cqw;line-height:1.24;overflow-wrap:anywhere}
 #dv4modal .dv4tpl-bottom{top:86.8%;left:8.5%;width:83%;height:4.8%;gap:5%;font-size:2.3cqw}
+
+/* Final biographical slots replace the three printed labels and values. */
+#dv4modal .dv4tpl-bottom{top:82.4%;left:7.2%;width:85.6%;height:9.3%;gap:1.6%;align-items:stretch;font-size:2cqw}
+#dv4modal .dv4tpl-bottom>div{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:7% 2% 3%;border:2px solid #9f6929;border-radius:6px;background:linear-gradient(120deg,#f6dfb3,#fce9c4 50%,#f0d4a3);min-width:0;overflow:auto}
+#dv4modal .dv4tpl-bottom b{font-size:2.1cqw;line-height:1.12;text-align:center;margin-bottom:7%}
+#dv4modal .dv4tpl-bottom span{font-size:2.3cqw;text-align:center;overflow-wrap:anywhere;max-height:none}
+#dv4modal .dv4tpl-tags{top:55.5%;left:9.8%;width:80.4%;height:3%;background:#f7e2b7}
+#dv4modal .dv4tpl-secret{top:73.6%;height:8%;background:linear-gradient(110deg,#f5dfb4,#f9e6c1,#f1d5a5)}
