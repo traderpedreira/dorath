@@ -79,19 +79,31 @@ $('create').onclick=()=>enter('create');$('join').onclick=()=>enter('join');
 document.addEventListener('change',e=>{if(e.target.id==='consequenceCard'&&$('consequencePreview'))$('consequencePreview').src='assets/consequencias/'+e.target.selectedOptions[0].dataset.asset});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b||!view)return;const t=b.dataset.action,r=Number(b.dataset.roll);const val=id=>$(id)?.value;
  const map={roomCreate:()=>action('roomCreate',{name:val('roomName')}),setup:()=>action('setup',{rolls:[0,1,2].map(i=>Number(val('setupRoll'+i))),order:[0,1,2].map(i=>val('setupDest'+i))}),start:()=>action('start'),move:()=>action('move',{roll:r}),endTurn:()=>action('endTurn'),missionOffer:()=>action('missionOffer',{replace:!!view.me.mission}),missionDecline:()=>action('missionDecline'),missionAttempt:()=>action('missionAttempt',{roll:r,bonus:Number(val('missionBonus'))}),missionD4:()=>action('missionD4',{d4:r,otherId:val('missionOther'),rewardOption:val('missionRewardOption')}),characters:()=>action('characters',{ids:[...document.querySelectorAll('.char-check:checked')].map(x=>x.value)}),convert:()=>action('convert',{rate:Number(val('conversionRate'))}),marcoD4:()=>action('marcoD4',{d4:r}),marcoIndividualD4:()=>action('marcoIndividualD4',{d4:r}),ruptureD4:()=>action('ruptureD4',{d4:r}),preparePass:()=>action('prepare',{option:'pass'}),prepareMission:()=>action('prepare',{option:'mission',roll:Number(prompt('D6 físico da Missão:')),bonus:0}),prepareConvert:()=>action('prepare',{option:'convert',rate:Number(prompt('Índice da taxa de conversão (0–5):'))}),consequence:()=>action('consequence',{card:val('consequenceCard'),d4:Number(val('consequenceD4'))}),threatSpawnD4:()=>action('threatSpawnD4',{d4:r}),threatAttempt:()=>action('threatAttempt',{threatId:b.dataset.threat,attribute:val('attr-'+b.dataset.threat),roll:r}),threatD4:()=>action('threatD4',{d4:r,attribute:val('threatRewardAttr')}),dominatorD8:()=>action('dominatorD8',{roll:r}),dominatorTierD4:()=>action('dominatorTierD4',{d4:r}),dominatorChoice:()=>action('dominatorChoice',{option:Number(b.dataset.option),otherId:val('dominatorOther')}),arkEnter:()=>action('arkEnter',{characterId:val('arkEarlyCharacter')}),arkConfirm:()=>action('arkFinalize',{enter:true}),arkFinalEnter:()=>action('arkFinalize',{enter:true,characterId:val('arkCharacter')}),arkFinalOutside:()=>action('arkFinalize',{enter:false}),lastChance:()=>action('lastChance',{roll:r}),mandamentoRefuse:()=>action('mandamentoChoice',{refuse:true}),mandamentoOpen:()=>action('mandamentoChoice',{refuse:false}),vidaHeranca:()=>action('specialChoice',{card:'vida',option:'heranca'}),vidaProvisoes:()=>action('specialChoice',{card:'vida',option:'provisoes'}),conhecimentoAceitar:()=>action('specialChoice',{card:'conhecimento',option:'aceitar'}),conhecimentoRecusar:()=>action('specialChoice',{card:'conhecimento',option:'recusar'}),preservationD6:()=>action('preservationD6',{roll:r}),advanceFinal:()=>action('advanceFinal'),correctPosition:()=>action('correctPosition',{house:Number(val('correctHouse')),reason:val('correctReason')}),tradePropose:()=>action('tradePropose',{toId:val('tradeTo'),offerKey:val('offerKey'),offer:Number(val('offerQty')),wantKey:val('wantKey'),want:Number(val('wantQty'))}),tradeAccept:()=>action('tradeAnswer',{tradeId:b.dataset.trade,accept:true}),tradeDecline:()=>action('tradeAnswer',{tradeId:b.dataset.trade,accept:false})};map[t]?.()});
+let authDisplayRevision=0;
 async function showAccount(){
- const identity=await validSession();
- currentUser=identity?.user||null;view=null;token='';
+ const revision=++authDisplayRevision;
  $('board').hidden=true;
- $('account').hidden=!!currentUser;
- $('game').hidden=!currentUser;
- if(!currentUser){say('Entre na sua conta para abrir o playtest.');return}
- $('accountEmail').textContent=currentUser.email||'Conta conectada';
- historyKey=`dorath.p1.secretHistory.${currentUser.id}`;
- commonKey=`dorath.p1.commonHistory.${currentUser.id}`;
- token=localStorage.getItem(accountTokenKey(currentUser.id))||'';
- if(token)await refresh();
- else{$('login').hidden=false;say('Crie uma Partida-Mãe ou entre pelo código da sala.')}
+ $('login').hidden=true;
+ try{
+  const identity=await Promise.race([validSession(),new Promise((_,reject)=>setTimeout(()=>reject(new Error('Tempo esgotado ao verificar a sessão.')),9000))]);
+  if(revision!==authDisplayRevision)return;
+  currentUser=identity?.user||null;view=null;token='';
+  $('account').hidden=!!currentUser;
+  $('game').hidden=!currentUser;
+  if(!currentUser){say('Entre na sua conta para abrir o playtest.');return}
+  $('accountEmail').textContent=currentUser.email||'Conta conectada';
+  historyKey=`dorath.p1.secretHistory.${currentUser.id}`;
+  commonKey=`dorath.p1.commonHistory.${currentUser.id}`;
+  token=localStorage.getItem(accountTokenKey(currentUser.id))||'';
+  if(token)await refresh();
+  else{$('login').hidden=false;say('Crie uma Partida-Mãe ou entre pelo código da sala.')}
+ }catch(error){
+  if(revision!==authDisplayRevision)return;
+  currentUser=null;view=null;token='';
+  $('board').hidden=true;$('game').hidden=true;$('account').hidden=false;
+  say('Não foi possível verificar a conexão. Confira sua internet e tente entrar novamente.',true);
+  console.warn('Dorath: falha de inicialização da sessão',error);
+ }
 }
 $('accountForm').onsubmit=async e=>{
  e.preventDefault();
