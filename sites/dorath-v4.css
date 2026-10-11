@@ -187,3 +187,11 @@ html .topbar .dv4-brand-logo{display:block;width:min(84%,430px);max-height:150px
 #dv4 .dv4-player-card .dv4-mini-mission{top:81%;left:17%;width:66%;height:10%;font-size:2.65cqw;line-height:1.25;text-align:left;overflow:hidden;overflow-wrap:anywhere}
 #dv4 .dv4-player-card .dv4-mini-selfie{z-index:1}
 #dv4 .dv4-player-card .dv4-card-foot{margin-top:auto}
+
+/* Miniatura: preservar o nome completo sem cortar nas bordas da arte. */
+#dv4 .dv4-player-card .dv4-mini-name{
+ top:4%;left:5%;width:90%;height:5%;
+ font-size:clamp(5px,4.1cqw,9px);line-height:1.1;
+ white-space:normal;overflow-wrap:anywhere;text-overflow:clip;
+ display:flex;align-items:center;justify-content:center;
+}
