@@ -82,11 +82,25 @@
       "family": "Recurso / bênção inicial",
       "intensity": "Leve",
       "execution": "VARIÁVEL",
-      "rule": "Ocorrência positiva leve do Éden. Pode conceder benefício/recurso temático; sem Consequência.",
+      "rule": "Ocorrência positiva leve do Éden. Ao parar exatamente nesta casa, o jogador escolhe 1 recurso administrável — Conhecimento, Influência ou Provisões — e recebe +1. Sem rolagem e sem Consequência.",
       "status": "PLAYTEST DINÂMICO",
       "name": "Jeová prepara o Jardim do Éden",
       "legacyType": "MARCO",
-      "card": null
+      "card": null,
+      "occurrence": {
+        "id": "H02_BENCAO_EDEN",
+        "trigger": "exactLanding",
+        "oncePerPlayer": true,
+        "type": "resourceChoice",
+        "narrative": "O Jardim do Éden foi preparado com abundância e tudo o que era necessário para a vida. Escolha um recurso para representar essa provisão inicial.",
+        "choices": [
+          "conhecimento",
+          "influencia",
+          "provisoes"
+        ],
+        "amount": 1,
+        "die": null
+      }
     },
     {
       "house": 3,
@@ -548,11 +562,20 @@
       "family": "Presságio de Ameaça",
       "intensity": "Média",
       "execution": "VARIÁVEL",
-      "rule": "Presságio narrativo. Não revela Nefilim e não coloca carta de Ameaça em jogo.",
+      "rule": "Presságio narrativo. Ao parar exatamente nesta casa, o app apresenta a fidelidade de Enoque em contraste com a crescente corrupção humana. Não concede nem remove recursos, não revela Nefilim e não coloca carta de Ameaça em jogo.",
       "status": "PLAYTEST DINÂMICO",
       "name": "Enoque anda com Deus",
       "legacyType": "PERSONAGEM",
-      "card": null
+      "card": null,
+      "occurrence": {
+        "id": "H35_ENOQUE_PRESSAGIO",
+        "trigger": "exactLanding",
+        "oncePerPlayer": true,
+        "type": "narrative",
+        "narrative": "Enoque continuou andando com o verdadeiro Deus em meio a uma humanidade cada vez mais corrompida. Sua fidelidade funciona como um presságio narrativo do contraste que se tornará ainda mais evidente nas casas seguintes.",
+        "die": null,
+        "mechanicalEffect": "none"
+      }
     },
     {
       "house": 36,
@@ -1977,5 +2000,13 @@
     "affectsGameMath": false,
     "affectsHouseOrder": false,
     "affectsMechanics": false
+  },
+  "houseOccurrences": {
+    "status": "PLAYTEST V4 — ações mínimas para casas antes inertes",
+    "houses": [
+      2,
+      35
+    ],
+    "note": "As ocorrências só são disparadas ao parar exatamente na casa. P1-020 concede +1 em um recurso administrável escolhido, sem dado. P1-350 é somente narrativa, sem efeito mecânico."
   }
 }
