@@ -19,7 +19,30 @@ document.addEventListener('dorath-photo-update',e=>{playerPhoto=e.detail?.photo|
 function select(id,user=false){if(!panels.includes(id))return;selected=id;manual=user;for(const key of panels)active(key)?.classList.toggle('dv4-current',key===id);for(const b of nav.querySelectorAll('button'))b.classList.toggle('dv4-selected',b.dataset.dv4===(navItems.some(n=>n[0]===id)?id:'history'));ui.querySelector('#dv4label').textContent=({'movement':'SEU PRÓXIMO PASSO','missions':'MISSÃO','world':'EVENTO E ARCA','player':'CARTA DO JOGADOR','rooms':'SALAS DA PARTIDA','threats':'AMEAÇAS COLETIVAS','trades':'TROCAS','history':'HISTÓRICO'})[id];extras.hidden=true}
 nav.addEventListener('click',e=>{const id=e.target.closest('button[data-dv4]')?.dataset.dv4;if(!id)return;if(id==='history'){extras.hidden=!extras.hidden;return}select(id,true)});
 extras.addEventListener('click',e=>{const id=e.target.closest('[data-dv4]')?.dataset.dv4;if(id)select(id,true)});
-function openCard(card){const body=ui.querySelector('#dv4content');body.replaceChildren();let title=document.createElement('h2');title.textContent=card.title;body.append(title);if(card.kind==='JOGADOR'){const action=document.createElement('button');action.type='button';action.textContent='Editar carta e escolher selfie';action.addEventListener('click',()=>{modal.close();select('player',true);active('player')?.scrollIntoView({block:'start',behavior:'smooth'})});body.append(action)}if(card.src){const img=document.createElement('img');img.src=card.src;img.alt=card.title;img.loading='eager';body.append(img)}else{let p=document.createElement('p');p.textContent=card.info||'';body.append(p);let player=active('player');let details=player?.querySelectorAll('p');for(const el of [...(details||[])].slice(0,4)){let q=document.createElement('p');q.textContent=el.textContent;body.append(q)}}modal.showModal()}
+function openCard(card){
+ const body=ui.querySelector('#dv4content');body.replaceChildren();
+ if(card.kind==='JOGADOR'){
+  const player=active('player');
+  const resources=text(player?.querySelector('p'));
+  const value=(name)=>{const rx=new RegExp(name+'\\s*:\\s*(\\d+)','i');return resources.match(rx)?.[1]||'0'};
+  let personal={};try{personal=JSON.parse(localStorage.getItem('dorath.visual.profile.v1.'+(document.getElementById('accountEmail')?.textContent?.trim()||'local'))||'{}')}catch{}
+  const cv=(str)=>escapeHTML(str||'Não preenchido');
+  const sheet=document.createElement('article');sheet.className='dv4-full-player';
+  sheet.innerHTML='<header class="dv4-fp-head"><span class="dv4-fp-decoration" aria-hidden="true">❧ ✦ ❧</span><h2>'+escapeHTML(card.title)+'</h2><p>Período 1 · Carta do Jogador</p></header>'+
+   '<div class="dv4-fp-main"><div class="dv4-fp-photo">'+(playerPhoto?'<img alt="Selfie do jogador" src="'+playerPhoto+'">':'<div class="dv4-fp-placeholder">♛<small>Tire sua selfie</small></div>')+'</div>'+
+   '<div class="dv4-fp-testimony"><h3>MINHA HISTÓRIA</h3><p>'+cv(personal.historia)+'</p><h4>ORIGEM / TRAJETÓRIA</h4><p>'+cv(personal.origem)+'</p></div></div>'+
+   '<div class="dv4-fp-stats">'+[['Conhecimento','Conhecimento'],['Influência','Influência'],['Provisões','Provisões'],['Herança','Herança']].map(([name,key])=>'<section><span>'+name+'</span><strong>'+value(key)+'</strong></section>').join('')+'</div>'+
+   '<section class="dv4-fp-notes"><h3>ANOTAÇÕES PESSOAIS</h3><p>'+cv(personal.notas)+'</p></section>'+
+   '<footer class="dv4-fp-footer">DORATH · DA CRIAÇÃO À RESTAURAÇÃO</footer>';
+  body.append(sheet);
+  const action=document.createElement('button');action.type='button';action.className='dv4-edit-card';action.textContent='Editar minha carta / tirar selfie';action.addEventListener('click',()=>{modal.close();select('player',true);active('player')?.scrollIntoView({block:'start',behavior:'smooth'})});body.append(action);
+ }else{
+  const title=document.createElement('h2');title.textContent=card.title;body.append(title);
+  if(card.src){const img=document.createElement('img');img.src=card.src;img.alt=card.title;img.loading='eager';body.append(img)}
+  else{const p=document.createElement('p');p.textContent=card.info||'Nenhum personagem selecionado.';body.append(p)}
+ }
+ modal.showModal();
+}
 ui.querySelector('#dv4close').addEventListener('click',()=>modal.close());modal.addEventListener('click',e=>{if(e.target===modal)modal.close()});
 function renderCards(){
  const player=active('player');const label=text(player?.querySelector('h3')).split('·')[0].trim()||'Jogador';const chars=text(player?.querySelectorAll('p')[2]).replace(/^Personagens \(até 2\):\s*/,'');const available=[...player?.querySelectorAll('.char-check')||[]];const people=chars.split(',').map(x=>x.trim()).filter(Boolean).slice(0,2).map(id=>({id,name:text(available.find(c=>c.value===id)?.closest('label'))||id}));const statLine=text(player?.querySelector('p'));const key=label+'|'+statLine+'|'+people.map(p=>p.name).join('|');if(oldNames===key)return;oldNames=key;cards.replaceChildren();
