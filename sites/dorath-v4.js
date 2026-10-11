@@ -8,6 +8,8 @@ board.insertBefore(ui,host);const cards=ui.querySelector('#dv4cards'),nav=ui.que
 const navItems=[['movement','Jogar','◈'],['missions','Missão','✦'],['world','Evento','❢'],['player','Jogador','♛'],['history','Mais','☰']];
 for(const [id,label,icon] of navItems){const b=document.createElement('button');b.type='button';b.dataset.dv4=id;b.innerHTML='<span aria-hidden="true">'+icon+'</span><small>'+label+'</small>';nav.append(b)}
 const extras=document.createElement('div');extras.id='dv4extras';extras.hidden=true;for(const [id,label] of [['rooms','Salas'],['threats','Ameaças'],['trades','Trocas'],['history','Histórico'],['player','Carta do Jogador']]){let b=document.createElement('button');b.type='button';b.dataset.dv4=id;b.textContent=label;extras.append(b)}ui.insertBefore(extras,nav);const accountMenu=document.createElement('div');accountMenu.className='dv4-account-menu';accountMenu.innerHTML='<small>Conectado como <span id="dv4menuEmail"></span></small><button type="button" id="dv4menuSignout">Sair da conta</button>';extras.append(accountMenu);
+const chooseParty=document.createElement('button');chooseParty.type='button';chooseParty.textContent='Trocar de partida';chooseParty.addEventListener('click',()=>{extras.hidden=true;document.dispatchEvent(new Event('dorath-choose-party'))});accountMenu.insertBefore(chooseParty,accountMenu.querySelector('#dv4menuSignout'));
+
 // A navegação vem depois do painel de turno, não entre as cartas e as ações.
 host.after(extras,nav);
 accountMenu.querySelector('#dv4menuSignout').addEventListener('click',()=>{if(window.confirm('Deseja realmente sair da conta?'))document.getElementById('signout')?.click()});
