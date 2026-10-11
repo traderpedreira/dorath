@@ -30,7 +30,7 @@ function renderCards(){
   b.classList.add('dv4-player-card');
   const stats=[...player.querySelectorAll('p')][0]?.textContent||'';
   const resourceNames=['Conhecimento','Influência','Provisões','Herança'];
-  const bits=resourceNames.map(n=>{const m=stats.match(new RegExp(n+'\\\\s*:\\\\s*(\\\\d+)','i'));return '<span><small>'+n+'</small><b>'+(m?m[1]:'—')+'</b></span>'}).join('');
+  const bits=resourceNames.map(n=>{const m=stats.match(new RegExp(n+'\\s*:\\s*(\\d+)','i'));return '<span><small>'+n+'</small><b>'+(m?m[1]:'—')+'</b></span>'}).join('');
   b.innerHTML='<span class="dv4-card-type">JOGADOR</span><span class="dv4-portrait">'+(c.src?'<img src="'+escapeHTML(c.src)+'" alt="">':'<span class="dv4-card-symbol" aria-hidden="true">♛</span>')+'</span><strong>'+escapeHTML(c.title)+'</strong><span class="dv4-card-stats">'+bits+'</span><span class="dv4-card-foot">TOCAR PARA ABRIR</span>';
  }else{
   b.classList.add('dv4-character-card');
