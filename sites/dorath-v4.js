@@ -27,20 +27,46 @@ function openCard(card){
   const value=name=>{const entry=resources.split('·').find(x=>x.trim().toLowerCase().startsWith(name.toLowerCase()+':'));return entry?.match(/[0-9]+/)?.[0]||'0'};
   let personal={};try{personal=JSON.parse(localStorage.getItem('dorath.visual.profile.v1.'+(document.getElementById('accountEmail')?.textContent?.trim()||'local'))||'{}')}catch{}
   const cv=str=>escapeHTML(String(str||'').trim());
+  const displayName=personal.nome?.trim()||card.title;
   const secret=text(player?.querySelectorAll('p')[1]).replace(/^Missão Secreta\s*/i,'').trim();
   const houseCode=(text(document.querySelector('#summary h2')).match(/P[1-8]-\d{3}/)||[])[0]||'P1-010';
   const period=(houseCode.match(/^P([1-8])/)||[])[1]||'1';
   const round=(text(document.querySelector('#summary p')).match(/Rodada\s+(\d+)/i)||[])[1]||'—';
   const sheet=document.createElement('article');sheet.className='dv4tpl-card dv4tpl-v5';
   sheet.innerHTML='<img class="dv4tpl-base" src="assets/ui/player-card-background.png" alt="Arte-base homologada da Carta do Jogador">'+
-   '<div class="dv4tpl-name">'+escapeHTML(card.title)+'</div>'+
+   '<div class="dv4tpl-name">'+escapeHTML(displayName)+'</div>'+
    '<div class="dv4tpl-subtitle">Período '+period+' · Rodada '+round+' · Casa '+escapeHTML(houseCode)+'</div>'+
    '<div class="dv4tpl-portrait">'+(playerPhoto?'<img alt="Selfie do jogador" src="'+escapeHTML(playerPhoto)+'">':'<div class="dv4tpl-placeholder">SUA FOTO AQUI</div>')+'</div>'+
    '<div class="dv4tpl-history">'+cv(personal.historia||'')+'</div>'+
    '<div class="dv4tpl-stats">'+[['knowledge','Conhecimento'],['influence','Influência'],['heritage','Herança'],['provisions','Provisões']].map(([key,name])=>'<output class="dv4tpl-stat dv4tpl-'+key+'">'+value(name)+'</output>').join('')+'</div>'+
    '<div class="dv4tpl-secret">'+escapeHTML(secret||'Aguardando atribuição da missão.')+'</div>';
   body.append(sheet);
-  const action=document.createElement('button');action.type='button';action.className='dv4tpl-edit';action.textContent='Editar carta · Tirar selfie';action.addEventListener('click',()=>{modal.close();select('player',true);active('player')?.scrollIntoView({block:'start',behavior:'smooth'})});body.append(action);
+  const action=document.createElement('button');action.type='button';action.className='dv4tpl-edit';action.textContent='Editar carta · Tirar selfie';action.addEventListener('click',()=>{
+    body.replaceChildren();
+    const editor=document.createElement('section');editor.className='dv4-card-editor';
+    const source=document.getElementById('dorathPersonalHistory');
+    const stored=(()=>{try{return JSON.parse(localStorage.getItem('dorath.visual.profile.v1.'+(document.getElementById('accountEmail')?.textContent?.trim()||'local'))||'{}')}catch{return {}}})();
+    const form=document.createElement('form');form.className='dv4-card-editor-form';
+    const titles=[['nome','Nome na Carta',60],['historia','Experiência',600],['origem','Origem / trajetória',120],['notas','Anotações pessoais',600],['anoBatismo','Ano de batismo',40],['tempoServico','Tempo de serviço',60],['congregacaoCidade','Congregação / Cidade',100]];
+    for(const [id,label,max] of titles){
+      const row=document.createElement('label');row.textContent=label;
+      const field=document.createElement(id==='historia'||id==='notas'?'textarea':'input');
+      field.name=id;field.maxLength=max;field.value=stored[id]||'';if(field.tagName==='TEXTAREA')field.rows=4;
+      row.append(field);form.append(row);
+    }
+    const photoBtn=document.createElement('button');photoBtn.type='button';photoBtn.textContent='Tirar selfie';
+    photoBtn.addEventListener('click',()=>source?.querySelector('#dorathPhotoCamera')?.click());
+    form.append(photoBtn);
+    const save=document.createElement('button');save.type='submit';save.textContent='Salvar e voltar à carta';form.append(save);
+    form.addEventListener('submit',event=>{
+      event.preventDefault();const next={...stored};
+      for(const [id] of titles)next[id]=form.elements.namedItem(id).value.trim();
+      try{localStorage.setItem('dorath.visual.profile.v1.'+(document.getElementById('accountEmail')?.textContent?.trim()||'local'),JSON.stringify(next))}catch{}
+      for(const [id] of titles){const legacy=document.getElementById('dorath-profile-'+id);if(legacy)legacy.value=next[id]}
+      modal.close();openCard(card);
+    });
+    editor.append(form);body.append(editor);
+  });body.append(action);
  }else{
   const title=document.createElement('h2');title.textContent=card.title;body.append(title);
   if(card.src){const img=document.createElement('img');img.src=card.src;img.alt=card.title;img.loading='eager';body.append(img)}
