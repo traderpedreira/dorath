@@ -26,16 +26,21 @@ function openCard(card){
   const resources=text(player?.querySelector('p'));
   const value=name=>{const entry=resources.split('·').find(x=>x.trim().toLowerCase().startsWith(name.toLowerCase()+':'));return entry?.match(/[0-9]+/)?.[0]||'0'};
   let personal={};try{personal=JSON.parse(localStorage.getItem('dorath.visual.profile.v1.'+(document.getElementById('accountEmail')?.textContent?.trim()||'local'))||'{}')}catch{}
-  const cv=str=>escapeHTML(str||'A definir');
-  const sheet=document.createElement('article');sheet.className='dv4pc-master';
-  sheet.innerHTML='<header class="dv4pc-header"><div class="dv4pc-ornament" aria-hidden="true">❦ ── ❧ ── ❦</div><h2>'+escapeHTML(card.title)+'</h2><p>PERÍODO 1 · JOGADOR</p><div class="dv4pc-rule" aria-hidden="true">✦</div></header>'+
-   '<div class="dv4pc-story"><div class="dv4pc-portrait">'+(playerPhoto?'<img alt="Selfie do jogador" src="'+playerPhoto+'">':'<div class="dv4pc-placeholder">♛<small>Retrato pendente</small></div>')+'</div><div class="dv4pc-testimony"><h3>HISTÓRICO DO JOGADOR</h3><div class="dv4pc-flourish">❧ ─── ❧</div><p>'+cv(personal.historia)+'</p></div></div>'+
-   '<div class="dv4pc-identity"><span>JOGADOR</span><span>·</span><span>'+cv(personal.origem)+'</span></div>'+
-   '<div class="dv4pc-resources">'+[['Herança','♛'],['Conhecimento','✧'],['Provisões','❦'],['Influência','♟']].map(([name,icon])=>'<div class="dv4pc-resource"><h4>'+name+'</h4><div class="dv4pc-resource-medal"><i aria-hidden="true">'+icon+'</i><strong>'+value(name)+'</strong></div></div>').join('')+'</div>'+
-   '<section class="dv4pc-secret"><h3>MISSÃO SECRETA</h3><p>'+escapeHTML(text(player?.querySelectorAll('p')[1]).replace(/^Missão Secreta\s*/i,'')||'Aguardando atribuição da missão.')+'</p></section>'+'<div class="dv4pc-storyfoot"><h3>ANOTAÇÕES PESSOAIS</h3><p>'+cv(personal.notas)+'</p></div>'+
-   '<footer class="dv4pc-footer" aria-hidden="true">❧ ✦ ❧</footer>';
+  const cv=str=>escapeHTML(String(str||'').trim());
+  const secret=text(player?.querySelectorAll('p')[1]).replace(/^Missão Secreta\\s*/i,'').trim();
+  const sheet=document.createElement('article');sheet.className='dv4tpl-card';
+  const fields=[['Herança',value('Herança')],['Conhecimento',value('Conhecimento')],['Provisões',value('Provisões')],['Influência',value('Influência')]];
+  sheet.innerHTML='<img class="dv4tpl-base" src="assets/ui/player-card-template.png" alt="Ornamentos originais da Carta do Jogador Dorath">'+
+   '<div class="dv4tpl-name">'+escapeHTML(card.title)+'</div>'+
+   '<div class="dv4tpl-subtitle">PERÍODO 1 · JOGADOR</div>'+
+   '<div class="dv4tpl-portrait">'+(playerPhoto?'<img alt="Selfie do jogador" src="'+escapeHTML(playerPhoto)+'">':'<div class="dv4tpl-placeholder">TIRE SUA SELFIE</div>')+'</div>'+
+   '<div class="dv4tpl-history"><p>'+cv(personal.historia||'Sua história será exibida aqui.')+'</p></div>'+
+   '<div class="dv4tpl-tags"><span>'+cv(personal.tag1||'JOGADOR')+'</span><span>•</span><span>'+cv(personal.tag2||'DORATH')+'</span><span>•</span><span>'+cv(personal.tag3||'PERÍODO 1')+'</span></div>'+
+   '<div class="dv4tpl-stats">'+fields.map(([k,v])=>'<div class="dv4tpl-stat"><b>'+k+'</b><strong>'+v+'</strong></div>').join('')+'</div>'+
+   '<div class="dv4tpl-secret"><h3>MISSÃO SECRETA</h3><p>'+escapeHTML(secret||'Aguardando atribuição da missão.')+'</p></div>'+
+   '<div class="dv4tpl-bottom"><span>'+cv(personal.anoBatismo||'—')+'</span><span>'+cv(personal.tempoServico||'—')+'</span><span>'+cv(personal.congregacaoCidade||'—')+'</span></div>';
   body.append(sheet);
-  const action=document.createElement('button');action.type='button';action.className='dv4pc-edit';action.textContent='Editar carta · Tirar selfie';action.addEventListener('click',()=>{modal.close();select('player',true);active('player')?.scrollIntoView({block:'start',behavior:'smooth'})});body.append(action);
+  const action=document.createElement('button');action.type='button';action.className='dv4tpl-edit';action.textContent='Editar carta · Tirar selfie';action.addEventListener('click',()=>{modal.close();select('player',true);active('player')?.scrollIntoView({block:'start',behavior:'smooth'})});body.append(action);
  }else{
   const title=document.createElement('h2');title.textContent=card.title;body.append(title);
   if(card.src){const img=document.createElement('img');img.src=card.src;img.alt=card.title;img.loading='eager';body.append(img)}
