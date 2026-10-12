@@ -141,6 +141,7 @@ function draw(){const v=view,p=v.me,host=p.id===v.hostPlayerId,turn=v.turnPlayer
  }
  $('movement').innerHTML=movement.replace(/<p(?=>)/g,'<p class="dv4-movement-status"');
  $('movement').dataset.missionStep=String(hasMissionStep);
+ $('movement').dataset.isMyTurn=String(turn);
  const missionAttrs=p.mission?(p.mission.id==='M06'||p.mission.id==='M09'||p.mission.id==='M15'?[]:p.mission.requirement.includes('Conhecimento ou Influência')?['conhecimento','influencia']:p.mission.requirement.includes('Conhecimento')?['conhecimento']:p.mission.requirement.includes('Influência')?['influencia']:[]):[];
 let mission='<h3>Missão comum</h3>';
  if(!p.setupDone)mission+='<p>Confirme os atributos iniciais em Jogar antes de acessar Missões.</p>';
