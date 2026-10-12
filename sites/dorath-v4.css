@@ -636,3 +636,19 @@ html body #board .mp-grid > #movement.dv4-current .dv4-intro-event-target{
  color:#ffffff!important;
  font-weight:800!important;
 }
+
+/* Mensagens de turno para todos os jogadores, inclusive após passar a vez. */
+html body #board .mp-grid > #movement.dv4-current > p.dv4-movement-status{
+ display:block!important;
+ background:#fff0d0!important;
+ color:#382515!important;
+ border:1px solid #ba955e!important;
+ border-radius:9px!important;
+ box-shadow:none!important;
+ margin:10px 0 14px!important;
+ padding:13px 14px!important;
+ font:600 .94rem/1.5 var(--dv4-type-body)!important;
+ text-align:center!important;
+ text-shadow:none!important;
+ opacity:1!important;
+}
