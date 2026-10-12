@@ -90,7 +90,7 @@ function missionOffer(g,p,replace){
  if(!pool.length)pool=all.filter(m=>m.id!==p.missionHistory.at(-1));
  const m=pick(pool);p.mission={...m};p.missionHistory.push(m.id);p.offeredMove=g.round+':'+p.house;
  p.missionDonationSnapshot=p.donatedAmount;
- p.missionRandomBonus=p.house===3?(Number.isInteger(p.house3LandingBonus)?p.house3LandingBonus:rand(4)):null;
+ p.missionRandomBonus=p.house===3&&Number.isInteger(p.house3LandingBonus)?p.house3LandingBonus:rand(4);
  log(g,'missao',`Missão privada oferecida a ${p.name}`,{privateFor:p.id});
 }
 function missionReward(g,p,n,a={}){
@@ -301,7 +301,7 @@ function missionAttempt(g,p,a){
  if(req.includes('Ameaça ativa')&&!g.activeThreats.length)fail('Não há Ameaça ativa');
  if(req.includes('EM RISCO')&&!g.players.some(q=>q.id!==p.id&&!arkReady(q)))fail('Nenhum jogador EM RISCO');
  if(m.id==='M09'&&p.donatedAmount<=(p.missionDonationSnapshot||0))fail('Transfira voluntariamente 1 recurso após receber esta Missão');
- const baseBonus=Number.isInteger(p.missionRandomBonus)?p.missionRandomBonus:number(a.bonus??0,0,3);
+ const baseBonus=Number.isInteger(p.missionRandomBonus)?p.missionRandomBonus:rand(4); // Missões anteriores à atualização também não permitem bônus manual
  const bonus=baseBonus+(p.nextCooperationBonus||0);
  p.missionRandomBonus=null;
  p.nextCooperationBonus=0;p.missionUsedRound=g.round;
