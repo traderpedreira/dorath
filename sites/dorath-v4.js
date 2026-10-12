@@ -110,11 +110,18 @@ function renderCards(){
  for(const c of set){
  const b=document.createElement('button');b.className='dv4-card';b.type='button';b.setAttribute('aria-label','Abrir carta: '+c.title);
  if(c.kind==='JOGADOR'){
-  b.classList.add('dv4-player-card');
-  b.innerHTML='<span class="dv4-mini-art"><img class="dv4-mini-base" src="assets/ui/Cart%C3%A3o%20Dorath%20com%20miss%C3%A3o%20secreta.png" alt="Carta do Jogador">'+(c.src?'<img class="dv4-mini-selfie" src="'+escapeHTML(c.src)+'" alt="">':'')+'<span class="dv4-mini-name">'+escapeHTML(miniName)+'</span><span class="dv4-mini-meta">Período '+period+' · Rodada '+round+' · Casa '+house+'</span><span class="dv4-mini-session">PARTIDA CONECTADA</span><span class="dv4-mini-medals">'+[['Conhecimento',15.5],['Influência',38.7],['Herança',62.3],['Provisões',85.4]].map(([name,left])=>'<span style="left:'+left+'%">'+getValue(name)+'</span>').join('')+'</span><span class="dv4-mini-mission">'+escapeHTML(secret||'Aguardando missão secreta.')+'</span></span><span class="dv4-card-foot">TOQUE PARA ABRIR</span>';
+  b.classList.add('dv4-player-card','dv4-summary-card');
+  b.innerHTML='<span class="dv4-summary-type">CARTA DO JOGADOR</span><strong class="dv4-summary-name">'+escapeHTML(miniName)+'</strong>'+
+   '<span class="dv4-summary-stats dv4-summary-stats-player">'+
+   [['Conhecimento','CON'],['Influência','INF'],['Herança','HER'],['Provisões','PRO']].map(([name,abbr])=>'<span class="dv4-summary-stat"><small>'+abbr+'</small><b>'+getValue(name)+'</b></span>').join('')+
+   '</span><span class="dv4-summary-footer">VER CARTA COMPLETA ↗</span>';
  }else{
-  b.classList.add('dv4-character-card');
-  b.innerHTML='<strong class="dv4-character-name">'+escapeHTML(c.title)+'</strong><span class="dv4-character-shortstats">'+escapeHTML(c.stats||'Escolha na galeria')+'</span><span class="dv4-card-foot">ABRIR CARTA</span>';
+  b.classList.add('dv4-character-card','dv4-summary-card');
+  const fields=[['Conhecimento','CON'],['Influência','INF'],['Herança','HER']];
+  const stat=(name)=>{const m=(c.stats||'').match(new RegExp(name+'\\s+(\\d+)','i'));return m?m[1]:'—'};
+  b.innerHTML='<span class="dv4-summary-type">PERSONAGEM</span><strong class="dv4-summary-name">'+escapeHTML(c.title)+'</strong>'+
+   '<span class="dv4-summary-stats">'+fields.map(([name,abbr])=>'<span class="dv4-summary-stat"><small>'+abbr+'</small><b>'+stat(name)+'</b></span>').join('')+'</span>'+
+   '<span class="dv4-summary-footer">VER CARTA COMPLETA ↗</span>';
  }
  b.onclick=()=>openCard(c);cards.append(b)
  }
