@@ -389,3 +389,27 @@ html #world.dv4-current .dv4-position-feedback[hidden]{display:none!important}
 html #missions.dv4-current .dv4-mission-feedback{display:block;padding:12px;margin:12px 0;border:1px solid #926b3d;border-radius:9px;background:#fff1cd!important;color:#402816!important;line-height:1.4;font-weight:700}
 html #missions.dv4-current .dv4-mission-feedback.mp-error{background:#ffe0d0!important;color:#832e20!important;border-color:#aa5540}
 html #missions.dv4-current .dv4-mission-feedback[hidden]{display:none!important}
+
+/* Padrão universal dos dados físicos: D4, D6 e D8 sempre em uma linha. */
+html body .mp-grid>.mp-card .dice{
+ display:grid!important;
+ grid-template-columns:repeat(6,minmax(0,1fr))!important;
+ gap:clamp(3px,1.2vw,7px)!important;
+ width:100%!important;min-width:0!important;
+ flex-wrap:nowrap!important;
+}
+html body .mp-grid>.mp-card .dice:has(>button:nth-child(4):last-child){
+ grid-template-columns:repeat(4,minmax(0,1fr))!important;
+}
+html body .mp-grid>.mp-card .dice:has(>button:nth-child(8):last-child){
+ grid-template-columns:repeat(8,minmax(0,1fr))!important;
+}
+html body .mp-grid>.mp-card .dice>button{
+ display:grid!important;place-items:center!important;
+ box-sizing:border-box!important;
+ min-width:0!important;min-height:0!important;
+ width:100%!important;max-width:100%!important;height:auto!important;
+ aspect-ratio:1/1!important;
+ flex:none!important;margin:0!important;padding:0!important;
+ font-size:clamp(.8rem,3.5vw,1.2rem)!important;
+}
