@@ -617,3 +617,22 @@ body,.mp-card p,.mp-card label,.mp-card input,.mp-card select,.mp-card textarea,
  opacity:1!important;
 }
 #movement .dv4-intro-event-hint strong{color:#fff7e8!important;font-weight:800!important}
+
+/* O painel aplica cor escura aos parágrafos; a orientação usa div independente. */
+html body #board .mp-grid > #movement.dv4-current div.dv4-intro-event-hint{
+ display:block!important;
+ background:#51351f!important;
+ color:#fff1d4!important;
+ border:1px solid #c8a36a!important;
+ border-radius:9px!important;
+ padding:14px 12px!important;
+ margin:14px 0!important;
+ font:700 .98rem/1.5 var(--dv4-type-body)!important;
+ text-align:center!important;
+ text-shadow:none!important;
+ opacity:1!important;
+}
+html body #board .mp-grid > #movement.dv4-current .dv4-intro-event-target{
+ color:#ffffff!important;
+ font-weight:800!important;
+}
