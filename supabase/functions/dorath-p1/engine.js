@@ -366,7 +366,7 @@ export function applyAction(g,p,a){
  case 'missionDecline':activeTurn(g,p);if(!missionEligible(g,p))fail('Oportunidade indisponível');p.offeredMove=g.round+':'+p.house;break;
  case 'missionAttempt':activeTurn(g,p);missionAttempt(g,p,a);break;
  case 'missionD4':if(!p.missionRewardPending)fail('Recompensa de Missão ausente');missionReward(g,p,number(a.d4,1,4),a);break;
- case 'mandamentoChoice':if(g.phase!=='active'||!g.globalStates.MANDAMENTO||p.mandamentoChoice)fail('Escolha do Mandamento indisponível');p.mandamentoChoice=a.refuse?'recusou':'não recusou';if(a.refuse){const roll=g.marcos[6]?.d4||2;gain(g,p,'heranca',roll>=3?2:1);if(roll===4)gain(g,p,'influencia',1)}break;
+ case 'mandamentoChoice':if(!g.globalStates.MANDAMENTO||p.mandamentoChoice)fail('Escolha do Mandamento indisponível');p.mandamentoChoice=a.refuse?'recusou':'não recusou';if(a.refuse){const roll=g.marcos[6]?.d4||2;gain(g,p,'heranca',roll>=3?2:1);if(roll===4)gain(g,p,'influencia',1)}break;
  case 'specialChoice':if(g.phase!=='active'||p.house!==7||!g.globalStates.MANDAMENTO||p.specialChoices[a.card])fail('Carta Especial indisponível nesta casa');
   if(a.card==='vida'){if(a.option==='heranca')gain(g,p,'heranca',2);else if(a.option==='provisoes')gain(g,p,'provisoes',2);else fail('Escolha inválida')}
   else if(a.card==='conhecimento'){if(a.option==='aceitar'){gain(g,p,'conhecimento',3);change(p,'heranca',-5)}else if(a.option!=='recusar')fail('Escolha inválida')}
