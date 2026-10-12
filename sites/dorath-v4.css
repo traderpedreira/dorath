@@ -413,3 +413,20 @@ html body .mp-grid>.mp-card .dice>button{
  flex:none!important;margin:0!important;padding:0!important;
  font-size:clamp(.8rem,3.5vw,1.2rem)!important;
 }
+
+/* Confirmação obrigatória no aparelho: recursos físicos da mesa. */
+#dv4ResourceNotice{
+ box-sizing:border-box;width:min(92vw,460px);max-width:460px;
+ border:3px ridge #be9352;border-radius:19px;
+ padding:25px 20px 22px;text-align:center;
+ color:#3b2512;background:linear-gradient(145deg,#fff5d8 0%,#efdab0 64%,#d5ac76 100%);
+ box-shadow:0 16px 50px #080503bd,inset 0 2px 0 #fff8df;
+ font-family:Georgia,serif;
+}
+#dv4ResourceNotice::backdrop{background:rgba(12,8,5,.8)}
+#dv4ResourceNotice .dv4-resource-icon{font-size:2.25rem;color:#835a28}
+#dv4ResourceNotice h2{color:#684018;margin:5px 0 12px;letter-spacing:.09em;font-size:1.45rem}
+#dv4ResourceNotice.dv4-resource-loss h2{color:#913d27}
+#dv4ResourceNotice #dv4ResourceMessage{color:#3a2412;font-size:clamp(1.12rem,4.4vw,1.42rem);font-weight:bold;line-height:1.45;margin:12px 0}
+#dv4ResourceNotice .dv4-resource-instruction{color:#64462a;font-size:.98rem;line-height:1.4;margin:15px 0 20px}
+#dv4ResourceNotice #dv4ResourceAck{width:100%;margin:0;padding:13px 9px;border:2px ridge #d9b071;border-radius:10px;color:#ffeccb;background:linear-gradient(#866034,#452b19);font:700 .93rem Georgia,serif;letter-spacing:.02em;min-height:52px}
