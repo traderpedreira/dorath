@@ -13,7 +13,7 @@ document.getElementById('audioAmbient').addEventListener('change',e=>{audio.ambi
 document.getElementById('audioEffects').addEventListener('change',e=>{audio.effects=e.target.checked});
 function say(t,error=false){$('status').textContent=t;$('status').classList.toggle('mp-error',error)}
 async function api(route,data={}){
- if(!/^https:\/\/[^/]+\.supabase\.co\/functions\/v1\/dorath-p1$/.test(EDGE_FUNCTION_URL))throw Error('Configure site/supabase-config.js antes de usar o app');
+ if(!/^https:\/\/[^/]+\.supabase\.co\/functions\/v1\/dorath-p1(?:-v4)?$/.test(EDGE_FUNCTION_URL))throw Error('Configure site/supabase-config.js antes de usar o app');
  // A sessão já foi obtida no login/INITIAL_SESSION. Não consultar getSession()
  // a cada requisição: isso pode bloquear no lock interno durante refresh de token.
  if(!sessionAccessToken)throw Error('Sessão indisponível. Entre na sua conta novamente.');
