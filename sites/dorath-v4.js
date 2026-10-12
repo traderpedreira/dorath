@@ -198,7 +198,12 @@ const priority=()=>{
  if(active('player')?.dataset.setupDone!=='true')return 'movement';
  if(initialAdamPending)return 'player';
  if(active('world')?.querySelector('.dv4-house-occurrence'))return 'movement';
- if(introAwaitEvent)return 'movement';
+ if(introAwaitEvent&&active('movement')?.querySelector('.dv4-intro-event-hint'))return 'movement';
+ if(introAwaitEvent)introAwaitEvent=false;
+ // A rolagem de movimento sempre abre o turno; a missão vem após a chegada.
+ if(active('movement')?.querySelector('[data-action="move"],[data-action="setup"]'))return 'movement';
+ // Enquanto há missão a decidir ou resolver, não desviar para Encerrar turno.
+ if(active('missions')?.dataset.missionStep==='true')return 'missions';
  // Primeiro conclui os dados obrigatórios do Marco 06; em seguida destaca a decisão pessoal.
  const movementActions=[...active('movement')?.querySelectorAll('[data-action]')||[]].map(b=>b.dataset.action);
  if(movementActions.some(a=>['marcoD4','marcoIndividualD4'].includes(a)))return 'movement';
