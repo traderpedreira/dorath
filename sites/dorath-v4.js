@@ -195,6 +195,9 @@ modal.addEventListener('close',()=>{
  }
 });
 const priority=()=>{
+ // Fora da vez, o jogador acompanha o estado em Jogar; Missão não é acionável.
+ const movement=active('movement');
+ if(movement?.dataset.isMyTurn==='false')return 'movement';
  if(active('player')?.dataset.setupDone!=='true')return 'movement';
  if(initialAdamPending)return 'player';
  if(active('world')?.querySelector('.dv4-house-occurrence'))return 'movement';
