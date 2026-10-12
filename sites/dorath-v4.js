@@ -107,23 +107,33 @@ function renderCards(){
  const key=[label,statLine,secret,miniName,period,round,house,people.map(p=>p.name+':'+p.stats).join('|')].join('|');if(oldNames===key)return;oldNames=key;cards.replaceChildren();
  const getValue=name=>{const entry=statLine.split('·').find(x=>x.trim().toLowerCase().startsWith(name.toLowerCase()+':'));return entry?.match(/[0-9]+/)?.[0]||'0'};
  const set=[{title:label,kind:'JOGADOR',src:playerPhoto||null,info:'Toque em Editar carta para inserir sua foto, origem e história.'},...Array.from({length:2},(_,i)=>({kind:'PERSONAGEM',title:people[i]?.name||'Não selecionado',stats:people[i]?.stats||'',src: mapped[slug(people[i]?.name||'')]?'assets/personagens/'+mapped[slug(people[i].name)]:null}))];
- for(const c of set){
- const b=document.createElement('button');b.className='dv4-card';b.type='button';b.setAttribute('aria-label','Abrir carta: '+c.title);
- if(c.kind==='JOGADOR'){
-  b.classList.add('dv4-player-card','dv4-summary-card');
-  b.innerHTML='<span class="dv4-summary-type">CARTA DO JOGADOR</span><strong class="dv4-summary-name">'+escapeHTML(miniName)+'</strong>'+
-   '<span class="dv4-summary-stats dv4-summary-stats-player">'+
-   [['Conhecimento','CON'],['Influência','INF'],['Herança','HER'],['Provisões','PRO']].map(([name,abbr])=>'<span class="dv4-summary-stat"><small>'+abbr+'</small><b>'+getValue(name)+'</b></span>').join('')+
-   '</span><span class="dv4-summary-footer">VER CARTA COMPLETA ↗</span>';
- }else{
-  b.classList.add('dv4-character-card','dv4-summary-card');
-  const fields=[['Conhecimento','CON'],['Influência','INF'],['Herança','HER']];
-  const stat=(name)=>{const m=(c.stats||'').match(new RegExp(name+'\\s+(\\d+)','i'));return m?m[1]:'—'};
-  b.innerHTML='<span class="dv4-summary-type">PERSONAGEM</span><strong class="dv4-summary-name">'+escapeHTML(c.title)+'</strong>'+
-   '<span class="dv4-summary-stats">'+fields.map(([name,abbr])=>'<span class="dv4-summary-stat"><small>'+abbr+'</small><b>'+stat(name)+'</b></span>').join('')+'</span>'+
-   '<span class="dv4-summary-footer">VER CARTA COMPLETA ↗</span>';
- }
- b.onclick=()=>openCard(c);cards.append(b)
+ for(const [slot,c] of set.entries()){
+  const b=document.createElement(c.kind==='JOGADOR'?'button':'div');
+  b.className='dv4-card dv4-summary-card';
+  if(c.kind==='JOGADOR'){
+   b.type='button';b.classList.add('dv4-player-card');
+   b.setAttribute('aria-label','Abrir carta: '+c.title);
+   b.innerHTML='<span class="dv4-summary-type">CARTA DO JOGADOR</span><strong class="dv4-summary-name">'+escapeHTML(miniName)+'</strong>'+
+    '<span class="dv4-summary-stats dv4-summary-stats-player">'+
+    [['Conhecimento','CON'],['Influência','INF'],['Herança','HER'],['Provisões','PRO']].map(([name,abbr])=>'<span class="dv4-summary-stat"><small>'+abbr+'</small><b>'+getValue(name)+'</b></span>').join('')+
+    '</span><span class="dv4-summary-footer">VER CARTA COMPLETA ↗</span>';
+   b.onclick=()=>openCard(c);
+  }else{
+   b.classList.add('dv4-character-card');
+   const fields=[['Conhecimento','CON'],['Influência','INF'],['Herança','HER']];
+   const stat=name=>{const m=(c.stats||'').match(new RegExp(name+'\\s+(\\d+)','i'));return m?m[1]:'—'};
+   b.innerHTML='<span class="dv4-summary-type">PERSONAGEM '+slot+'</span><strong class="dv4-summary-name">'+escapeHTML(c.title)+'</strong>'+
+    '<span class="dv4-summary-stats dv4-summary-stats-character">'+fields.map(([name,abbr])=>'<span class="dv4-summary-stat"><small>'+abbr+'</small><b>'+stat(name)+'</b></span>').join('')+
+    '<button class="dv4-summary-swap" type="button" aria-label="Trocar personagem '+slot+'">TROCAR<br>CARTA</button></span>'+
+    '<button class="dv4-summary-open" type="button">VER CARTA COMPLETA ↗</button>';
+   b.querySelector('.dv4-summary-open').addEventListener('click',()=>openCard(c));
+   b.querySelector('.dv4-summary-swap').addEventListener('click',()=>{
+    select('player',true);
+    const gallery=active('player')?.querySelector('.dv4-character-gallery');
+    gallery?.scrollIntoView({block:'nearest',behavior:'smooth'});
+   });
+  }
+  cards.append(b);
  }
 }
 // A galeria expõe a arte completa sem substituir o limite de personagens do motor.
