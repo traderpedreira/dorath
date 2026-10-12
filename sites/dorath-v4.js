@@ -161,6 +161,7 @@ document.addEventListener('click',e=>{
 
 let initialAdamPending=false;
 let initialAdamOpen=false;
+let introAwaitEvent=false;
 document.addEventListener('dorath-setup-acknowledged',()=>{
  initialAdamPending=true;
  select('player',true);
@@ -186,6 +187,7 @@ function updateIntroSelection(){
 modal.addEventListener('close',()=>{
  if(initialAdamOpen){
   initialAdamOpen=false;
+  introAwaitEvent=true;
   select('movement',true);
   const movement=active('movement');
   let hint=movement?.querySelector('#dv4IntroEventHint');
@@ -196,6 +198,8 @@ modal.addEventListener('close',()=>{
 const priority=()=>{
  if(active('player')?.dataset.setupDone!=='true')return 'movement';
  if(initialAdamPending)return 'player';
+ if(introAwaitEvent&&active('world')?.querySelector('.dv4-house-occurrence'))return 'movement';
+ if(introAwaitEvent)introAwaitEvent=false;
  // Primeiro conclui os dados obrigatórios do Marco 06; em seguida destaca a decisão pessoal.
  const movementActions=[...active('movement')?.querySelectorAll('[data-action]')||[]].map(b=>b.dataset.action);
  if(movementActions.some(a=>['marcoD4','marcoIndividualD4'].includes(a)))return 'movement';
