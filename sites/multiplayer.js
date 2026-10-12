@@ -150,8 +150,8 @@ let mission='<h3>Missão comum</h3>';
  mission+=`<p class="dv4-mission-roll-title">ROLE O D6 FÍSICO</p><div class="dv4-mission-dice">${die('missionAttempt',6).replace('<div class="dice">','<div class="dice" style="display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:4px!important;flex-wrap:nowrap!important">')}</div>`;
  mission+='<p id="dv4MissionFeedback" class="dv4-mission-feedback" role="status" aria-live="polite" hidden></p>';
  if(p.setupDone&&v.phase==='active'&&v.availableMission&&turn)mission+=`<button data-action="missionOffer">${p.mission?'Trocar Missão por 1 Influência':'Gerar Missão'}</button><button data-action="missionDecline">Ignorar oportunidade</button>`;
- $('missions').innerHTML=mission;
- $('missions').dataset.missionStep=String(hasMissionStep);
+ $('missions').innerHTML=turn?mission:'<h3>Missão comum</h3><p class="dv4-mission-wait">As Missões ficam disponíveis apenas durante seu turno.</p>';
+ $('missions').dataset.missionStep=String(turn&&hasMissionStep);
  let world='<h3>Eventos</h3>';
  if(v.phase==='house-occurrence'&&v.pendingHouseOccurrence?.initiator===p.id){
   const o=v.house?.occurrence;
