@@ -97,7 +97,21 @@ function openCard(card){
 }
 ui.querySelector('#dv4close').addEventListener('click',()=>modal.close());modal.addEventListener('click',e=>{if(e.target!==modal)return;const r=modal.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)modal.close()});
 function renderCards(){
- const player=active('player');const label=text(player?.querySelector('h3')).split('·')[0].trim()||'Jogador';const chars=player?.dataset.setupDone==='true'?text(player?.querySelectorAll('p')[2]).replace(/^Personagens \(até 2\):\s*/,''):'';const available=[...player?.querySelectorAll('.char-check')||[]];const people=chars.split(',').map(x=>x.trim()).filter(Boolean).slice(0,2).map(id=>{const el=available.find(c=>c.value===id)?.closest('.dv4-character-option');const names={adao:'Adão',eva:'Eva',caim:'Caim',abel:'Abel',sete:'Sete',noe:'Noé',sem:'Sem',cam:'Cam',jafe:'Jafé',matusalem:'Matusalém',enos:'Enos',jabal:'Jabal',jubal:'Jubal',tubalcaim:'Tubalcaim','lameque-caim':'Lameque (linhagem de Caim)','lameque-noe':'Lameque (linhagem de Sete)','enoque-caim':'Enoque (linhagem de Caim)','enoque-sete':'Enoque (linhagem de Sete)'};return {id,name:el?.dataset.characterName||names[id]||id,stats:el?.dataset.characterStats||''}});
+ const player=active('player');
+ const label=text(player?.querySelector('h3')).split('·')[0].trim()||'Jogador';
+ const chars=player?.dataset.setupDone==='true'?text(player?.querySelectorAll('p')[2]).replace(/^Personagens \\(até 2\\):\\s*/,''):'';
+ const official={
+  adao:['Adão',2,2,2],eva:['Eva',2,3,2],caim:['Caim',1,2,0],abel:['Abel',1,1,2],sete:['Sete',2,2,2],
+  'lameque-caim':['Lameque (linhagem de Caim)',0,4,0],'enoque-caim':['Enoque (linhagem de Caim)',2,3,1],
+  jabal:['Jabal',3,3,2],jubal:['Jubal',3,3,2],tubalcaim:['Tubalcaim',4,3,2],enos:['Enos',2,2,2],
+  'enoque-sete':['Enoque (linhagem de Sete)',3,2,3],matusalem:['Matusalém',3,2,4],
+  'lameque-noe':['Lameque (linhagem de Sete)',2,2,3],noe:['Noé',3,3,4],sem:['Sem',3,3,4],
+  cam:['Cam',3,4,2],jafe:['Jafé',3,2,3]
+ };
+ const people=chars.split(',').map(x=>x.trim()).filter(id=>Object.prototype.hasOwnProperty.call(official,id)).slice(0,2).map(id=>{
+  const [name,conhecimento,influencia,heranca]=official[id];
+  return {id,name,stats:`Conhecimento ${conhecimento} · Influência ${influencia} · Herança ${heranca}`};
+ });
  const statLine=text(player?.querySelector('p'));const secret=text(player?.querySelectorAll('p')[1]).replace(/^Missão Secreta\s*/i,'').trim();
  let personal={};try{personal=JSON.parse(localStorage.getItem('dorath.visual.profile.v1.'+(document.getElementById('accountEmail')?.textContent?.trim()||'local'))||'{}')}catch{}
  const summary=text(document.querySelector('#summary h2')),raw=text(document.querySelector('#summary p'));
