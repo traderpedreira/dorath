@@ -157,7 +157,6 @@ function nextPending(g){
  g.phase='active';
 }
 function afterMove(g,p,old,n){
- if(n===3){p.house3LandingBonus=rand(4);log(g,'missao',`${p.name} recebeu bônus aleatório +${p.house3LandingBonus} na Casa 03`,{privateFor:p.id})}
  g.marcoQueue=master.marcos.filter(h=>h>old&&h<=n&&!g.marcos[h]).map(h=>({house:h,initiator:p.id,stopped:n===h}));
  if(marco.has(n)&&g.marcos[n]&&!p.marcoPersonal[n])g.personalPending={house:n,initiator:p.id,stopped:true};
  if(old<42&&n>=42){g.arkOpened=true;log(g,'arca','Arca revelada: 3 Provisões e 1 Personagem próprio')}
