@@ -64,7 +64,7 @@ async function refresh(){
   void audio.update(view);saveCommon();
   $('login').hidden=true;$('board').hidden=false;
   if(changed)draw();
-  say(`Conectado · Partida-Mãe ${view.motherCode} · revisão ${view.revision}`);
+  say(`Conectado · Partida-Mãe ${view.motherCode} · ${view.players.length} ${view.players.length===1?'jogador':'jogadores'} na partida`);
   lastRefreshFailure=0;
  }catch(e){
   lastRefreshFailure=Date.now();
