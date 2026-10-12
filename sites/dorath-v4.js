@@ -99,7 +99,9 @@ ui.querySelector('#dv4close').addEventListener('click',()=>modal.close());modal.
 function renderCards(){
  const player=active('player');
  const label=text(player?.querySelector('h3')).split('·')[0].trim()||'Jogador';
- const chars=player?.dataset.setupDone==='true'?text(player?.querySelectorAll('p')[2]).replace(/^Personagens \\(até 2\\):\\s*/,''):'';
+ const selectedLine=text(player?.querySelectorAll('p')[2]);
+ const chars=player?.dataset.setupDone==='true' && selectedLine.startsWith('Personagens (até 2):')
+  ? selectedLine.slice('Personagens (até 2):'.length).trim() : '';
  const official={
   adao:['Adão',2,2,2],eva:['Eva',2,3,2],caim:['Caim',1,2,0],abel:['Abel',1,1,2],sete:['Sete',2,2,2],
   'lameque-caim':['Lameque (linhagem de Caim)',0,4,0],'enoque-caim':['Enoque (linhagem de Caim)',2,3,1],
