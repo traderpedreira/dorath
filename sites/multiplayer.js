@@ -44,6 +44,19 @@ function showResourceNotice(){
  modal.classList.toggle('dv4-resource-loss',change.delta<0);
  if(!modal.open)modal.showModal();
 }
+function showInitialResourceReceipt(p){
+ const d=document.createElement('dialog');d.className='dv4-setup-receipt';
+ d.innerHTML='<h2>ATRIBUTOS RECEBIDOS</h2><p>Você recebeu seus recursos iniciais:</p>'+
+ ['conhecimento','influencia','provisoes'].map(k=>'<p><strong>'+resourceNames[k]+': '+Number(p.resources[k])+'</strong></p>').join('')+
+ '<p>Confira suas fichas físicas antes de continuar.</p><button type="button">CONFIRMEI MEUS ATRIBUTOS</button>';
+ document.body.append(d);
+ d.addEventListener('cancel',e=>e.preventDefault());
+ d.querySelector('button').addEventListener('click',()=>{
+  d.close();d.remove();
+  document.dispatchEvent(new Event('dorath-setup-acknowledged'));
+ });
+ d.showModal();
+}
 function recordResourceChanges(previous,next){
  if(!previous?.me||!next?.me||previous.me.id!==next.me.id||previous.motherCode!==next.motherCode)return;
  for(const key of Object.keys(resourceNames)){
@@ -82,7 +95,7 @@ async function refresh(){
 }
 function missionFeedback(message,error=false){const el=$('dv4MissionFeedback');if(el){el.hidden=false;el.textContent=message;el.classList.toggle('mp-error',error)}}
 function positionFeedback(message,error=false){const el=$('correctPositionFeedback');if(el){el.hidden=false;el.textContent=message;el.classList.toggle('mp-error',error)}}
-async function action(type,data={}){if(busy){if(type==='missionAttempt')missionFeedback('Aguarde a conclusão da ação anterior.');return}busy=true;try{const prior=view;view=await api('action',{token,expectedRevision:view.revision,type,...data});recordResourceChanges(prior,view);saveCommon();void audio.update(view);draw();say(`Ação registrada · rodada ${view.round}`);if(type==='correctPosition')positionFeedback(`Posição atualizada para a casa ${view.me.house}.`);if(type==='missionAttempt')missionFeedback(view.me.missionRewardPending?'SUCESSO! Role o D4 físico para determinar a recompensa.':'Teste registrado: missão não concluída nesta tentativa.');if(type==='missionD4')missionFeedback('Recompensa da missão registrada.')}catch(e){const msg=e.message;await refresh();say(msg,true);if(type==='correctPosition')positionFeedback('Correção não realizada: '+msg,true);if(type==='missionAttempt'||type==='missionD4')missionFeedback('Não foi possível registrar o dado: '+msg,true)}finally{busy=false}}
+async function action(type,data={}){if(busy){if(type==='missionAttempt')missionFeedback('Aguarde a conclusão da ação anterior.');return}busy=true;try{const prior=view;view=await api('action',{token,expectedRevision:view.revision,type,...data});recordResourceChanges(prior,view);if(type==='setup'&&view.me.setupDone){resourceQueue.length=0;resourceDialog?.close()}saveCommon();void audio.update(view);draw();if(type==='setup'&&view.me.setupDone)showInitialResourceReceipt(view.me);say(`Ação registrada · rodada ${view.round}`);if(type==='correctPosition')positionFeedback(`Posição atualizada para a casa ${view.me.house}.`);if(type==='missionAttempt')missionFeedback(view.me.missionRewardPending?'SUCESSO! Role o D4 físico para determinar a recompensa.':'Teste registrado: missão não concluída nesta tentativa.');if(type==='missionD4')missionFeedback('Recompensa da missão registrada.')}catch(e){const msg=e.message;await refresh();say(msg,true);if(type==='correctPosition')positionFeedback('Correção não realizada: '+msg,true);if(type==='missionAttempt'||type==='missionD4')missionFeedback('Não foi possível registrar o dado: '+msg,true)}finally{busy=false}}
 async function correctPosition(){
  const house=Number($('correctHouse')?.value),reason=($('correctReason')?.value||'').trim();
  if(view?.phase!=='active'){positionFeedback('A correção só é permitida durante a partida ativa.',true);return}
@@ -107,6 +120,7 @@ function draw(){const v=view,p=v.me,host=p.id===v.hostPlayerId,turn=v.turnPlayer
 
  if(v.phase==='active'&&turn&&p.house<50){movement+=p.lastMovedRound===v.round?(v.round===1&&p.house===2?'<p>Entrada inicial concluída: Casa 02, sem D6. Resolva a bênção e atualize as fichas físicas.</p>':'<p>Movimento desta rodada registrado.</p>'):(v.round===1&&p.house===1?'<p>Na primeira rodada, a entrada na Casa 02 é automática. Aguarde a sincronização.</p>':`<p>Role D6 físico e informe:</p>${die('move',6)}`);movement+='<button data-action="endTurn">Encerrar turno</button>'}
  if(v.phase==='active'&&!turn)movement+='<p>Aguarde seu turno.</p>';
+ if(v.phase==='house-occurrence'&&v.pendingHouseOccurrence?.initiator===p.id)movement+='<p class="dv4-intro-event-hint">Resolva a ocorrência na aba Eventos.</p>';
  if(v.phase==='house-occurrence')movement+=v.pendingHouseOccurrence&&v.pendingHouseOccurrence.initiator===p.id?'<p>Resolva a ocorrência desta casa antes de continuar.</p>':'<p>Aguarde a resolução da ocorrência pelo jogador atual.</p>';
  if(v.phase==='marco-roll')movement+=`<p>Marco ${v.pendingMarco.house}: D4 coletivo pelo primeiro jogador.</p>${v.pendingMarco.initiator===p.id?die('marcoD4',4):''}`;
  if(v.phase==='marco-individual')movement+=`<p>Envolvimento individual ao parar no Marco: D4 físico separado.</p>${v.pendingMarco.initiator===p.id?die('marcoIndividualD4',4):''}`;
