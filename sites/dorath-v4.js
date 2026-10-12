@@ -108,16 +108,15 @@ function renderCards(){
  const getValue=name=>{const entry=statLine.split('·').find(x=>x.trim().toLowerCase().startsWith(name.toLowerCase()+':'));return entry?.match(/[0-9]+/)?.[0]||'0'};
  const set=[{title:label,kind:'JOGADOR',src:playerPhoto||null,info:'Toque em Editar carta para inserir sua foto, origem e história.'},...Array.from({length:2},(_,i)=>({kind:'PERSONAGEM',title:people[i]?.name||'Não selecionado',stats:people[i]?.stats||'',src: mapped[slug(people[i]?.name||'')]?'assets/personagens/'+mapped[slug(people[i].name)]:null}))];
  for(const [slot,c] of set.entries()){
-  const b=document.createElement(c.kind==='JOGADOR'?'button':'div');
+  const b=document.createElement('div');
   b.className='dv4-card dv4-summary-card';
   if(c.kind==='JOGADOR'){
-   b.type='button';b.classList.add('dv4-player-card');
-   b.setAttribute('aria-label','Abrir carta: '+c.title);
+   b.classList.add('dv4-player-card');
    b.innerHTML='<span class="dv4-summary-type">CARTA DO JOGADOR</span><strong class="dv4-summary-name">'+escapeHTML(miniName)+'</strong>'+
     '<span class="dv4-summary-stats dv4-summary-stats-player">'+
     [['Conhecimento','CON'],['Influência','INF'],['Herança','HER'],['Provisões','PRO']].map(([name,abbr])=>'<span class="dv4-summary-stat"><small>'+abbr+'</small><b>'+getValue(name)+'</b></span>').join('')+
-    '</span><span class="dv4-summary-footer">VER CARTA COMPLETA ↗</span>';
-   b.onclick=()=>openCard(c);
+    '</span><button class="dv4-summary-open" type="button">VER CARTA<br>COMPLETA</button>';
+   b.querySelector('.dv4-summary-open').addEventListener('click',()=>openCard(c));
   }else{
    b.classList.add('dv4-character-card');
    const fields=[['Conhecimento','CON'],['Influência','INF'],['Herança','HER']];
