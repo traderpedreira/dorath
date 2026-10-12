@@ -385,3 +385,7 @@ html #world.dv4-current .dv4-position-hint{font-size:.8rem!important;line-height
 html #world.dv4-current .dv4-position-feedback{padding:10px 12px!important;margin:10px 0!important;border:1px solid #8e6c3f;border-radius:8px;background:#fff0c9!important;color:#34220d!important;font-size:.92rem;line-height:1.4}
 html #world.dv4-current .dv4-position-feedback.mp-error{border-color:#ad4935!important;background:#ffe2d3!important;color:#802b1d!important}
 html #world.dv4-current .dv4-position-feedback[hidden]{display:none!important}
+
+html #missions.dv4-current .dv4-mission-feedback{display:block;padding:12px;margin:12px 0;border:1px solid #926b3d;border-radius:9px;background:#fff1cd!important;color:#402816!important;line-height:1.4;font-weight:700}
+html #missions.dv4-current .dv4-mission-feedback.mp-error{background:#ffe0d0!important;color:#832e20!important;border-color:#aa5540}
+html #missions.dv4-current .dv4-mission-feedback[hidden]{display:none!important}
