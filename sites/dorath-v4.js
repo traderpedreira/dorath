@@ -189,17 +189,14 @@ modal.addEventListener('close',()=>{
   initialAdamOpen=false;
   introAwaitEvent=true;
   select('movement',true);
-  const movement=active('movement');
-  let hint=movement?.querySelector('#dv4IntroEventHint');
-  if(!hint&&movement){hint=document.createElement('p');hint.id='dv4IntroEventHint';hint.className='dv4-intro-event-hint';movement.prepend(hint)}
-  if(hint)hint.textContent='Resolva a ocorrência na aba Eventos.';
+  // A indicação de Eventos é desenhada pelo estado real da ocorrência, não adicionada ao DOM.
  }
 });
 const priority=()=>{
  if(active('player')?.dataset.setupDone!=='true')return 'movement';
  if(initialAdamPending)return 'player';
- if(introAwaitEvent&&active('world')?.querySelector('.dv4-house-occurrence'))return 'movement';
- if(introAwaitEvent)introAwaitEvent=false;
+ if(active('world')?.querySelector('.dv4-house-occurrence'))return 'movement';
+ if(introAwaitEvent)return 'movement';
  // Primeiro conclui os dados obrigatórios do Marco 06; em seguida destaca a decisão pessoal.
  const movementActions=[...active('movement')?.querySelectorAll('[data-action]')||[]].map(b=>b.dataset.action);
  if(movementActions.some(a=>['marcoD4','marcoIndividualD4'].includes(a)))return 'movement';
