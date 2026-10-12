@@ -130,7 +130,16 @@ function draw(){const v=view,p=v.me,host=p.id===v.hostPlayerId,turn=v.turnPlayer
  if(v.preparationClosed&&p.preserved&&p.preservationBonus===null)movement+=`<p>Role seu D6 secreto de Preservação. Ele só será aplicado em P1-540.</p>${die('preservationD6',6)}`;
  if(v.preparationClosed&&host&&v.phase==='active'&&[50,51,53].includes(p.house))movement+='<button data-action="advanceFinal">Avançar sequência final coletiva</button>';
  if(v.phase==='ended')movement+=`<h4>Resultado</h4><ol>${(v.finalScores||[]).map(s=>`<li>${esc(s.name)}: ${s.score} pontos</li>`).join('')}</ol>`;
+ const hasMissionStep=v.phase==='active'&&turn&&p.lastMovedRound===v.round&&(
+  Boolean(p.missionRewardPending)||
+  (Boolean(p.mission)&&p.missionUsedRound!==v.round)||
+  Boolean(v.availableMission)
+ );
+ if(v.phase==='active'&&turn&&p.house<50&&hasMissionStep){
+  movement=movement.replace('<button data-action="endTurn">Encerrar turno</button>','');
+ }
  $('movement').innerHTML=movement.replace(/<p(?=>)/g,'<p class="dv4-movement-status"');
+ $('movement').dataset.missionStep=String(hasMissionStep);
  const missionAttrs=p.mission?(p.mission.id==='M06'||p.mission.id==='M09'||p.mission.id==='M15'?[]:p.mission.requirement.includes('Conhecimento ou Influência')?['conhecimento','influencia']:p.mission.requirement.includes('Conhecimento')?['conhecimento']:p.mission.requirement.includes('Influência')?['influencia']:[]):[];
 let mission='<h3>Missão comum</h3>';
  if(!p.setupDone)mission+='<p>Confirme os atributos iniciais em Jogar antes de acessar Missões.</p>';
@@ -141,6 +150,7 @@ let mission='<h3>Missão comum</h3>';
  mission+='<p id="dv4MissionFeedback" class="dv4-mission-feedback" role="status" aria-live="polite" hidden></p>';
  if(p.setupDone&&v.phase==='active'&&v.availableMission&&turn)mission+=`<button data-action="missionOffer">${p.mission?'Trocar Missão por 1 Influência':'Gerar Missão'}</button><button data-action="missionDecline">Ignorar oportunidade</button>`;
  $('missions').innerHTML=mission;
+ $('missions').dataset.missionStep=String(hasMissionStep);
  let world='<h3>Eventos</h3>';
  if(v.phase==='house-occurrence'&&v.pendingHouseOccurrence?.initiator===p.id){
   const o=v.house?.occurrence;
