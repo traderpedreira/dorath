@@ -51,7 +51,7 @@ export function newPlayer(name,room,team,history=[],commonHistory=[]){
  house:1,resources:{conhecimento:2,influencia:2,provisoes:2,heranca:0},characters:['adao'],
  secretMissionId:sid,secretCompletedAt:null,setupDone:false,preserved:false,preservedCharacterId:null,
  arkFinalized:false,preservationBonus:null,consequences:[],mission:null,missionRewardPending:null,
- specialChoices:{},mandamentoChoice:null,lastChanceUsed:false,houseOccurrences:{},
+ specialChoices:{},mandamentoChoice:null,lastChanceUsed:false,houseOccurrences:{},house3LandingBonus:null,missionRandomBonus:null,
  missionHistory:Array.isArray(commonHistory)?commonHistory.filter(id=>master.commonMissions.some(m=>m.id===id)).slice(-100):[],missionUsedRound:0,missionSuccesses:0,difficultMissionSuccess:false,
  threatAttempts:{},threatContributions:0,consequenceCount:0,tradeCount:0,donatedAmount:0,
  conversionCount:0,convertedRound:0,tradedRound:0,firstRuptures:0,marcoPersonal:{},
@@ -90,6 +90,7 @@ function missionOffer(g,p,replace){
  if(!pool.length)pool=all.filter(m=>m.id!==p.missionHistory.at(-1));
  const m=pick(pool);p.mission={...m};p.missionHistory.push(m.id);p.offeredMove=g.round+':'+p.house;
  p.missionDonationSnapshot=p.donatedAmount;
+ p.missionRandomBonus=p.house===3?(Number.isInteger(p.house3LandingBonus)?p.house3LandingBonus:rand(4)):null;
  log(g,'missao',`Missão privada oferecida a ${p.name}`,{privateFor:p.id});
 }
 function missionReward(g,p,n,a={}){
@@ -137,6 +138,7 @@ function nextPending(g){
  g.phase='active';
 }
 function afterMove(g,p,old,n){
+ if(n===3){p.house3LandingBonus=rand(4);log(g,'missao',`${p.name} recebeu bônus aleatório +${p.house3LandingBonus} na Casa 03`,{privateFor:p.id})}
  g.marcoQueue=master.marcos.filter(h=>h>old&&h<=n&&!g.marcos[h]).map(h=>({house:h,initiator:p.id,stopped:n===h}));
  if(marco.has(n)&&g.marcos[n]&&!p.marcoPersonal[n])g.personalPending={house:n,initiator:p.id,stopped:true};
  if(old<42&&n>=42){g.arkOpened=true;log(g,'arca','Arca revelada: 3 Provisões e 1 Personagem próprio')}
@@ -299,7 +301,9 @@ function missionAttempt(g,p,a){
  if(req.includes('Ameaça ativa')&&!g.activeThreats.length)fail('Não há Ameaça ativa');
  if(req.includes('EM RISCO')&&!g.players.some(q=>q.id!==p.id&&!arkReady(q)))fail('Nenhum jogador EM RISCO');
  if(m.id==='M09'&&p.donatedAmount<=(p.missionDonationSnapshot||0))fail('Transfira voluntariamente 1 recurso após receber esta Missão');
- const bonus=number(a.bonus??0,0,3)+(p.nextCooperationBonus||0);
+ const baseBonus=Number.isInteger(p.missionRandomBonus)?p.missionRandomBonus:number(a.bonus??0,0,3);
+ const bonus=baseBonus+(p.nextCooperationBonus||0);
+ p.missionRandomBonus=null;
  p.nextCooperationBonus=0;p.missionUsedRound=g.round;
  const success=number(a.roll,1,6)+bonus>=m.target;
  if(success){p.missionRewardPending=true;log(g,'missao',`${p.name} passou no teste de ${m.name}; D4 separado pendente`,{privateFor:p.id})}
