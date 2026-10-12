@@ -652,3 +652,53 @@ html body #board .mp-grid > #movement.dv4-current > p.dv4-movement-status{
  text-shadow:none!important;
  opacity:1!important;
 }
+
+/* Missão: cartões em coluna para não extrapolar a largura do celular. */
+html body #board #missions.dv4-current .dv4-mission-bonus{
+ display:grid!important;
+ grid-template-columns:minmax(0,1fr)!important;
+ gap:9px!important;
+ width:100%!important;
+ min-width:0!important;
+ box-sizing:border-box!important;
+ margin:16px 0!important;
+ padding:14px!important;
+ border:1px solid #b28a57!important;
+ border-radius:10px!important;
+ background:linear-gradient(150deg,#f7e8c6,#e6c995)!important;
+}
+html body #board #missions.dv4-current .dv4-mission-bonus > label,
+html body #board #missions.dv4-current .dv4-mission-bonus > p,
+html body #board #missions.dv4-current .dv4-mission-bonus > small{
+ display:block!important;
+ width:100%!important;
+ min-width:0!important;
+ max-width:100%!important;
+ margin:0!important;
+ color:#442a15!important;
+ line-height:1.45!important;
+ overflow-wrap:break-word!important;
+}
+html body #board #missions.dv4-current .dv4-mission-bonus > label{
+ font:700 .85rem/1.4 var(--dv4-type-display)!important;
+}
+html body #board #missions.dv4-current .dv4-mission-bonus select{
+ display:block!important;
+ width:100%!important;
+ max-width:100%!important;
+ min-width:0!important;
+ flex:none!important;
+ margin:7px 0 0!important;
+ padding:10px 28px 10px 12px!important;
+ font-family:var(--dv4-type-body)!important;
+ font-size:.94rem!important;
+ text-align:left!important;
+ text-align-last:left!important;
+ box-sizing:border-box!important;
+}
+html body #board #missions.dv4-current .dv4-mission-bonus > p{
+ font:600 .92rem/1.45 var(--dv4-type-body)!important;
+}
+html body #board #missions.dv4-current .dv4-mission-bonus > small{
+ font:500 .79rem/1.55 var(--dv4-type-body)!important;
+}
