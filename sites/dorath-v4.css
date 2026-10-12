@@ -598,3 +598,22 @@ body,.mp-card p,.mp-card label,.mp-card input,.mp-card select,.mp-card textarea,
 .dv4-setup-receipt button,#player .dv4-intro-adam{display:block;width:100%;background:linear-gradient(#856032,#52361a);border:1px solid #bd985d;border-radius:8px;color:#fff0d4;padding:13px 10px;min-height:45px;font:700 .8rem var(--dv4-type-display);cursor:pointer}
 #player .dv4-intro-adam{margin:10px 0 15px}
 .dv4-intro-event-hint{padding:12px;border:1px solid #c4a166;border-radius:8px;background:#4d3520;color:#ffebc3;font:700 .88rem/1.45 var(--dv4-type-body)}
+
+/* Orientação da ocorrência: contraste garantido também nas regras do painel nativo. */
+#dv4 #movement .dv4-intro-event-hint,
+#movement .dv4-intro-event-hint{
+ display:block!important;
+ background:#51351f!important;
+ color:#fff1d4!important;
+ border:1px solid #c8a36a!important;
+ border-radius:9px!important;
+ padding:14px 12px!important;
+ font-family:var(--dv4-type-body)!important;
+ font-size:.94rem!important;
+ font-weight:700!important;
+ line-height:1.5!important;
+ text-align:center!important;
+ text-shadow:none!important;
+ opacity:1!important;
+}
+#movement .dv4-intro-event-hint strong{color:#fff7e8!important;font-weight:800!important}
