@@ -159,18 +159,43 @@ document.addEventListener('click',e=>{
  openCard({kind:'PERSONAGEM',title:row.dataset.characterName,src,stats:text(row.querySelector('.dv4-gallery-stats'))});
 });
 
-let adamIntroSeen=false;
-function firstAdamReveal(){
- if(adamIntroSeen||document.getElementById('board')?.hidden)return;
- if(active('player')?.dataset.setupDone!=='true')return;
- const movement=active('movement');
- if(!movement||!text(movement).includes('Recursos iniciais registrados'))return;
- const src=mapped[slug('Adão')]?'assets/personagens/'+mapped[slug('Adão')]:null;
- if(!src)return;
- adamIntroSeen=true;openCard({kind:'PERSONAGEM',title:'Adão',src,stats:'Conhecimento 2 · Influência 2 · Herança 2'});
+let initialAdamPending=false;
+let initialAdamOpen=false;
+document.addEventListener('dorath-setup-acknowledged',()=>{
+ initialAdamPending=true;
+ select('player',true);
+ updateIntroSelection();
+});
+function updateIntroSelection(){
+ const panel=active('player');
+ if(!panel)return;
+ let btn=panel.querySelector('#dv4ChooseAdam');
+ if(!initialAdamPending){btn?.remove();return}
+ if(!btn){
+  btn=document.createElement('button');
+  btn.id='dv4ChooseAdam';btn.type='button';btn.className='dv4-intro-adam';
+  btn.textContent='SELECIONAR ADÃO E ABRIR CARTA';
+  btn.addEventListener('click',()=>{
+   const c={kind:'PERSONAGEM',title:'Adão',src:'assets/personagens/01_ADAO.webp',stats:'Conhecimento 2 · Influência 2 · Herança 2'};
+   initialAdamOpen=true;initialAdamPending=false;
+   btn.remove();openCard(c);
+  });
+  panel.insertBefore(btn,panel.querySelector('.dv4-character-gallery'));
+ }
 }
+modal.addEventListener('close',()=>{
+ if(initialAdamOpen){
+  initialAdamOpen=false;
+  select('movement',true);
+  const movement=active('movement');
+  let hint=movement?.querySelector('#dv4IntroEventHint');
+  if(!hint&&movement){hint=document.createElement('p');hint.id='dv4IntroEventHint';hint.className='dv4-intro-event-hint';movement.prepend(hint)}
+  if(hint)hint.textContent='Resolva a ocorrência na aba Eventos.';
+ }
+});
 const priority=()=>{
  if(active('player')?.dataset.setupDone!=='true')return 'movement';
+ if(initialAdamPending)return 'player';
  // Primeiro conclui os dados obrigatórios do Marco 06; em seguida destaca a decisão pessoal.
  const movementActions=[...active('movement')?.querySelectorAll('[data-action]')||[]].map(b=>b.dataset.action);
  if(movementActions.some(a=>['marcoD4','marcoIndividualD4'].includes(a)))return 'movement';
@@ -188,10 +213,10 @@ const priority=()=>{
 function fingerprint(){return panels.map(id=>[id,[...active(id)?.querySelectorAll('[data-action]')||[]].map(b=>b.dataset.action).join(',')].join(':')).join('|')+'|'+text(active('movement'))}
 function update(){
  if(board.hidden)return;
- const s=fingerprint();renderCards();firstAdamReveal();
+ const s=fingerprint();renderCards();updateIntroSelection();
  const summary=text(document.querySelector('#summary h2'));const code=(summary.match(/P[1-8]-(\d{3})/)||[])[1];ui.querySelector('#dv4house').textContent=code?'CASA '+String(Math.round(Number(code)/10)).padStart(2,'0'):'CASA —';
  const raw=text(document.querySelector('#summary p'));const rd=raw.match(/Rodada\s+(\d+)/i);ui.querySelector('#dv4round').textContent=rd?'RODADA '+rd[1]:'RODADA —';
- if(sig!==s){sig=s;select(priority(),false)}else if(!manual)select(selected,false);
+ if(sig!==s){sig=s;if(!initialAdamOpen&&!initialAdamPending)select(priority(),false)}else if(!manual&&!initialAdamOpen&&!initialAdamPending)select(selected,false);
 }
 let scheduled=false;const observer=new MutationObserver(()=>{if(scheduled)return;scheduled=true;queueMicrotask(()=>{scheduled=false;update()})});for(const id of panels)observer.observe(active(id),{childList:true,subtree:true});observer.observe(board,{attributes:true,attributeFilter:['hidden']});select('movement');update();
 })();
