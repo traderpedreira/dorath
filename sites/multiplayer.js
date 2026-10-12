@@ -132,8 +132,9 @@ function draw(){const v=view,p=v.me,host=p.id===v.hostPlayerId,turn=v.turnPlayer
  if(v.phase==='ended')movement+=`<h4>Resultado</h4><ol>${(v.finalScores||[]).map(s=>`<li>${esc(s.name)}: ${s.score} pontos</li>`).join('')}</ol>`;
  const hasMissionStep=v.phase==='active'&&turn&&p.lastMovedRound===v.round&&(
   Boolean(p.missionRewardPending)||
-  (Boolean(p.mission)&&p.missionUsedRound!==v.round)||
-  Boolean(v.availableMission)
+  (p.missionUsedRound!==v.round&&(
+    Boolean(p.mission)||Boolean(v.availableMission)
+  ))
  );
  if(v.phase==='active'&&turn&&p.house<50&&hasMissionStep){
   movement=movement.replace('<button data-action="endTurn">Encerrar turno</button>','');
