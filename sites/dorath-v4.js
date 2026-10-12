@@ -120,6 +120,10 @@ function renderCards(){
  }
 }
 const priority=()=>{
+ // Primeiro conclui os dados obrigatórios do Marco 06; em seguida destaca a decisão pessoal.
+ const movementActions=[...active('movement')?.querySelectorAll('[data-action]')||[]].map(b=>b.dataset.action);
+ if(movementActions.some(a=>['marcoD4','marcoIndividualD4'].includes(a)))return 'movement';
+ if(active('world')?.querySelector('[data-action="mandamentoRefuse"], [data-action="mandamentoOpen"]'))return 'world';
  const set=[
  ['missions',['missionD4','missionAttempt','missionOffer','missionDecline']],
  ['world',['consequence','threatSpawnD4','mandamentoRefuse','mandamentoOpen','vidaHeranca','vidaProvisoes','conhecimentoAceitar','conhecimentoRecusar','lastChance']],
