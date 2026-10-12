@@ -63,7 +63,7 @@ export function publicView(g,p){return {
  turnPlayerId:g.players[g.turnIndex]?.id||null,hostPlayerId:g.hostPlayerId,
  playerOrder:g.players.map(x=>({id:x.id,name:x.name})),
  rooms:g.rooms.map(r=>({...r,players:g.players.filter(x=>x.room===r.code).map(x=>({id:x.id,name:x.name,house:x.house,team:x.team,preserved:x.preserved,arkFinalized:x.arkFinalized}))})),
- me:p,house:byHouse.get(p.house),availableCharacters:unlocked(p).map(c=>({id:c.id,name:c.name,asset:c.asset})),globalStates:g.globalStates,violence:g.violence,
+ me:p,house:byHouse.get(p.house),availableCharacters:unlocked(p).map(c=>({id:c.id,name:c.name,asset:c.asset,attributes:c.attributes})),globalStates:g.globalStates,violence:g.violence,
  arkOpened:g.arkOpened,preparationClosed:g.preparationClosed,rupturesResolved:g.rupturesResolved,
  pendingMarco:g.pendingMarco,pendingRupture:g.pendingRupture,pendingHouseOccurrence:g.pendingHouseOccurrence?.initiator===p.id?g.pendingHouseOccurrence:null,
  pendingConsequencePlayers:g.pendingConsequencePlayers||[],pendingThreat:g.pendingThreat,
