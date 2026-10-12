@@ -82,6 +82,25 @@ function missionEligible(g,p){
  return master.missionSystem.common.eligibleFamilies.some(f=>h.family.toLowerCase().includes(f.toLowerCase()))
   &&!master.missionSystem.common.ineligible.includes(h.anchorType);
 }
+function missionAttributeChoices(m){
+ const r=m.requirement;
+ if(m.id==='M06'||m.id==='M09'||m.id==='M15')return [];
+ if(r.includes('Conhecimento ou Influência'))return ['conhecimento','influencia'];
+ if(r.includes('Conhecimento'))return ['conhecimento'];
+ if(r.includes('Influência'))return ['influencia'];
+ return [];
+}
+function characterMissionBonus(g,p,m,a){
+ const allowed=missionAttributeChoices(m);
+ if(!allowed.length)return {bonus:0,character:'sem atributo definido',attribute:null};
+ const attribute=allowed.length===1?allowed[0]:a.attribute;
+ if(!allowed.includes(attribute))fail('Selecione o atributo permitido para esta Missão');
+ const character=characters.find(c=>c.id===a.characterId&&p.characters.includes(c.id)&&unlocked(p).some(u=>u.id===c.id));
+ if(!character)fail('Selecione um Personagem ativo e desbloqueado');
+ const stat=character.attributes[attribute];
+ if(!Number.isInteger(stat))fail('Atributo do Personagem não cadastrado');
+ return {bonus:stat>=4?2:stat>=2?1:0,character:character.name,attribute};
+}
 function missionOffer(g,p,replace){
  if(!missionEligible(g,p))fail('Esta casa não oferece nova Missão');
  if(p.mission){if(!replace)fail('Mantenha a Missão atual ou substitua por 1 Influência');if(p.resources.influencia<1)fail('Influência insuficiente');change(p,'influencia',-1)}
@@ -90,7 +109,7 @@ function missionOffer(g,p,replace){
  if(!pool.length)pool=all.filter(m=>m.id!==p.missionHistory.at(-1));
  const m=pick(pool);p.mission={...m};p.missionHistory.push(m.id);p.offeredMove=g.round+':'+p.house;
  p.missionDonationSnapshot=p.donatedAmount;
- p.missionRandomBonus=p.house===3&&Number.isInteger(p.house3LandingBonus)?p.house3LandingBonus:rand(4);
+ p.missionRandomBonus=null;
  log(g,'missao',`Missão privada oferecida a ${p.name}`,{privateFor:p.id});
 }
 function missionReward(g,p,n,a={}){
@@ -308,11 +327,12 @@ function missionAttempt(g,p,a){
  if(req.includes('Ameaça ativa')&&!g.activeThreats.length)fail('Não há Ameaça ativa');
  if(req.includes('EM RISCO')&&!g.players.some(q=>q.id!==p.id&&!arkReady(q)))fail('Nenhum jogador EM RISCO');
  if(m.id==='M09'&&p.donatedAmount<=(p.missionDonationSnapshot||0))fail('Transfira voluntariamente 1 recurso após receber esta Missão');
- const baseBonus=Number.isInteger(p.missionRandomBonus)?p.missionRandomBonus:rand(4); // Missões anteriores à atualização também não permitem bônus manual
- const bonus=baseBonus+(p.nextCooperationBonus||0);
+ const support=characterMissionBonus(g,p,m,a);
+ const bonus=support.bonus+(p.nextCooperationBonus||0);
  p.missionRandomBonus=null;
  p.nextCooperationBonus=0;p.missionUsedRound=g.round;
  const success=number(a.roll,1,6)+bonus>=m.target;
+ log(g,'missao',`Teste de ${m.name}: ${support.character}${support.attribute?' / '+support.attribute:''} (+${support.bonus}), outros bônus +${bonus-support.bonus}, D6 ${a.roll}, alvo ${m.target}`,{privateFor:p.id});
  if(success){p.missionRewardPending=true;log(g,'missao',`${p.name} passou no teste de ${m.name}; D4 separado pendente`,{privateFor:p.id})}
  else {if(m.failure.startsWith('-1 Provis'))change(p,'provisoes',-1);if(m.failure.startsWith('-1 Conhecimento'))change(p,'conhecimento',-1);if(m.failure.startsWith('-1 Influência'))change(p,'influencia',-1);
   log(g,'missao',`${p.name} falhou em ${m.name}`,{privateFor:p.id})}
