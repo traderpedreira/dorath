@@ -731,3 +731,21 @@ html body #board #missions.dv4-current .dv4-bonus-table thead th{background:#805
 html body #board #missions.dv4-current .dv4-bonus-table tbody th{font-weight:700;color:#61401f!important}
 html body #board #missions.dv4-current .dv4-bonus-table tbody td{font-weight:800;font-size:1.04rem!important}
 html body #board #missions.dv4-current .dv4-bonus-caption{display:block;margin-top:7px!important;font:500 .75rem/1.45 var(--dv4-type-body)!important;text-align:center;color:#67472b!important}
+
+/* Navegação fixa: sempre presente na parte inferior durante a rolagem. */
+html body #board #dv4 .dv4-nav{
+ position:fixed!important;
+ left:50%!important;right:auto!important;
+ bottom:0!important;
+ transform:translateX(-50%)!important;
+ width:calc(100% - 16px)!important;max-width:704px!important;
+ margin:0!important;
+ padding:9px 7px max(12px,env(safe-area-inset-bottom))!important;
+ z-index:100!important;
+ background:linear-gradient(#35251c,#1a1310)!important;
+ border:1px solid #a87d46!important;
+ border-radius:14px 14px 0 0!important;
+ box-shadow:0 -7px 25px #000b!important;
+}
+html body .mp-shell{padding-bottom:calc(125px + env(safe-area-inset-bottom))!important}
+#player .dv4-gallery-pause{font:.8rem/1.45 var(--dv4-type-body);color:#563a1c!important;text-align:center;margin:8px 0}
