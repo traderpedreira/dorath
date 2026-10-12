@@ -466,3 +466,20 @@ html body .mp-grid>.mp-card .dice>button{
 #dv4 .dv4-summary-open{display:block;width:100%;padding:7px 2px!important;border:1px solid #89602f!important;border-radius:5px!important;background:#6e4926!important;color:#fff2d8!important;font:700 clamp(.5rem,1.55vw,.67rem) Georgia,serif!important;text-align:center;cursor:pointer}
 #dv4 .dv4-summary-swap:focus-visible,#dv4 .dv4-summary-open:focus-visible{outline:3px solid #fff4c5;outline-offset:2px}
 #dv4 .dv4-character-card.dv4-summary-card{cursor:default}
+
+/* Revisão visual V4 — galeria de 18 artes e ações de cartas. */
+#dv4 .dv4-summary-open,#dv4 .dv4-summary-footer{line-height:1.15!important;white-space:normal!important;min-height:33px;display:grid!important;place-items:center!important}
+#dv4 .dv4-summary-open{width:100%!important;font-size:clamp(.59rem,1.85vw,.74rem)!important}
+#player .dv4-character-gallery{display:block!important;margin:10px 0}
+#player .dv4-gallery-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+#player .dv4-character-option{display:flex!important;flex-direction:column;position:relative;gap:5px;min-width:0;padding:8px;background:linear-gradient(155deg,#f1dcaf,#ccaa77)!important;color:#3d2913!important;border:2px solid #937247;border-radius:10px;text-align:center}
+#player .dv4-gallery-art{display:block;width:100%;aspect-ratio:3/4.4;object-fit:contain;border:0;border-radius:5px}
+#player .dv4-locked .dv4-gallery-art{filter:grayscale(1) brightness(.56) opacity(.55)}
+#player .dv4-locked{background:#6e665b!important;border-color:#746d66!important;color:#e5d6bd!important}
+#player .dv4-gallery-name{font:700 .9rem Georgia,serif}
+#player .dv4-gallery-stats{font-size:.72rem;color:#5a4227;line-height:1.3}
+#player .dv4-gallery-select{display:flex;align-items:center;justify-content:center;gap:7px;border:1px solid #97774c;background:#fff3d5;border-radius:6px;padding:6px;font-weight:bold;cursor:pointer}
+#player .dv4-gallery-select input{accent-color:#6b4b24;min-width:19px;min-height:19px}
+#player .dv4-gallery-locked{font-size:.7rem;letter-spacing:.1em;font-weight:bold}
+#player .dv4-unlocked .dv4-gallery-art,#player .dv4-unlocked .dv4-gallery-name{cursor:pointer}
+@media(min-width:700px){#player .dv4-gallery-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
