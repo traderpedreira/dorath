@@ -274,6 +274,12 @@ function secretCheck(g,p,final=false){
  if(done){p.secretCompletedAt=g.round*100+g.turnIndex+1;log(g,'missao',`${p.name} cumpriu a Missão Secreta`,{privateFor:p.id})}
 }
 function activeTurn(g,p){if(g.phase!=='active'||g.players[g.turnIndex]?.id!==p.id)fail('Não é seu turno normal')}
+function firstRoundEntry(g,p){
+ if(g.round!==1||p.house!==1||p.lastMovedRound===g.round)return;
+ p.house=2;p.lastMovedRound=g.round;p.offeredMove=null;
+ log(g,'movimento',`${p.name}: entrada inicial obrigatória P1-010 → P1-020 (sem D6)`);
+ afterMove(g,p,1,2);
+}
 function endTurn(g,p){activeTurn(g,p);if(p.lastMovedRound!==g.round&&p.house<50)fail('Informe o D6 de movimento');
  if(p.missionRewardPending)fail('Resolva o D4 da Missão antes de encerrar');
  g.turnIndex=(g.turnIndex+1)%g.players.length;
@@ -282,8 +288,9 @@ function endTurn(g,p){activeTurn(g,p);if(p.lastMovedRound!==g.round&&p.house<50)
   g.players.forEach(q=>{q.consequences=q.consequences.filter(c=>c.expiresRound>=g.round);q.threatAttempts={}});
   log(g,'rodada',`Rodada ${g.round} começou`);
  }
+ firstRoundEntry(g,g.players[g.turnIndex]);
 }
-function move(g,p,a){activeTurn(g,p);if(p.house>=50)fail('A sequência P1-500 a P1-540 é coletiva e sem D6');
+function move(g,p,a){activeTurn(g,p);if(g.round===1&&p.house===1)fail('Na rodada inicial, a entrada na Casa 02 é automática; não role D6');if(p.house>=50)fail('A sequência P1-500 a P1-540 é coletiva e sem D6');
  if(p.lastMovedRound===g.round)fail('Você já se moveu nesta rodada');
  const roll=number(a.roll,1,6),old=p.house;
  let n=Math.min(50,old+roll);const barrier=master.ruptures.find(r=>r.house>old&&r.house<=n&&!g.rupturesResolved[r.id]);
@@ -357,8 +364,8 @@ export function applyAction(g,p,a){
  if(!a||typeof a.type!=='string')fail('Ação inválida');
  switch(a.type){
  case 'roomCreate':if(p.id!==g.hostPlayerId||g.phase!=='lobby'||g.rooms.length>=5)fail('Sala indisponível');{let c=code();while(g.rooms.some(r=>r.code===c)||c===g.motherCode)c=code();g.rooms.push({code:c,name:String(a.name||`Sala ${g.rooms.length+1}`).slice(0,40),team:String(a.team||'').slice(0,30)});log(g,'sala',`Sala ${c} criada`)}break;
- case 'setup':if(g.phase!=='lobby'||p.setupDone)fail('Preparação inicial indisponível');if(!Array.isArray(a.rolls)||a.rolls.length!==3||!Array.isArray(a.order)||new Set(a.order).size!==3||a.order.some(k=>!admin.includes(k)))fail('Informe 3D6 e a distribuição dos recursos');a.order.forEach((k,i)=>p.resources[k]=2+Math.floor((number(a.rolls[i],1,6)-1)/2));p.setupDone=true;if(g.players.length>=2&&g.players.every(q=>q.setupDone)){g.phase='active';log(g,'partida','Todos os jogadores preparados; partida iniciada automaticamente')}break;
- case 'start':if(p.id!==g.hostPlayerId||g.phase!=='lobby'||g.players.length<2||g.players.some(q=>!q.setupDone))fail('O anfitrião inicia após todos prepararem os recursos');g.phase='active';log(g,'partida','Partida iniciada');break;
+ case 'setup':if(g.phase!=='lobby'||p.setupDone)fail('Preparação inicial indisponível');if(!Array.isArray(a.rolls)||a.rolls.length!==3||!Array.isArray(a.order)||new Set(a.order).size!==3||a.order.some(k=>!admin.includes(k)))fail('Informe 3D6 e a distribuição dos recursos');a.order.forEach((k,i)=>p.resources[k]=2+Math.floor((number(a.rolls[i],1,6)-1)/2));p.setupDone=true;if(g.players.length>=2&&g.players.every(q=>q.setupDone)){g.phase='active';log(g,'partida','Todos os jogadores preparados; partida iniciada automaticamente');firstRoundEntry(g,g.players[g.turnIndex])}break;
+ case 'start':if(p.id!==g.hostPlayerId||g.phase!=='lobby'||g.players.length<2||g.players.some(q=>!q.setupDone))fail('O anfitrião inicia após todos prepararem os recursos');g.phase='active';log(g,'partida','Partida iniciada');firstRoundEntry(g,g.players[g.turnIndex]);break;
  case 'move':move(g,p,a);break;
  case 'endTurn':endTurn(g,p);break;
  case 'houseOccurrence':resolveHouseOccurrence(g,p,a);break;
