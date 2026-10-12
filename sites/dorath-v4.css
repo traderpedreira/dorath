@@ -536,3 +536,31 @@ body,.mp-card p,.mp-card label,.mp-card input,.mp-card select,.mp-card textarea,
 #player .dv4-gallery-grid .dv4-locked .dv4-gallery-art{filter:grayscale(1) brightness(.67) opacity(.72)!important}
 #player .dv4-gallery-grid .dv4-unlocked .dv4-gallery-art{filter:none!important}
 #player .dv4-gallery-grid .dv4-gallery-select{font-family:var(--dv4-type-body)!important;margin:0!important;width:100%;min-height:40px}
+
+/* Espaçamento uniforme e ações alinhadas no rodapé das três cartas. */
+#dv4 .dv4-cards .dv4-summary-card{
+ padding:11px 8px 14px!important;
+ gap:8px!important;
+ box-sizing:border-box!important;
+ justify-content:space-between!important;
+}
+#dv4 .dv4-cards .dv4-summary-card .dv4-summary-open{
+ display:grid!important;
+ place-items:center!important;
+ align-self:stretch!important;
+ width:100%!important;
+ min-height:39px!important;
+ margin:5px 0 0!important;
+ padding:6px 3px!important;
+ background:#6e4926!important;
+ color:#fff2d8!important;
+ border:1px solid #89602f!important;
+ border-radius:5px!important;
+ font:700 clamp(.5rem,1.55vw,.67rem)/1.15 var(--dv4-type-display)!important;
+ letter-spacing:.02em!important;
+ text-align:center!important;
+ cursor:pointer!important;
+}
+@media(max-width:385px){
+ #dv4 .dv4-cards .dv4-summary-card{padding:9px 5px 12px!important;gap:5px!important}
+}
