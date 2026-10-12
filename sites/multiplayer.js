@@ -21,6 +21,38 @@ async function api(route,data={}){
  let body;try{body=await response.json()}catch{throw Error('Resposta inválida do servidor')}
  if(!response.ok)throw Error(body.error||`Erro ${response.status}`);return body;
 }
+// Confirmação das fichas físicas: cada celular mostra somente as mudanças do próprio jogador.
+const resourceNames={conhecimento:'Conhecimento',influencia:'Influência',provisoes:'Provisões',heranca:'Herança'};
+const resourceQueue=[];
+let resourceDialog=null;
+function ensureResourceDialog(){
+ if(resourceDialog)return resourceDialog;
+ resourceDialog=document.createElement('dialog');resourceDialog.id='dv4ResourceNotice';
+ resourceDialog.innerHTML='<div class="dv4-resource-icon" aria-hidden="true">✦</div><h2 id="dv4ResourceTitle"></h2><p id="dv4ResourceMessage"></p><p class="dv4-resource-instruction">Atualize suas fichas físicas na mesa antes de continuar.</p><button id="dv4ResourceAck" type="button">OK — ATUALIZEI MINHAS FICHAS</button>';
+ document.body.append(resourceDialog);
+ resourceDialog.querySelector('#dv4ResourceAck').addEventListener('click',()=>{resourceDialog.close();resourceQueue.shift();showResourceNotice()});
+ resourceDialog.addEventListener('cancel',e=>e.preventDefault());
+ return resourceDialog;
+}
+function showResourceNotice(){
+ const modal=ensureResourceDialog(),change=resourceQueue[0];
+ if(!change)return;
+ modal.querySelector('#dv4ResourceTitle').textContent=change.delta>0?'PARABÉNS!':'ATENÇÃO!';
+ modal.querySelector('#dv4ResourceMessage').textContent=change.delta>0
+ ?`Você recebeu +${change.delta} ${resourceNames[change.key]}!`
+ :`Você perdeu ${Math.abs(change.delta)} ${resourceNames[change.key]}.`;
+ modal.classList.toggle('dv4-resource-loss',change.delta<0);
+ if(!modal.open)modal.showModal();
+}
+function recordResourceChanges(previous,next){
+ if(!previous?.me||!next?.me||previous.me.id!==next.me.id||previous.motherCode!==next.motherCode)return;
+ for(const key of Object.keys(resourceNames)){
+  const before=Number(previous.me.resources?.[key]),after=Number(next.me.resources?.[key]);
+  if(!Number.isFinite(before)||!Number.isFinite(after)||before===after)continue;
+  resourceQueue.push({key,delta:after-before});
+ }
+ if(resourceQueue.length)showResourceNotice();
+}
 function saveCommon(){if(view?.me?.missionHistory)localStorage.setItem(commonKey,JSON.stringify(view.me.missionHistory))}
 let refreshInFlight=false, lastRefreshFailure=0;
 async function refresh(){
@@ -28,7 +60,7 @@ async function refresh(){
  refreshInFlight=true;
  try{
   const next=await api('state',{token});
-  const changed=!view||next.revision!==view.revision;view=next;
+  const changed=!view||next.revision!==view.revision;const prior=view;view=next;recordResourceChanges(prior,next);
   void audio.update(view);saveCommon();
   $('login').hidden=true;$('board').hidden=false;
   if(changed)draw();
@@ -50,7 +82,7 @@ async function refresh(){
 }
 function missionFeedback(message,error=false){const el=$('dv4MissionFeedback');if(el){el.hidden=false;el.textContent=message;el.classList.toggle('mp-error',error)}}
 function positionFeedback(message,error=false){const el=$('correctPositionFeedback');if(el){el.hidden=false;el.textContent=message;el.classList.toggle('mp-error',error)}}
-async function action(type,data={}){if(busy){if(type==='missionAttempt')missionFeedback('Aguarde a conclusão da ação anterior.');return}busy=true;try{view=await api('action',{token,expectedRevision:view.revision,type,...data});saveCommon();void audio.update(view);draw();say(`Ação registrada · rodada ${view.round}`);if(type==='correctPosition')positionFeedback(`Posição atualizada para a casa ${view.me.house}.`);if(type==='missionAttempt')missionFeedback(view.me.missionRewardPending?'SUCESSO! Role o D4 físico para determinar a recompensa.':'Teste registrado: missão não concluída nesta tentativa.');if(type==='missionD4')missionFeedback('Recompensa da missão registrada.')}catch(e){const msg=e.message;await refresh();say(msg,true);if(type==='correctPosition')positionFeedback('Correção não realizada: '+msg,true);if(type==='missionAttempt'||type==='missionD4')missionFeedback('Não foi possível registrar o dado: '+msg,true)}finally{busy=false}}
+async function action(type,data={}){if(busy){if(type==='missionAttempt')missionFeedback('Aguarde a conclusão da ação anterior.');return}busy=true;try{const prior=view;view=await api('action',{token,expectedRevision:view.revision,type,...data});recordResourceChanges(prior,view);saveCommon();void audio.update(view);draw();say(`Ação registrada · rodada ${view.round}`);if(type==='correctPosition')positionFeedback(`Posição atualizada para a casa ${view.me.house}.`);if(type==='missionAttempt')missionFeedback(view.me.missionRewardPending?'SUCESSO! Role o D4 físico para determinar a recompensa.':'Teste registrado: missão não concluída nesta tentativa.');if(type==='missionD4')missionFeedback('Recompensa da missão registrada.')}catch(e){const msg=e.message;await refresh();say(msg,true);if(type==='correctPosition')positionFeedback('Correção não realizada: '+msg,true);if(type==='missionAttempt'||type==='missionD4')missionFeedback('Não foi possível registrar o dado: '+msg,true)}finally{busy=false}}
 async function correctPosition(){
  const house=Number($('correctHouse')?.value),reason=($('correctReason')?.value||'').trim();
  if(view?.phase!=='active'){positionFeedback('A correção só é permitida durante a partida ativa.',true);return}
