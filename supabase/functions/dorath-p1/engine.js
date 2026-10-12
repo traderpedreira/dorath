@@ -369,7 +369,7 @@ export function applyAction(g,p,a){
  case 'mandamentoChoice':if(!g.globalStates.MANDAMENTO||p.house<6||p.house>=12||p.mandamentoChoice)fail('Escolha do Mandamento indisponível para este jogador nesta casa');p.mandamentoChoice=a.refuse?'recusou':'não recusou';if(a.refuse){const roll=g.marcos[6]?.d4||2;gain(g,p,'heranca',roll>=3?2:1);if(roll===4)gain(g,p,'influencia',1)}break;
  case 'specialChoice':if(g.phase!=='active'||p.house!==7||!g.globalStates.MANDAMENTO||p.specialChoices[a.card])fail('Carta Especial indisponível nesta casa');
   if(a.card==='vida'){if(a.option==='heranca')gain(g,p,'heranca',2);else if(a.option==='provisoes')gain(g,p,'provisoes',2);else fail('Escolha inválida')}
-  else if(a.card==='conhecimento'){if(a.option==='aceitar'){gain(g,p,'conhecimento',3);change(p,'heranca',-5)}else if(a.option!=='recusar')fail('Escolha inválida')}
+  else if(a.card==='conhecimento'){if(p.mandamentoChoice==='recusou')fail('O fruto já foi recusado na Casa 06; decisão definitiva');if(a.option==='aceitar'){gain(g,p,'conhecimento',3);change(p,'heranca',-5)}else if(a.option!=='recusar')fail('Escolha inválida')}
   else fail('Carta Especial inválida');p.specialChoices[a.card]=a.option;log(g,'especial',`${p.name} resolveu ${a.card==='vida'?'Árvore da Vida':'Árvore do Conhecimento'}`,{privateFor:p.id});break;
  case 'characters':if(g.phase!=='active')fail('Personagens indisponíveis');if(!Array.isArray(a.ids)||a.ids.length>2||new Set(a.ids).size!==a.ids.length||a.ids.some(id=>!unlocked(p).some(c=>c.id===id)))fail('Seleção de Personagens inválida');p.characters=a.ids;break;
  case 'convert':if(!['active','rupture-prep'].includes(g.phase))fail('Conversão indisponível');convert(g,p,a);break;
