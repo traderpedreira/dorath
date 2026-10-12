@@ -442,3 +442,20 @@ html body .mp-grid>.mp-card .dice>button{
 .dv4-gallery-name{font-weight:700}
 .dv4-gallery-stats{font-size:.82rem;opacity:.9}
 .dv4-full-card-stats{text-align:center;font-weight:bold;color:#eec98d}
+
+/* V4: resumos legíveis das três cartas; arte integral preservada na ampliação. */
+#dv4 .dv4-cards .dv4-summary-card{
+ display:flex!important;flex-direction:column!important;justify-content:space-between!important;
+ align-items:stretch!important;gap:7px!important;padding:10px 7px!important;
+ background:linear-gradient(145deg,#f7e5c2,#d2ab75 75%,#b88a54)!important;
+ min-height:155px!important;aspect-ratio:3/4.55!important;text-align:center!important;
+}
+#dv4 .dv4-summary-type{font-size:clamp(.48rem,1.6vw,.66rem);font-weight:700;letter-spacing:.09em;color:#79522e;line-height:1.2}
+#dv4 .dv4-summary-name{display:grid;place-items:center;flex:1;min-height:28px;font-size:clamp(.78rem,2.8vw,1.08rem);line-height:1.14;color:#39230f;overflow-wrap:anywhere;text-wrap:balance}
+#dv4 .dv4-summary-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;width:100%}
+#dv4 .dv4-summary-stats-player{grid-template-columns:repeat(2,minmax(0,1fr))}
+#dv4 .dv4-summary-stat{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:1px;min-width:0;padding:4px 1px;background:#fff0d1;border:1px solid #ad824a;border-radius:5px;box-shadow:inset 0 1px #fff9e9}
+#dv4 .dv4-summary-stat small{font:700 clamp(.45rem,1.7vw,.66rem) Georgia,serif;letter-spacing:.015em;color:#77502e}
+#dv4 .dv4-summary-stat b{font-size:clamp(.91rem,3vw,1.25rem);line-height:1.05;color:#30200e}
+#dv4 .dv4-summary-footer{display:block;font:700 clamp(.43rem,1.45vw,.61rem) Georgia,serif;color:#64401d;letter-spacing:.025em}
+@media(max-width:385px){#dv4 .dv4-cards .dv4-summary-card{padding:7px 4px!important;gap:4px!important}#dv4 .dv4-summary-stat{padding:3px 1px}}
