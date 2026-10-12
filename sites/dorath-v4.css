@@ -430,3 +430,15 @@ html body .mp-grid>.mp-card .dice>button{
 #dv4ResourceNotice #dv4ResourceMessage{color:#3a2412;font-size:clamp(1.12rem,4.4vw,1.42rem);font-weight:bold;line-height:1.45;margin:12px 0}
 #dv4ResourceNotice .dv4-resource-instruction{color:#64462a;font-size:.98rem;line-height:1.4;margin:15px 0 20px}
 #dv4ResourceNotice #dv4ResourceAck{width:100%;margin:0;padding:13px 9px;border:2px ridge #d9b071;border-radius:10px;color:#ffeccb;background:linear-gradient(#866034,#452b19);font:700 .93rem Georgia,serif;letter-spacing:.02em;min-height:52px}
+
+/* Cartas recolhidas: nome e atributos; arte integral apenas no modal. */
+#dv4 .dv4-character-card{justify-content:center!important;gap:12px!important;padding:10px 5px!important}
+#dv4 .dv4-character-name{font-size:clamp(.76rem,2.8vw,1.04rem);line-height:1.2;text-wrap:balance}
+#dv4 .dv4-character-shortstats{font-size:clamp(.57rem,1.9vw,.81rem);line-height:1.45;overflow-wrap:anywhere}
+.dv4-character-gallery{display:grid;gap:8px;margin:12px 0}
+.dv4-character-gallery h4{margin:3px 0}
+.dv4-character-option{display:grid;grid-template-columns:auto 1fr;column-gap:10px;row-gap:3px;align-items:center;padding:10px;border:1px solid #987447;border-radius:9px;background:#372919}
+.dv4-character-option .char-check{grid-row:span 2;min-width:18px;min-height:18px}
+.dv4-gallery-name{font-weight:700}
+.dv4-gallery-stats{font-size:.82rem;opacity:.9}
+.dv4-full-card-stats{text-align:center;font-weight:bold;color:#eec98d}
