@@ -483,3 +483,33 @@ html body .mp-grid>.mp-card .dice>button{
 #player .dv4-gallery-locked{font-size:.7rem;letter-spacing:.1em;font-weight:bold}
 #player .dv4-unlocked .dv4-gallery-art,#player .dv4-unlocked .dv4-gallery-name{cursor:pointer}
 @media(min-width:700px){#player .dv4-gallery-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+/* Identidade tipográfica Dorath V4: títulos ornamentais, nomes clássicos e UI legível. */
+:root{--dv4-type-display:'Cinzel Decorative',Georgia,serif;--dv4-type-title:'Cormorant Garamond',Georgia,serif;--dv4-type-body:'Inter',Arial,sans-serif}
+body,.mp-card p,.mp-card label,.mp-card input,.mp-card select,.mp-card textarea,.muted,.mini,
+#dv4 .dv4-meta,#dv4 .dv4-nav,#dv4 .dv4-label,#player .dv4-gallery-stats,#player .dv4-character-gallery p,
+#player .dv4-gallery-select,#player .dv4-gallery-locked{font-family:var(--dv4-type-body)!important}
+.mp-card h2,.mp-card h3,.mp-card h4,#dv4 .dv4-label,#player .dv4-character-gallery h4{font-family:var(--dv4-type-display)!important;letter-spacing:.035em}
+#dv4 .dv4-summary-name,#player .dv4-gallery-name{font-family:var(--dv4-type-title)!important;font-weight:700!important;letter-spacing:.012em}
+#dv4 .dv4-summary-name{font-size:clamp(.94rem,3.45vw,1.37rem)!important}
+#player .dv4-gallery-name{font-size:1.18rem!important;line-height:1.1}
+#dv4 .dv4-summary-type{font:700 clamp(.47rem,1.6vw,.61rem)/1.2 var(--dv4-type-display)!important}
+#dv4 .dv4-summary-stat small{font-family:var(--dv4-type-body)!important;letter-spacing:.035em}
+#dv4 .dv4-summary-stat b{font-family:var(--dv4-type-title)!important;font-size:clamp(1.02rem,3.45vw,1.48rem)!important}
+#dv4 .dv4-summary-swap,#dv4 .dv4-summary-open,#dv4 .dv4-summary-footer{font-family:var(--dv4-type-display)!important;letter-spacing:.02em!important}
+#dv4 .dv4-summary-footer{font-size:clamp(.43rem,1.45vw,.62rem)!important}
+/* O selo pertence à área visual da carta e não interfere no checkbox. */
+#player .dv4-locked{isolation:isolate;overflow:hidden}
+#player .dv4-locked .dv4-gallery-art{filter:grayscale(1) brightness(.62) opacity(.66)!important}
+#player .dv4-locked::after{
+ content:'BLOQUEADA';position:absolute;z-index:2;left:-12%;top:30%;width:124%;
+ transform:rotate(-19deg);pointer-events:none;text-align:center;
+ color:#ffe4da;background:rgba(132,20,22,.92);
+ border-top:2px solid #f0b9ac;border-bottom:2px solid #f0b9ac;
+ box-shadow:0 0 0 2px rgba(81,9,13,.35),0 5px 12px rgba(0,0,0,.4);
+ font:700 clamp(.85rem,3.6vw,1.27rem)/1.25 var(--dv4-type-display);
+ letter-spacing:.055em;padding:9px 0;text-shadow:0 1px 2px #38090b;
+}
+#player .dv4-unlocked{box-shadow:inset 0 0 0 1px rgba(255,244,212,.6),0 5px 14px #0005}
+#player .dv4-gallery-locked{color:#f0dfd2!important}
+@media(max-width:370px){#player .dv4-locked::after{font-size:.75rem!important;letter-spacing:.02em}}
