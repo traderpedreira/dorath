@@ -564,3 +564,28 @@ body,.mp-card p,.mp-card label,.mp-card input,.mp-card select,.mp-card textarea,
 @media(max-width:385px){
  #dv4 .dv4-cards .dv4-summary-card{padding:9px 5px 12px!important;gap:5px!important}
 }
+
+/* Correção de altura: botões jamais ultrapassam a base das cartas compactas. */
+#dv4 .dv4-cards{align-items:stretch!important}
+#dv4 .dv4-cards .dv4-summary-card{
+ aspect-ratio:auto!important;height:auto!important;min-height:230px!important;
+ overflow:visible!important;
+ display:flex!important;flex-direction:column!important;
+ justify-content:flex-start!important;gap:8px!important;
+ padding:12px 8px 13px!important;
+}
+#dv4 .dv4-cards .dv4-summary-card .dv4-summary-name{
+ flex:1 0 auto!important;min-height:39px!important;
+}
+#dv4 .dv4-cards .dv4-summary-card .dv4-summary-stats{flex:0 0 auto!important}
+#dv4 .dv4-cards .dv4-summary-card .dv4-summary-open{
+ position:relative!important;flex:0 0 auto!important;
+ margin:7px 0 0!important;min-height:42px!important;
+ box-sizing:border-box!important;
+}
+#dv4 .dv4-cards .dv4-summary-card .dv4-summary-type{
+ flex:0 0 auto!important;
+}
+@media(max-width:385px){
+ #dv4 .dv4-cards .dv4-summary-card{padding:9px 5px 12px!important;gap:5px!important;min-height:220px!important}
+}
