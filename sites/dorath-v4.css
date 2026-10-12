@@ -519,14 +519,18 @@ body,.mp-card p,.mp-card label,.mp-card input,.mp-card select,.mp-card textarea,
 #player .dv4-gallery-grid .dv4-gallery-art{width:100%!important;height:auto!important;aspect-ratio:3/4.4!important;object-fit:contain!important}
 #player .dv4-gallery-grid .dv4-locked{background:#6a6259!important}
 #player .dv4-gallery-grid .dv4-locked::after{
- content:'BLOQUEADA'!important;position:absolute!important;z-index:4!important;
+ content:'BLOQUEADA'!important;
+ position:absolute!important;z-index:4!important;
  top:38%!important;left:-9%!important;width:118%!important;
- transform:rotate(-21deg)!important;display:block!important;
- padding:3px 0!important;background:transparent!important;
- border:3px solid #b41c22!important;border-left:0!important;border-right:0!important;
- box-shadow:none!important;color:#d31923!important;
+ transform:rotate(-21deg)!important;
+ display:block!important;padding:6px 0!important;
+ background:rgba(255,255,255,.78)!important;
+ border:0!important;
+ color:#b41c22!important;
  font:700 clamp(.82rem,4vw,1.4rem)/1.2 var(--dv4-type-display)!important;
- letter-spacing:.035em!important;text-shadow:1px 1px 0 #f5ddc6,-1px -1px 0 #f5ddc6,0 2px 5px #180608!important;
+ letter-spacing:.04em!important;text-align:center!important;
+ text-shadow:none!important;box-shadow:none!important;
+ -webkit-text-stroke:0!important;
  pointer-events:none!important;
 }
 #player .dv4-gallery-grid .dv4-locked .dv4-gallery-art{filter:grayscale(1) brightness(.67) opacity(.72)!important}
