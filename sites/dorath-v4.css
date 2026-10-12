@@ -459,3 +459,10 @@ html body .mp-grid>.mp-card .dice>button{
 #dv4 .dv4-summary-stat b{font-size:clamp(.91rem,3vw,1.25rem);line-height:1.05;color:#30200e}
 #dv4 .dv4-summary-footer{display:block;font:700 clamp(.43rem,1.45vw,.61rem) Georgia,serif;color:#64401d;letter-spacing:.025em}
 @media(max-width:385px){#dv4 .dv4-cards .dv4-summary-card{padding:7px 4px!important;gap:4px!important}#dv4 .dv4-summary-stat{padding:3px 1px}}
+
+/* Slots de personagens: mesma grade 2×2 da Carta do Jogador. */
+#dv4 .dv4-summary-stats-character{grid-template-columns:repeat(2,minmax(0,1fr))}
+#dv4 .dv4-summary-swap{display:grid;place-items:center;min-width:0;min-height:44px;padding:3px 1px!important;border:1px solid #936b32!important;border-radius:5px!important;background:linear-gradient(#73502c,#51351d)!important;color:#fff0cc!important;font:700 clamp(.48rem,1.55vw,.69rem)/1.1 Georgia,serif!important;letter-spacing:0!important;text-align:center;cursor:pointer}
+#dv4 .dv4-summary-open{display:block;width:100%;padding:7px 2px!important;border:1px solid #89602f!important;border-radius:5px!important;background:#6e4926!important;color:#fff2d8!important;font:700 clamp(.5rem,1.55vw,.67rem) Georgia,serif!important;text-align:center;cursor:pointer}
+#dv4 .dv4-summary-swap:focus-visible,#dv4 .dv4-summary-open:focus-visible{outline:3px solid #fff4c5;outline-offset:2px}
+#dv4 .dv4-character-card.dv4-summary-card{cursor:default}
