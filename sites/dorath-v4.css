@@ -589,3 +589,12 @@ body,.mp-card p,.mp-card label,.mp-card input,.mp-card select,.mp-card textarea,
 @media(max-width:385px){
  #dv4 .dv4-cards .dv4-summary-card{padding:9px 5px 12px!important;gap:5px!important;min-height:220px!important}
 }
+
+/* Jornada inicial: confirmação da reserva, escolha de Adão e orientação para Eventos. */
+.dv4-setup-receipt{max-width:min(92vw,430px);border:2px solid #c29b5f;border-radius:13px;padding:23px;background:#f1dfbb;color:#392612;text-align:center;box-shadow:0 16px 48px #000b}
+.dv4-setup-receipt::backdrop{background:#080604ce}
+.dv4-setup-receipt h2{font-family:var(--dv4-type-display);margin:0 0 15px;font-size:1.16rem}
+.dv4-setup-receipt p{font-family:var(--dv4-type-body);font-size:.9rem}
+.dv4-setup-receipt button,#player .dv4-intro-adam{display:block;width:100%;background:linear-gradient(#856032,#52361a);border:1px solid #bd985d;border-radius:8px;color:#fff0d4;padding:13px 10px;min-height:45px;font:700 .8rem var(--dv4-type-display);cursor:pointer}
+#player .dv4-intro-adam{margin:10px 0 15px}
+.dv4-intro-event-hint{padding:12px;border:1px solid #c4a166;border-radius:8px;background:#4d3520;color:#ffebc3;font:700 .88rem/1.45 var(--dv4-type-body)}
