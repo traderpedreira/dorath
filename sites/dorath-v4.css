@@ -718,3 +718,16 @@ html body #board .mp-grid > #missions.dv4-current > p.dv4-mission-wait{
  text-shadow:none!important;
  opacity:1!important;
 }
+
+/* Tabela de conversão dos atributos dos personagens nas Missões. */
+html body #board #missions.dv4-current .dv4-test-attribute{display:flex!important;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding:10px 12px;background:#fff0d1;border:1px solid #c49b63;border-radius:8px}
+html body #board #missions.dv4-current .dv4-test-attribute span{font:700 .68rem var(--dv4-type-display);letter-spacing:.035em;color:#77502c}
+html body #board #missions.dv4-current .dv4-test-attribute strong{font:700 1.12rem var(--dv4-type-title);color:#392511!important}
+html body #board #missions.dv4-current .dv4-bonus-table-wrap{min-width:0;width:100%;margin-top:3px}
+html body #board #missions.dv4-current .dv4-bonus-heading{text-align:center;font:700 .8rem var(--dv4-type-display);color:#503319;margin:7px 0}
+html body #board #missions.dv4-current table.dv4-bonus-table{table-layout:fixed!important;width:100%!important;max-width:100%;border-collapse:separate;border-spacing:3px;font-family:var(--dv4-type-body);color:#392511}
+html body #board #missions.dv4-current .dv4-bonus-table th,html body #board #missions.dv4-current .dv4-bonus-table td{padding:9px 2px!important;text-align:center!important;border:1px solid #b98e54!important;border-radius:5px;background:#fff1d4!important;font-size:clamp(.65rem,2.45vw,.84rem)!important;line-height:1.2!important}
+html body #board #missions.dv4-current .dv4-bonus-table thead th{background:#80572c!important;color:#fff4dc!important;font-weight:700}
+html body #board #missions.dv4-current .dv4-bonus-table tbody th{font-weight:700;color:#61401f!important}
+html body #board #missions.dv4-current .dv4-bonus-table tbody td{font-weight:800;font-size:1.04rem!important}
+html body #board #missions.dv4-current .dv4-bonus-caption{display:block;margin-top:7px!important;font:500 .75rem/1.45 var(--dv4-type-body)!important;text-align:center;color:#67472b!important}
