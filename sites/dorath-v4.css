@@ -811,3 +811,98 @@ html body #board #player .dv4-not-owned .dv4-gallery-art{opacity:.8}
 #player .dv4-secret-panel strong{display:block;font-size:1.12rem;line-height:1.35}
 #player .dv4-secret-panel p{margin:8px 0 0;font-size:.95rem;line-height:1.5}
 #player .dv4-history-grid{padding-top:12px;border-top:1px solid #c4a675}
+
+
+/* V4 — linguagem visual compartilhada nas demais abas; exclusivamente apresentacional */
+html body #board .mp-grid>.mp-card.dv4-current:is(#movement,#missions,#world,#rooms,#threats,#trades,#history){
+  color:#3e2917;
+  overflow-wrap:anywhere;
+}
+html body #board .mp-grid>.mp-card.dv4-current:is(#movement,#missions,#world,#rooms,#threats,#trades,#history)>h3{
+  margin:0 0 16px;
+  padding-bottom:12px;
+  border-bottom:1px solid #b99b6a;
+  font:700 clamp(1.1rem,4.5vw,1.45rem)/1.25 Georgia,serif;
+  text-transform:uppercase;
+  letter-spacing:.035em;
+  color:#492e17;
+}
+html body #board .mp-grid>.mp-card.dv4-current:is(#movement,#missions,#world,#rooms,#threats,#trades,#history)>h4{
+  margin:16px 0 9px;
+  font-size:1rem;
+  color:#533619;
+}
+html body #board .mp-grid>.mp-card.dv4-current:is(#movement,#missions,#world,#rooms,#threats,#trades,#history)>p{
+  max-width:100%;
+  line-height:1.55;
+  margin:10px 0 14px;
+}
+html body #board .mp-grid>.mp-card.dv4-current:is(#movement,#missions,#world,#rooms,#threats,#trades,#history) :is(input:not([type="checkbox"]):not([type="range"]),select,textarea){
+  max-width:100%;min-width:0;box-sizing:border-box;
+  background:#fff3d9;color:#3c2916;border:1px solid #a78250;
+  border-radius:9px;
+}
+html body #board .mp-grid>.mp-card.dv4-current:is(#movement,#missions,#world,#rooms,#threats,#trades,#history) label{
+  color:#49321b;line-height:1.4;
+}
+html body #board .mp-grid>.mp-card.dv4-current:is(#movement,#missions,#world,#rooms,#threats,#trades,#history) button[data-action]{
+  min-height:43px;
+  border-radius:9px;
+  font-weight:700;
+}
+html body #board .mp-grid>.mp-card.dv4-current:is(#movement,#missions,#world,#rooms,#threats,#trades,#history) :is(button,select,input):focus-visible,
+html body #board #player .dv4-player-section>summary:focus-visible{
+  outline:3px solid #8e5b23;outline-offset:3px;
+}
+html body #board .mp-grid>.mp-card.dv4-current :is(.dv4-mission-details,.dv4-mission-bonus,.dv4-test-attribute){
+  border-radius:12px;max-width:100%;
+}
+html body #board #missions .dv4-mission-details{
+  display:grid;gap:9px;padding:13px;background:#fff0d0;border:1px solid #b99c6b;
+}
+html body #board #missions .dv4-mission-details p{
+  padding:10px 12px;margin:0!important;background:rgba(255,255,255,.36);
+  border:1px solid rgba(154,116,65,.25);border-radius:8px;
+  line-height:1.5;
+}
+html body #board #missions .dv4-mission-details p b{
+  display:block;margin-bottom:4px;color:#70491f;
+  font:700 .75rem/1.3 system-ui,sans-serif;letter-spacing:.09em;
+}
+html body #board #missions .dv4-mission-bonus{
+  padding:13px;margin-top:12px;border:1px solid #b99c6b;
+  background:#f6e6c5;border-radius:12px;
+}
+html body #board #missions .dv4-mission-leader{
+  margin:6px 0 13px;padding:12px;border-radius:9px;
+  background:#fff5df;border:1px solid #c4a574;
+  font-weight:700;color:#4a2d15;
+}
+html body #board #missions .dv4-mission-dice .dice,
+html body #board :is(#movement,#world,#threats) .dice{
+  gap:5px;max-width:100%;
+}
+html body #board :is(#movement,#missions,#world,#threats) .dice button{
+  min-width:0;padding:8px 2px;font-variant-numeric:tabular-nums;
+}
+html body #board :is(#world,#rooms,#trades,#threats,#history) :is(.mp-chip,.mp-list li){
+  border:1px solid #c3a777;border-radius:10px;
+  background:rgba(255,246,221,.65);
+  padding:12px;margin:7px 0;color:#462e19;
+}
+html body #board :is(#world,#rooms,#trades,#threats,#history) .mp-list{
+  padding-left:0;list-style:none;display:grid;gap:8px;
+}
+html body #board :is(#world,#rooms,#trades,#threats,#history) .mp-list li{
+  margin:0;overflow-wrap:anywhere;
+}
+html body #board #history .mp-list li{font-size:.92rem;line-height:1.5}
+html body #board :is(#rooms,#trades,#threats) p{
+  padding:10px 12px;border-radius:10px;
+  background:rgba(255,248,232,.45);
+}
+@media(max-width:380px){
+ html body #board .mp-grid>.mp-card.dv4-current:is(#movement,#missions,#world,#rooms,#threats,#trades,#history){padding:13px!important}
+ html body #board #missions .dv4-mission-details{padding:9px}
+ html body #board #missions .dv4-mission-details p{padding:9px}
+}
