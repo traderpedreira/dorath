@@ -7,12 +7,12 @@ const ui=document.createElement('section');ui.id='dv4';ui.innerHTML='<div class=
 board.insertBefore(ui,host);const cards=ui.querySelector('#dv4cards'),nav=ui.querySelector('.dv4-nav'),modal=ui.querySelector('#dv4modal');
 const navItems=[['movement','Jogar','◈'],['missions','Missão','✦'],['world','Eventos','❢'],['player','Jogador','♛'],['history','Mais','☰']];
 for(const [id,label,icon] of navItems){const b=document.createElement('button');b.type='button';b.dataset.dv4=id;b.innerHTML='<span aria-hidden="true">'+icon+'</span><small>'+label+'</small>';nav.append(b)}
-const extras=document.createElement('div');extras.id='dv4extras';extras.hidden=true;for(const [id,label] of [['rooms','Salas'],['threats','Ameaças'],['trades','Trocas'],['history','Histórico'],['player','Carta do Jogador']]){let b=document.createElement('button');b.type='button';b.dataset.dv4=id;b.textContent=label;extras.append(b)}ui.insertBefore(extras,nav);const accountMenu=document.createElement('div');accountMenu.className='dv4-account-menu';accountMenu.innerHTML='<small>Conectado como <span id="dv4menuEmail"></span></small><button type="button" id="dv4menuSignout">Sair da conta</button>';extras.append(accountMenu);
+const extras=document.createElement('div');extras.id='dv4extras';extras.hidden=true;for(const [id,label] of [['rooms','Salas'],['threats','Ameaças'],['trades','Trocas'],['history','Histórico'],['player','Carta do Jogador']]){let b=document.createElement('button');b.type='button';b.dataset.dv4=id;b.textContent=label;extras.append(b)}ui.insertBefore(extras,nav);const accountMenu=document.createElement('div');accountMenu.className='dv4-account-menu';accountMenu.innerHTML='<small>Conectado como <span id="dv4menuEmail"></span></small><button type="button" id="dv4menuSignout">Desconectar da partida</button>';extras.append(accountMenu);
 const chooseParty=document.createElement('button');chooseParty.type='button';chooseParty.textContent='Trocar de partida';chooseParty.addEventListener('click',()=>{extras.hidden=true;document.dispatchEvent(new Event('dorath-choose-party'))});accountMenu.insertBefore(chooseParty,accountMenu.querySelector('#dv4menuSignout'));
 
 // A navegação vem depois do painel de turno, não entre as cartas e as ações.
 host.after(extras,nav);
-accountMenu.querySelector('#dv4menuSignout').addEventListener('click',()=>{if(window.confirm('Deseja realmente sair da conta?'))document.getElementById('signout')?.click()});
+accountMenu.querySelector('#dv4menuSignout').addEventListener('click',()=>{if(window.confirm('Deseja desconectar desta partida? Você poderá retomá-la depois.'))document.getElementById('signout')?.click()});
 const text=(el)=>el?.textContent?.trim()||'';
 const escapeHTML=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const files={'adao':'01_ADAO.webp','eva':'02_EVA.webp','caim':'03_CAIM.webp','abel':'04_ABEL.webp','sete':'05_SETE.webp','noe':'15_NOE.webp','sem':'16_SEM.webp','jafe':'18_JAFE.webp','enos':'11_ENOS.webp','jabal':'08_JABAL.webp','jubal':'09_JUBAL.webp','tubalc a im':'10_TUBALCAIM.webp'};
@@ -76,8 +76,8 @@ function openCard(card){
     const photoBtn=document.createElement('button');photoBtn.type='button';photoBtn.textContent='Tirar selfie';
     photoBtn.addEventListener('click',()=>source?.querySelector('#dorathPhotoCamera')?.click());
     form.append(photoBtn);
-    const signout=document.createElement('button');signout.type='button';signout.className='dv4-editor-signout';signout.textContent='Sair da conta';
-    signout.addEventListener('click',()=>{if(window.confirm('Deseja realmente sair da conta? Sua partida continuará salva para retomar depois.')){modal.close();document.getElementById('signout')?.click()}});
+    const signout=document.createElement('button');signout.type='button';signout.className='dv4-editor-signout';signout.textContent='Desconectar da partida';
+    signout.addEventListener('click',()=>{if(window.confirm('Deseja desconectar desta partida? Você poderá retomá-la depois.')){modal.close();document.getElementById('signout')?.click()}});
     const save=document.createElement('button');save.type='submit';save.textContent='Salvar e voltar à carta';form.append(save);
     form.addEventListener('submit',event=>{
       event.preventDefault();const next={...stored};
