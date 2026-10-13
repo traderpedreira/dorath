@@ -6,9 +6,28 @@ const active=(id)=>document.getElementById(id);
 const ui=document.createElement('section');ui.id='dv4';ui.innerHTML='<div class="dv4-meta" aria-label="Informações da partida"><span>PERÍODO 1<small>Éden ao Dilúvio</small></span><span id="dv4round">RODADA —</span><span id="dv4house">CASA —</span></div><div class="dv4-cards" id="dv4cards" aria-label="Cartas do jogador"></div><div class="dv4-label" id="dv4label">PRÓXIMA AÇÃO</div><nav class="dv4-nav" aria-label="Navegação do Dorath"></nav><dialog id="dv4modal" aria-label="Carta ampliada"><button type="button" id="dv4close" aria-label="Fechar carta">✕</button><div id="dv4content"></div></dialog>';
 board.insertBefore(ui,host);const cards=ui.querySelector('#dv4cards'),nav=ui.querySelector('.dv4-nav'),modal=ui.querySelector('#dv4modal');
 const navItems=[['movement','Jogar','◈'],['missions','Missão','✦'],['world','Eventos','❢'],['player','Jogador','♛'],['threats','Ameaças','⚔'],['trades','Trocas','⇄'],['rooms','Salas','⌂'],['more','Mais','☰']];
-for(const [id,label,icon] of navItems){const b=document.createElement('button');b.type='button';b.dataset.dv4=id;b.innerHTML='<span aria-hidden="true">'+icon+'</span><small>'+label+'</small>';nav.append(b)}
+// Icones vetoriais embutidos (sem dependencia de fontes ou bibliotecas externas).
+const navIconPaths={
+ movement:'<path d="M6 3h12l4 9-10 9L2 12 6 3Z"/><path d="M2 12h20M6 3l6 9 6-9M12 12v9"/>',
+ missions:'<path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"/><path d="m19 17 .8 2.2L22 20l-2.2.8L19 23l-.8-2.2L16 20l2.2-.8L19 17Z"/>',
+ world:'<path d="M8 21h12a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v14a2 2 0 0 1 2 2Z"/><path d="M6 17H4a2 2 0 0 0 0 4h4M10 8h8M10 12h6"/>',
+ player:'<path d="m2 8 5 4 5-7 5 7 5-4-2 12H4L2 8Z"/><path d="M4 20h16"/>',
+ threats:'<path d="m14.5 17.5 3-3L6 3 3 6l11.5 11.5ZM13 19l6 2 2-2-2-6M3 21l6-6"/>',
+ trades:'<path d="M7 7h14m-4-4 4 4-4 4M17 17H3m4-4-4 4 4 4"/>',
+ rooms:'<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V10Z"/><path d="M9 21v-8h6v8"/>',
+ more:'<path d="M4 6h16M4 12h16M4 18h16"/>',
+ history:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/>',
+ change:'<path d="M20 7H4m0 0 4-4M4 7l4 4M4 17h16m0 0-4-4m4 4-4 4"/>',
+ logout:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>'
+};
+const navIcon=(key)=>'<svg class="dv4-nav-icon" width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(navIconPaths[key]||navIconPaths.more)+'</svg>';
+const setNavContent=(button,key,title)=>{button.innerHTML=navIcon(key)+'<small>'+title+'</small>';button.setAttribute('aria-label',title)};
+for(const [id,label] of navItems){const b=document.createElement('button');b.type='button';b.dataset.dv4=id;setNavContent(b,id,label);nav.append(b)}
 const extras=document.createElement('div');extras.id='dv4extras';extras.hidden=true;for(const [id,label] of [['history','Histórico']]){let b=document.createElement('button');b.type='button';b.dataset.dv4=id;b.textContent=label;extras.append(b)}ui.insertBefore(extras,nav);const accountMenu=document.createElement('div');accountMenu.className='dv4-account-menu';accountMenu.innerHTML='<small>Conectado como <span id="dv4menuEmail"></span></small><button type="button" id="dv4menuSignout">Desconectar da partida</button>';extras.append(accountMenu);
 const chooseParty=document.createElement('button');chooseParty.type='button';chooseParty.textContent='Trocar de partida';chooseParty.addEventListener('click',()=>{closeMore();document.dispatchEvent(new Event('dorath-choose-party'))});accountMenu.insertBefore(chooseParty,accountMenu.querySelector('#dv4menuSignout'));
+setNavContent(extras.querySelector('[data-dv4="history"]'),'history','Histórico');
+setNavContent(chooseParty,'change','Trocar partida');
+setNavContent(accountMenu.querySelector('#dv4menuSignout'),'logout','Desconectar');
 
 // A navegação vem depois do painel de turno, não entre as cartas e as ações.
 host.after(nav,extras);
