@@ -144,8 +144,8 @@ function renderCards(){
    b.querySelector('.dv4-summary-open').addEventListener('click',()=>openCard(c));
    b.querySelector('.dv4-summary-swap').addEventListener('click',()=>{
     select('player',true);
-    const gallery=active('player')?.querySelector('.dv4-character-gallery');
-    gallery?.scrollIntoView({block:'nearest',behavior:'smooth'});
+    const gallery=active('player')?.querySelector('.dv4-player-section[data-section="collection"]');
+    if(gallery){gallery.open=true;gallery.scrollIntoView({block:'nearest',behavior:'smooth'})}
    });
   }
   cards.append(b);
