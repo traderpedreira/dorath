@@ -181,7 +181,7 @@ function organizePlayerPanels(p,v){
  if(availableGrid.children.length)available.append(availableGrid);
  else available.append(Object.assign(document.createElement('p'),{textContent:'Nenhuma carta disponível para aquisição neste momento.'}));
  if(lockedGrid.children.length)locked.append(lockedGrid);
- for(const box of [...root.querySelectorAll('.dv4-free-recruit,.dv4-paid-recruit')])recruit.append(box);
+ for(const box of [...root.querySelectorAll('.dv4-free-recruit,.dv4-paid-recruit')]){if(box.classList.contains('dv4-paid-recruit'))box.querySelector('h4')?.remove();recruit.append(box)}
  if(!recruit.querySelector('.dv4-free-recruit'))recruit.append(Object.assign(document.createElement('p'),{textContent:'Nenhuma aquisição disponível neste momento.'}));
  root.replaceChildren(intro,collection,recruit,available,locked);
 }
