@@ -1315,3 +1315,17 @@ html body #account #accountSubmit{
 /* Acesso direto: Entrar e Criar conta alinhados abaixo de e-mail e senha. */
 html body #account .dv4-account-actions{display:flex!important;flex-wrap:wrap!important;align-items:center!important;justify-content:center!important;gap:10px!important;margin:12px auto 0!important;width:100%!important}
 html body #account .dv4-account-actions>button{display:block!important;width:auto!important;max-width:100%!important;min-width:0!important;margin:0!important;padding:11px 22px!important;white-space:nowrap!important}
+
+
+/* Missao: informacoes hierarquizadas e escolha do personagem na propria aba. */
+html body #board #missions .dv4-mission-details{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;padding:12px!important}
+html body #board #missions .dv4-mission-field{display:grid!important;align-content:start!important;gap:7px!important;min-width:0;padding:12px!important;border:1px solid #c6a574!important;border-radius:11px!important;background:linear-gradient(145deg,#fff3d6,#f2dbae)!important;box-shadow:0 2px 5px #55371512}
+html body #board #missions .dv4-mission-field-name,.dv4-mission-field-reward{grid-column:1/-1}
+html body #board #missions .dv4-mission-field>span{font:700 .73rem/1.2 system-ui,sans-serif!important;letter-spacing:.075em!important;color:#76512c!important}
+html body #board #missions .dv4-mission-field>strong{font:600 clamp(1rem,3.8vw,1.25rem)/1.35 Georgia,serif!important;color:#392719!important;overflow-wrap:anywhere!important}
+html body #board #missions .dv4-mission-field-reward{background:linear-gradient(145deg,#fff0c6,#e9cea0)!important}
+html body #board #missions .dv4-mission-support-heading{text-align:center!important;font:700 clamp(1.04rem,4vw,1.3rem)/1.3 Georgia,serif!important;letter-spacing:.04em!important;margin:2px 0 10px!important;color:#4c301a!important}
+html body #board #missions .dv4-mission-character-buttons{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;margin:0 0 14px!important}
+html body #board #missions .dv4-mission-character-button{width:100%!important;min-height:54px!important;margin:0!important;padding:10px 8px!important;border:1px solid #a8834d!important;border-radius:10px!important;background:#fff0d2!important;color:#55371b!important;font:700 1.03rem Georgia,serif!important;box-shadow:none!important}
+html body #board #missions .dv4-mission-character-button.is-active{background:linear-gradient(#ac7b3e,#60401f)!important;border:2px solid #f2d498!important;color:#fff2d4!important;box-shadow:0 0 0 1px #80582f!important}
+html body #board #missions .dv4-mission-character-button:focus-visible{outline:3px solid #c39b52!important;outline-offset:2px!important}
