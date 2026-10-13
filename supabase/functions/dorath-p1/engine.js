@@ -48,7 +48,7 @@ function secretFromHistory(history=[]){
 export function newPlayer(name,room,team,history=[],commonHistory=[]){
  const sid=secretFromHistory(history);
  return {id:uuid(),name:String(name||'Jogador').trim().slice(0,40)||'Jogador',room,team:String(team||'').slice(0,30),
- house:1,resources:{conhecimento:2,influencia:2,provisoes:2,heranca:0},characters:['adao'],ownedCharacters:['adao'],freeCharacterChoices:[],recruitHistory:{},missionCharacterId:null,
+ house:1,resources:{conhecimento:2,influencia:2,provisoes:2,heranca:0},characters:['adao'],ownedCharacters:['adao'],freeCharacterChoices:[],recruitHistory:{},missionCharacterId:'adao',
  secretMissionId:sid,secretCompletedAt:null,setupDone:false,preserved:false,preservedCharacterId:null,
  arkFinalized:false,preservationBonus:null,consequences:[],mission:null,missionRewardPending:null,
  specialChoices:{},mandamentoChoice:null,lastChanceUsed:false,houseOccurrences:{},house3LandingBonus:null,missionRandomBonus:null,
@@ -469,7 +469,9 @@ export function applyAction(g,p,a){
   syncFreeCollection(g,p);
   if(!Array.isArray(a.ids)||a.ids.length>2||new Set(a.ids).size!==a.ids.length||a.ids.some(id=>!p.ownedCharacters.includes(id)))fail('Selecione até dois personagens da sua coleção');
   p.characters=a.ids;
-  if(p.missionCharacterId&&!a.ids.includes(p.missionCharacterId))p.missionCharacterId=null;
+  // A selecao na aba Jogador define o personagem usado nas missoes.
+  // Um personagem ativo e assumido automaticamente; com dois, exige nova escolha.
+  p.missionCharacterId=a.ids.length===1?a.ids[0]:null;
  }break;
  case 'missionCharacterSelect':{
   activeTurn(g,p);
