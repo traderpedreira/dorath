@@ -794,3 +794,20 @@ html body #board #player .dv4-not-owned .dv4-gallery-art{opacity:.8}
 #player .dv4-player-section button[data-action="characters"]{display:block;width:100%;margin-top:12px}
 #player .dv4-player-section>h3{margin:0 0 12px}
 #player .dv4-player-section p{overflow-wrap:anywhere}
+
+
+/* Dashboard da Carta do Jogador: dados legados preservados apenas para as cartas V4 */
+#player .dv4-player-section[data-section="player"]>.dv4-legacy-data{display:none!important}
+#player .dv4-player-dashboard{display:grid;gap:14px;padding:2px 0 8px}
+#player .dv4-heritage{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 18px;border:1px solid #9a6c30;border-radius:12px;background:linear-gradient(125deg,#b28a51,#e6c58b 48%,#b98b48);color:#3c2714;box-shadow:inset 0 1px 0 #f9e2b8}
+#player .dv4-heritage span{font-size:.9rem;font-weight:700;letter-spacing:.13em}
+#player .dv4-heritage strong{font-size:clamp(2rem,7vw,3rem);line-height:1;font-variant-numeric:tabular-nums}
+#player .dv4-resource-grid,#player .dv4-history-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+#player .dv4-resource-stat,#player .dv4-history-stat{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;gap:4px;padding:13px 3px;border:1px solid #b79a69;border-radius:10px;background:rgba(255,250,231,.53);text-align:center}
+#player .dv4-resource-stat small,#player .dv4-history-stat small{font:700 clamp(.57rem,2.2vw,.75rem)/1.3 system-ui,sans-serif;letter-spacing:.015em;overflow-wrap:anywhere}
+#player .dv4-resource-stat strong,#player .dv4-history-stat strong{font:700 clamp(1.35rem,5vw,2rem)/1 Georgia,serif;color:#513018;font-variant-numeric:tabular-nums}
+#player .dv4-secret-panel{padding:15px;border:1px solid #b69a68;border-radius:12px;background:rgba(255,247,223,.63)}
+#player .dv4-secret-panel small{display:block;margin-bottom:7px;font:700 .75rem system-ui,sans-serif;letter-spacing:.09em;color:#795325}
+#player .dv4-secret-panel strong{display:block;font-size:1.12rem;line-height:1.35}
+#player .dv4-secret-panel p{margin:8px 0 0;font-size:.95rem;line-height:1.5}
+#player .dv4-history-grid{padding-top:12px;border-top:1px solid #c4a675}
