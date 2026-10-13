@@ -8,7 +8,7 @@ board.insertBefore(ui,host);const cards=ui.querySelector('#dv4cards'),nav=ui.que
 const navItems=[['movement','Jogar','◈'],['missions','Missão','✦'],['world','Eventos','❢'],['player','Jogador','♛'],['threats','Ameaças','⚔'],['trades','Trocas','⇄'],['rooms','Salas','⌂'],['more','Mais','☰']];
 for(const [id,label,icon] of navItems){const b=document.createElement('button');b.type='button';b.dataset.dv4=id;b.innerHTML='<span aria-hidden="true">'+icon+'</span><small>'+label+'</small>';nav.append(b)}
 const extras=document.createElement('div');extras.id='dv4extras';extras.hidden=true;for(const [id,label] of [['history','Histórico']]){let b=document.createElement('button');b.type='button';b.dataset.dv4=id;b.textContent=label;extras.append(b)}ui.insertBefore(extras,nav);const accountMenu=document.createElement('div');accountMenu.className='dv4-account-menu';accountMenu.innerHTML='<small>Conectado como <span id="dv4menuEmail"></span></small><button type="button" id="dv4menuSignout">Desconectar da partida</button>';extras.append(accountMenu);
-const chooseParty=document.createElement('button');chooseParty.type='button';chooseParty.textContent='Trocar de partida';chooseParty.addEventListener('click',()=>{extras.hidden=true;document.dispatchEvent(new Event('dorath-choose-party'))});accountMenu.insertBefore(chooseParty,accountMenu.querySelector('#dv4menuSignout'));
+const chooseParty=document.createElement('button');chooseParty.type='button';chooseParty.textContent='Trocar de partida';chooseParty.addEventListener('click',()=>{closeMore();document.dispatchEvent(new Event('dorath-choose-party'))});accountMenu.insertBefore(chooseParty,accountMenu.querySelector('#dv4menuSignout'));
 
 // A navegação vem depois do painel de turno, não entre as cartas e as ações.
 host.after(nav,extras);
@@ -21,8 +21,26 @@ const mapped=Object.fromEntries(Object.entries(files).map(([k,v])=>[slug(k),v]))
 let selected='movement',sig='',manual=false,oldNames='',playerPhoto='';
 try{playerPhoto=localStorage.getItem('dorath.visual.photo.v1.'+(document.getElementById('accountEmail')?.textContent?.trim()||'local'))||''}catch{}
 document.addEventListener('dorath-photo-update',e=>{playerPhoto=e.detail?.photo||'';oldNames='';renderCards()});
-function select(id,user=false){if(!panels.includes(id))return;selected=id;manual=user;for(const key of panels)active(key)?.classList.toggle('dv4-current',key===id);for(const b of nav.querySelectorAll('button'))b.classList.toggle('dv4-selected',b.dataset.dv4===(navItems.some(n=>n[0]===id)?id:'more'));ui.querySelector('#dv4label').textContent=({'movement':'SEU PRÓXIMO PASSO','missions':'MISSÃO','world':'EVENTOS','player':'CARTA DO JOGADOR','rooms':'SALAS DA PARTIDA','threats':'AMEAÇAS COLETIVAS','trades':'TROCAS','history':'HISTÓRICO'})[id];extras.hidden=true}
-nav.addEventListener('click',e=>{const id=e.target.closest('button[data-dv4]')?.dataset.dv4;if(!id)return;if(id==='more'){extras.hidden=!extras.hidden;if(!extras.hidden)accountMenu.querySelector('#dv4menuEmail').textContent=text(document.getElementById('accountEmail'));return}select(id,true)});
+const moreButton=nav.querySelector('[data-dv4="more"]');
+const historyButton=extras.querySelector('[data-dv4="history"]');
+const signoutButton=accountMenu.querySelector('#dv4menuSignout');
+function closeMore(){
+ nav.classList.remove('dv4-more-open');
+ moreButton.hidden=false;
+ if(historyButton)extras.insertBefore(historyButton,accountMenu);
+ if(chooseParty)accountMenu.insertBefore(chooseParty,signoutButton);
+ if(signoutButton)accountMenu.append(signoutButton);
+ extras.hidden=true;
+}
+function openMore(){
+ accountMenu.querySelector('#dv4menuEmail').textContent=text(document.getElementById('accountEmail'));
+ nav.classList.add('dv4-more-open');
+ moreButton.hidden=true;
+ for(const button of [historyButton,chooseParty,signoutButton])if(button)nav.append(button);
+ extras.hidden=false;
+}
+function select(id,user=false){if(!panels.includes(id))return;selected=id;manual=user;for(const key of panels)active(key)?.classList.toggle('dv4-current',key===id);for(const b of nav.querySelectorAll('button'))b.classList.toggle('dv4-selected',b.dataset.dv4===(navItems.some(n=>n[0]===id)?id:'more'));ui.querySelector('#dv4label').textContent=({'movement':'SEU PRÓXIMO PASSO','missions':'MISSÃO','world':'EVENTOS','player':'CARTA DO JOGADOR','rooms':'SALAS DA PARTIDA','threats':'AMEAÇAS COLETIVAS','trades':'TROCAS','history':'HISTÓRICO'})[id];closeMore()}
+nav.addEventListener('click',e=>{const id=e.target.closest('button[data-dv4]')?.dataset.dv4;if(!id)return;if(id==='more'){openMore();return}if(id==='history'){select(id,true);return}select(id,true)});
 extras.addEventListener('click',e=>{const id=e.target.closest('[data-dv4]')?.dataset.dv4;if(id)select(id,true)});
 function openCard(card){
  const body=ui.querySelector('#dv4content');body.replaceChildren();
