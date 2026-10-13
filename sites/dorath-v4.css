@@ -780,3 +780,17 @@ html body #board #player .dv4-collection-panel select{width:100%;padding:11px;bo
 html body #board #player .dv4-collection-panel button{width:100%;padding:12px;border-radius:8px;border:1px solid #a78352;background:#65421f;color:#fff0d5;font-weight:700}
 html body #board #player .dv4-available-label{font-size:.78rem;color:#644323!important;text-align:center;margin:5px 0}
 html body #board #player .dv4-not-owned .dv4-gallery-art{opacity:.8}
+
+
+/* V4 — organizacao modular da aba Jogador */
+#player .dv4-player-section{display:block;margin:0 0 13px;padding:0 12px 12px;border:1px solid #a98854;border-radius:15px;background:linear-gradient(145deg,#f8e8c5,#e6c997);color:#493019;overflow:hidden}
+#player .dv4-player-section>summary{display:list-item;list-style-position:inside;cursor:pointer;padding:15px 6px;font-family:Georgia,serif;font-size:clamp(1rem,4vw,1.22rem);font-weight:700;letter-spacing:.025em;line-height:1.4}
+#player .dv4-player-section[open]>summary{border-bottom:1px solid #c4a675;margin-bottom:12px}
+#player .dv4-player-section:not([open]){padding-bottom:0}
+#player .dv4-player-section .dv4-gallery-grid{margin:10px 0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+#player .dv4-player-section .dv4-character-option{min-width:0;width:100%}
+#player .dv4-player-section .dv4-collection-panel{margin:0 0 14px}
+#player .dv4-player-section .dv4-free-recruit{margin:10px 0}
+#player .dv4-player-section button[data-action="characters"]{display:block;width:100%;margin-top:12px}
+#player .dv4-player-section>h3{margin:0 0 12px}
+#player .dv4-player-section p{overflow-wrap:anywhere}
