@@ -906,3 +906,8 @@ html body #board :is(#rooms,#trades,#threats) p{
  html body #board #missions .dv4-mission-details{padding:9px}
  html body #board #missions .dv4-mission-details p{padding:9px}
 }
+
+/* Ocultar rótulo externo redundante apenas nestas três abas. */
+html body #board:has(#missions.dv4-current) #dv4label,
+html body #board:has(#world.dv4-current) #dv4label,
+html body #board:has(#player.dv4-current) #dv4label{display:none!important}
