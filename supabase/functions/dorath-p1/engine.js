@@ -114,7 +114,7 @@ function syncFreeCollection(g,p){
  }else p.freeCharacterChoices=candidates.map(c=>c.id);
 }
 export function publicView(g,p){return {
- revision:g.revision,motherCode:g.motherCode,phase:g.phase,round:g.round,
+ revision:g.revision,motherCode:g.motherCode,mode:g.mode||'multiplayer',phase:g.phase,round:g.round,
  turnPlayerId:g.players[g.turnIndex]?.id||null,hostPlayerId:g.hostPlayerId,
  playerOrder:g.players.map(x=>({id:x.id,name:x.name})),
  rooms:g.rooms.map(r=>({...r,players:g.players.filter(x=>x.room===r.code).map(x=>({id:x.id,name:x.name,house:x.house,team:x.team,preserved:x.preserved,arkFinalized:x.arkFinalized}))})),
