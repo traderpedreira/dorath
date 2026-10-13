@@ -111,7 +111,7 @@ const names=()=>view.rooms.flatMap(r=>r.players);
 const choices=(items,skip)=>items.filter(q=>q.id!==skip).map(q=>`<option value="${esc(q.id)}">${esc(q.name)}</option>`).join('');
 // Estado visual local: nao altera regras nem sessao da partida.
 const dv4PlayerExpanded=new Set(['player','collection']);
-function organizePlayerPanels(p){
+function organizePlayerPanels(p,v){
  const root=$('player');
  const gallery=root.querySelector('.dv4-character-gallery');
  if(!gallery)return;
@@ -123,6 +123,21 @@ function organizePlayerPanels(p){
  const locked=create('locked','PERSONAGENS BLOQUEADOS');
  // As linhas originais continuam no DOM para os componentes visuais da V4.
  [...root.children].filter(el=>el.tagName==='H3'||el.tagName==='P').forEach(el=>intro.append(el));
+ // Mantem os dados legados no DOM para a carta ampliada e a faixa de resumo V4.
+ [...intro.children].filter(el=>el.tagName==='H3'||el.tagName==='P').forEach(el=>el.classList.add('dv4-legacy-data'));
+ const resource=(key)=>Number(p.resources?.[key]??0);
+ const secret=v.secretMission;
+ const dashboard=document.createElement('div');
+ dashboard.className='dv4-player-dashboard';
+ dashboard.innerHTML=`<div class="dv4-heritage"><span>HERANÇA</span><strong>${resource('heranca')}</strong></div>
+ <div class="dv4-resource-grid">
+ ${[['provisoes','PROVISÕES'],['influencia','INFLUÊNCIA'],['conhecimento','CONHECIMENTO']].map(([key,name])=>`<div class="dv4-resource-stat"><small>${name}</small><strong>${resource(key)}</strong></div>`).join('')}
+ </div>
+ <div class="dv4-secret-panel"><small>MISSÃO SECRETA · ${esc(secret?.id||'—')}</small><strong>${esc(secret?.name||'Aguardando missão')}</strong><p>${esc(secret?.condition||'')}${p.secretCompletedAt?' · ✓ CUMPRIDA':''}</p></div>
+ <div class="dv4-history-grid">
+ ${[['CONVERSÕES',p.conversionCount],['INTERAÇÕES',p.tradeCount],['MISSÕES',p.missionSuccesses]].map(([name,n])=>`<div class="dv4-history-stat"><small>${name}</small><strong>${Number(n??0)}</strong></div>`).join('')}
+ </div>`;
+ intro.append(dashboard);
  const collectionInfo=root.querySelector('.dv4-collection-panel');
  if(collectionInfo){collectionInfo.querySelector('h4')?.remove();collection.append(collectionInfo)}
  const ownedGrid=document.createElement('div');ownedGrid.className='dv4-gallery-grid dv4-owned-grid';
@@ -178,7 +193,7 @@ function draw(){const v=view,p=v.me,host=p.id===v.hostPlayerId,turn=v.turnPlayer
   const updateNote=()=>{const h=p.recruitHistory?.[$('recruitTarget')?.value]||{failures:0,lastAttemptRound:0};const usedThisRound=h.lastAttemptRound===v.round;const eligible=h.failures>=2&&!usedThisRound;$('recruitHistoryNote').textContent=`Falhas nesta carta: ${h.failures}/2${h.lastAttemptRound===v.round?' · próxima tentativa na rodada seguinte':''}`;$('recruitGuarantee').disabled=!eligible;document.querySelectorAll('#player [data-action="recruitRoll"]').forEach(b=>{b.disabled=usedThisRound||h.failures>=2})};
   $('recruitTarget').addEventListener('change',updateNote);updateNote();
  }
- organizePlayerPanels(p);
+ organizePlayerPanels(p,v);
  let movement='<h3>Turno e movimento</h3>';
  if(v.phase==='lobby')movement+=!p.setupDone?`<p>Role fisicamente 3D6 e distribua os resultados conforme sua escolha.</p><div class="dv4-setup-rolls">${['conhecimento','influencia','provisoes'].map((k,i)=>`<label class="dv4-setup-row" for="setupRoll${i}"><span>${label[k]}</span><select id="setupRoll${i}" aria-label="Resultado para ${label[k]}">${Array.from({length:6},(_,j)=>`<option value="${j+1}">${j+1}</option>`).join('')}</select></label><input type="hidden" id="setupDest${i}" value="${k}">`).join('')}</div><div class="dv4-setup-actions"><button data-action="setup">Confirmar 3D6</button></div>`:(v.mode==='solo'?'<p>Preparação concluída. Iniciando sua aventura solo.</p>':'<p>Recursos iniciais registrados. Aguardando os demais jogadores.</p>');
 
