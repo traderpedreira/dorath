@@ -48,7 +48,7 @@ function secretFromHistory(history=[]){
 export function newPlayer(name,room,team,history=[],commonHistory=[]){
  const sid=secretFromHistory(history);
  return {id:uuid(),name:String(name||'Jogador').trim().slice(0,40)||'Jogador',room,team:String(team||'').slice(0,30),
- house:1,resources:{conhecimento:2,influencia:2,provisoes:2,heranca:0},characters:['adao'],ownedCharacters:['adao'],freeCharacterChoices:[],missionCharacterId:null,
+ house:1,resources:{conhecimento:2,influencia:2,provisoes:2,heranca:0},characters:['adao'],ownedCharacters:['adao'],freeCharacterChoices:[],recruitHistory:{},missionCharacterId:null,
  secretMissionId:sid,secretCompletedAt:null,setupDone:false,preserved:false,preservedCharacterId:null,
  arkFinalized:false,preservationBonus:null,consequences:[],mission:null,missionRewardPending:null,
  specialChoices:{},mandamentoChoice:null,lastChanceUsed:false,houseOccurrences:{},house3LandingBonus:null,missionRandomBonus:null,
@@ -62,6 +62,46 @@ function unlocked(p){return characters.filter(c=>c.unlockHouse<=Math.max(3,p.hou
 function characterCapacity(count){return count<=2?5:count<=4?4:count<=6?3:2}
 // Preenche gratuitamente slots livres apenas com personagens narrativamente desbloqueados.
 // Em desbloqueios concorrentes com vagas insuficientes, preserva a escolha do jogador.
+function recruitCharacter(g,p,a){
+ activeTurn(g,p);
+ if(p.house>=50||p.lastMovedRound===g.round)fail('Recrutamento disponível somente antes do movimento do turno');
+ syncFreeCollection(g,p);
+ const capacity=characterCapacity(g.players.length);
+ const owned=p.ownedCharacters;
+ if(owned.length<capacity)fail('Conclua primeiro o preenchimento gratuito da coleção');
+ const candidate=unlocked(p).find(c=>c.id===a.characterId&&!owned.includes(c.id));
+ if(!candidate)fail('Personagem indisponível ou já adquirido');
+ const replaced=a.replaceId;
+ if(!owned.includes(replaced))fail('Selecione a carta que será devolvida');
+ if(!['roll','direct','guarantee'].includes(a.method))fail('Modalidade de aquisição inválida');
+ p.recruitHistory||={};
+ const history=p.recruitHistory[candidate.id]||{failures:0,lastAttemptRound:0};
+ if(a.method==='roll'){
+  if(history.lastAttemptRound===g.round)fail('Nova tentativa somente na próxima rodada');
+  if(history.failures>=2)fail('Após duas falhas, utilize a aquisição garantida');
+  if(p.resources.influencia<1)fail('Influência insuficiente');
+  const roll=number(a.roll,1,6);
+  change(p,'influencia',-1);
+  history.lastAttemptRound=g.round;
+  if(roll<4){
+   history.failures++;
+   p.recruitHistory[candidate.id]=history;
+   log(g,'personagem',`${p.name} tentou adquirir ${candidate.name} (D6 ${roll}, falha ${history.failures}/2)`,{privateFor:p.id});
+   return;
+  }
+ }else{
+  if(a.method==='guarantee'&&(history.failures<2||history.lastAttemptRound===g.round))fail('Garantia disponível após duas falhas, em turno posterior');
+  const cost=a.method==='direct'?3:1;
+  if(p.resources.influencia<cost)fail('Influência insuficiente');
+  change(p,'influencia',-cost);
+ }
+ const index=owned.indexOf(replaced);
+ owned.splice(index,1,candidate.id);
+ p.characters=p.characters.filter(id=>id!==replaced);
+ if(p.missionCharacterId===replaced)p.missionCharacterId=null;
+ delete p.recruitHistory[candidate.id];
+ log(g,'personagem',`${p.name} adquiriu ${candidate.name} e devolveu ${characters.find(c=>c.id===replaced)?.name||replaced}`,{privateFor:p.id});
+}
 function syncFreeCollection(g,p){
  const cap=characterCapacity(g.players.length);
  p.ownedCharacters=Array.isArray(p.ownedCharacters)?[...new Set(p.ownedCharacters)]:[...new Set(p.characters||[])];
@@ -78,7 +118,7 @@ export function publicView(g,p){return {
  turnPlayerId:g.players[g.turnIndex]?.id||null,hostPlayerId:g.hostPlayerId,
  playerOrder:g.players.map(x=>({id:x.id,name:x.name})),
  rooms:g.rooms.map(r=>({...r,players:g.players.filter(x=>x.room===r.code).map(x=>({id:x.id,name:x.name,house:x.house,team:x.team,preserved:x.preserved,arkFinalized:x.arkFinalized}))})),
- me:{...p,ownedCharacters:Array.isArray(p.ownedCharacters)?p.ownedCharacters:p.characters,missionCharacterId:p.missionCharacterId??null,freeCharacterChoices:p.freeCharacterChoices||[],characterCapacity:characterCapacity(g.players.length)},house:byHouse.get(p.house),availableCharacters:unlocked(p).map(c=>({id:c.id,name:c.name,asset:c.asset,attributes:c.attributes})),globalStates:g.globalStates,violence:g.violence,
+ me:{...p,ownedCharacters:Array.isArray(p.ownedCharacters)?p.ownedCharacters:p.characters,missionCharacterId:p.missionCharacterId??null,freeCharacterChoices:p.freeCharacterChoices||[],recruitHistory:p.recruitHistory||{},characterCapacity:characterCapacity(g.players.length)},house:byHouse.get(p.house),availableCharacters:unlocked(p).map(c=>({id:c.id,name:c.name,asset:c.asset,attributes:c.attributes})),globalStates:g.globalStates,violence:g.violence,
  arkOpened:g.arkOpened,preparationClosed:g.preparationClosed,rupturesResolved:g.rupturesResolved,
  pendingMarco:g.pendingMarco,pendingRupture:g.pendingRupture,pendingHouseOccurrence:g.pendingHouseOccurrence?.initiator===p.id?g.pendingHouseOccurrence:null,
  pendingConsequencePlayers:g.pendingConsequencePlayers||[],pendingThreat:g.pendingThreat,
@@ -413,6 +453,7 @@ export function applyAction(g,p,a){
   if(a.card==='vida'){if(a.option==='heranca')gain(g,p,'heranca',2);else if(a.option==='provisoes')gain(g,p,'provisoes',2);else fail('Escolha inválida')}
   else if(a.card==='conhecimento'){if(p.mandamentoChoice!=='não recusou')fail('A escolha do fruto na Casa 07 exige ter mantido a decisão aberta na Casa 06');if(a.option==='aceitar'){gain(g,p,'conhecimento',3);change(p,'heranca',-5)}else if(a.option!=='recusar')fail('Escolha inválida')}
   else fail('Carta Especial inválida');p.specialChoices[a.card]=a.option;log(g,'especial',`${p.name} resolveu ${a.card==='vida'?'Árvore da Vida':'Árvore do Conhecimento'}`,{privateFor:p.id});break;
+ case 'recruitCharacter':recruitCharacter(g,p,a);break;
  case 'freeCharacterChoice':{
   const cap=characterCapacity(g.players.length);
   syncFreeCollection(g,p);
