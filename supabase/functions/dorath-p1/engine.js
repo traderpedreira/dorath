@@ -464,8 +464,7 @@ export function applyAction(g,p,a){
   p.freeCharacterChoices=[];
  }break;
  case 'characters':{
-  activeTurn(g,p);
-  if(p.house>=50||p.missionUsedRound===g.round)fail('Altere os personagens antes de realizar a Missão desta rodada');
+  if(!p.setupDone||g.phase==='ended'||p.house>=50)fail('Seleção de personagens indisponível');
   syncFreeCollection(g,p);
   if(!Array.isArray(a.ids)||a.ids.length>2||new Set(a.ids).size!==a.ids.length||a.ids.some(id=>!p.ownedCharacters.includes(id)))fail('Selecione até dois personagens da sua coleção');
   p.characters=a.ids;
@@ -474,8 +473,7 @@ export function applyAction(g,p,a){
   p.missionCharacterId=a.ids.length===1?a.ids[0]:null;
  }break;
  case 'missionCharacterSelect':{
-  activeTurn(g,p);
-  if(p.house>=50||p.missionUsedRound===g.round)fail('Escolha o personagem responsável antes da Missão desta rodada');
+  if(!p.setupDone||g.phase==='ended'||p.house>=50)fail('Seleção do responsável indisponível');
   if(!p.characters.includes(a.characterId))fail('Escolha um dos personagens ativos');
   p.missionCharacterId=a.characterId;
  }break;
@@ -524,5 +522,5 @@ export function applyAction(g,p,a){
   const code='P1-'+String(to*10).padStart(3,'0');p.house=to;log(g,'correcao',`${p.name} corrigiu posição para ${code}: ${reason}`,{privateFor:p.id})}break;
  default:fail('Ação desconhecida');
  }
- for(const q of g.players)secretCheck(g,q);
+ for(const q of g.players){syncFreeCollection(g,q);secretCheck(g,q)}
 }
