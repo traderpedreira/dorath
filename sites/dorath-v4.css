@@ -1168,3 +1168,76 @@ html body #board .mp-grid > #player.dv4-current > h3.dv4-player-heading{
  padding:0 0 12px!important;
  margin:0 0 18px!important;
 }
+
+
+/* Controles de acao: alinhamento e dimensoes consistentes */
+html body #board .mp-grid>.mp-card.dv4-current:is(#movement,#missions,#world,#trades,#threats) > button[data-action]{
+ display:block!important;width:fit-content!important;max-width:100%!important;
+ min-width:min(100%,170px)!important;margin:12px auto!important;
+ padding:11px 18px!important;text-align:center!important;
+}
+html body #board .mp-grid>.mp-card.dv4-current:is(#movement,#missions,#world,#trades,#threats) :is(.dv4-setup-actions,.dv4-recruit-actions){
+ justify-content:center!important;justify-items:center!important;
+}
+html body #board #world #conversionRate{
+ display:block!important;width:100%!important;max-width:100%!important;
+ margin:10px 0 13px!important;padding:12px!important;
+ background:#fff5de!important;border:1px solid #a78250!important;
+ border-radius:9px!important;color:#382615!important;
+}
+html body #board #world h4:has(+ #conversionRate){
+ padding:13px 14px 8px!important;margin:16px 0 0!important;
+ background:rgba(255,247,221,.65)!important;
+ border:1px solid #c1a271!important;border-bottom:none!important;
+ border-radius:11px 11px 0 0!important;
+}
+html body #board #world h4:has(+ #conversionRate)+#conversionRate{
+ border-radius:0 0 9px 9px!important;
+}
+html body #board #threats .dv4-threat-warning{
+ display:grid!important;gap:6px!important;
+ padding:12px!important;margin:3px 0 10px!important;
+ background:#ffedcf!important;border:1px solid #af7945!important;
+ border-left:4px solid #98602b!important;border-radius:9px!important;
+ color:#4a2d16!important;line-height:1.45!important;
+}
+html body #board #threats .dv4-threat-warning strong{
+ font:700 .8rem system-ui,sans-serif!important;letter-spacing:.06em;
+}
+html body #board #threats .dv4-threat-warning span{font-size:.89rem}
+html body #board #threats .dv4-threat-attribute{
+ display:grid!important;gap:7px!important;width:100%!important;
+ margin:4px 0!important;font:700 .76rem system-ui,sans-serif!important;
+ letter-spacing:.04em;
+}
+html body #board #threats .dv4-threat-attribute select{width:100%!important;margin:0!important}
+html body #board #trades .dv4-trade-field{
+ display:grid!important;gap:6px!important;
+ padding:11px 13px!important;margin:10px 0!important;
+ background:rgba(255,249,233,.58)!important;
+ border:1px solid #bf9f6c!important;border-radius:10px!important;
+ font:700 .75rem system-ui,sans-serif!important;letter-spacing:.035em;
+}
+html body #board #trades .dv4-trade-field :is(select,input){
+ width:100%!important;min-width:0!important;margin:0!important;
+ font:400 1rem Georgia,serif!important;
+}
+html body #board #trades .dv4-trade-empty{
+ padding:15px!important;margin:10px 0!important;
+ background:#fff0d2!important;border:1px solid #bba075!important;
+ border-radius:11px!important;line-height:1.5!important;
+}
+html body #board .dv4-party-history{
+ padding:12px!important;margin:14px 0!important;
+ background:#f6e7c7!important;color:#4a301a!important;
+ border:1px solid #b49361!important;border-radius:12px!important;
+}
+html body #board .dv4-party-history h4{margin:0 0 8px!important}
+html body #board .dv4-party-history p{font-size:.85rem!important;line-height:1.4!important}
+html body #board .dv4-party-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+html body #board .dv4-party-grid button{
+ display:grid!important;gap:5px!important;min-width:0!important;
+ padding:12px 8px!important;text-align:center!important;
+ border-radius:9px!important;
+}
+html body #board .dv4-party-grid small{display:block;font-size:.76rem}
