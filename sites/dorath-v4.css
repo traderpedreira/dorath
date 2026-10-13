@@ -1009,3 +1009,31 @@ html body #board>.dv4-nav button span{font-size:1.2rem!important;line-height:1.1
 html body #board>.dv4-nav button small{font-size:clamp(.66rem,2.6vw,.8rem)!important;line-height:1.2}
 html body #board>#dv4extras{margin:10px 0!important}
 @media(max-width:380px){html body #board>.dv4-nav{gap:4px!important;padding:6px!important}html body #board>.dv4-nav button{min-height:51px!important}}
+
+
+/* Rodapé: duas fileiras de 4, ocupando integralmente a largura disponível. */
+html body #board > nav.dv4-nav{
+ display:grid!important;
+ grid-template-columns:repeat(4,minmax(0,1fr))!important;
+ grid-template-rows:repeat(2,minmax(68px,auto))!important;
+ width:calc(100% + 14px)!important;
+ max-width:none!important;
+ margin:12px -7px 10px!important;
+ gap:7px!important;
+ padding:8px!important;
+ align-items:stretch!important;
+}
+html body #board > nav.dv4-nav > button{
+ width:100%!important;
+ height:100%!important;
+ min-width:0!important;
+ min-height:68px!important;
+ margin:0!important;
+ padding:8px 3px!important;
+}
+html body #board > nav.dv4-nav > button span{font-size:1.5rem!important}
+html body #board > nav.dv4-nav > button small{font-size:clamp(.68rem,2.7vw,.86rem)!important}
+@media(max-width:380px){
+ html body #board > nav.dv4-nav{gap:5px!important;padding:6px!important}
+ html body #board > nav.dv4-nav > button{min-height:62px!important}
+}
