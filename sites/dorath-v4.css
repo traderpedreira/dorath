@@ -911,3 +911,21 @@ html body #board :is(#rooms,#trades,#threats) p{
 html body #board:has(#missions.dv4-current) #dv4label,
 html body #board:has(#world.dv4-current) #dv4label,
 html body #board:has(#player.dv4-current) #dv4label{display:none!important}
+
+
+/* Missão comum: altura estritamente dependente do conteúdo disponível. */
+html body #board .mp-grid > #missions.mp-card.dv4-current{
+ min-height:0!important;
+ height:auto!important;
+ max-height:none!important;
+ display:block!important;
+ align-self:start!important;
+}
+html body #board .mp-grid > #missions.mp-card.dv4-current > :last-child:not([hidden]){
+ margin-bottom:0!important;
+}
+html body #board .mp-grid > #missions.mp-card.dv4-current > h3:only-child{
+ margin-bottom:0!important;
+ padding-bottom:0!important;
+ border-bottom:0!important;
+}
