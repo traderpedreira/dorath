@@ -929,3 +929,21 @@ html body #board .mp-grid > #missions.mp-card.dv4-current > h3:only-child{
  padding-bottom:0!important;
  border-bottom:0!important;
 }
+
+
+/* Jogar: sem altura minima fixa; cresce apenas com o conteudo e controles exibidos. */
+html body #board .mp-grid > #movement.mp-card.dv4-current{
+ min-height:0!important;
+ height:auto!important;
+ max-height:none!important;
+ display:block!important;
+ align-self:start!important;
+}
+html body #board .mp-grid > #movement.mp-card.dv4-current > :last-child:not([hidden]){
+ margin-bottom:0!important;
+}
+html body #board .mp-grid > #movement.mp-card.dv4-current > h3:only-child{
+ margin-bottom:0!important;
+ padding-bottom:0!important;
+ border-bottom:0!important;
+}
