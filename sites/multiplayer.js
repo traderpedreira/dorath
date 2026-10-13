@@ -71,8 +71,10 @@ let refreshInFlight=false, lastRefreshFailure=0;
 async function refresh(){
  if(!token||!currentUser||refreshInFlight)return;
  refreshInFlight=true;
+ const requestedToken=token,requestedUser=currentUser.id;
  try{
-  const next=await api('state',{token});
+  const next=await api('state',{token:requestedToken});
+  if(token!==requestedToken||currentUser?.id!==requestedUser)return;
   const changed=!view||next.revision!==view.revision;const prior=view;view=next;recordResourceChanges(prior,next);
   void audio.update(view);saveCommon();rememberParty(view);
   $('login').hidden=true;$('board').hidden=false;
@@ -80,6 +82,7 @@ async function refresh(){
   say(`Conectado · Partida-mestre ${view.motherCode} · ${view.playerOrder.length} ${view.playerOrder.length===1?'jogador':'jogadores'} na partida`);
   lastRefreshFailure=0;
  }catch(e){
+  if(token!==requestedToken||currentUser?.id!==requestedUser)return;
   lastRefreshFailure=Date.now();
   const invalid=/sessão inválida|outra conta/i.test(e?.message||'');
   if(invalid){
@@ -403,6 +406,8 @@ $('accountForm').onsubmit=async e=>{
 $('signout').onclick=async()=>{
  if(authBusy)return;
  authBusy=true;
+ // Invalida respostas de atualizacao pendentes antes de encerrar voluntariamente a conta.
+ token='';
  try{
   const {error}=await withAuthDeadline(supabase.auth.signOut());
   if(error)throw error;
