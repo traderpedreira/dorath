@@ -463,7 +463,20 @@ export function applyAction(g,p,a){
   for(const id of a.ids){p.ownedCharacters.push(id);log(g,'personagem',`${p.name} escolheu ${characters.find(c=>c.id===id)?.name} gratuitamente`,{privateFor:p.id})}
   p.freeCharacterChoices=[];
  }break;
- case 'characters':if(g.phase!=='active')fail('Personagens indisponíveis');if(!Array.isArray(a.ids)||a.ids.length>2||new Set(a.ids).size!==a.ids.length||a.ids.some(id=>!unlocked(p).some(c=>c.id===id)))fail('Seleção de Personagens inválida');p.characters=a.ids;break;
+ case 'characters':{
+  activeTurn(g,p);
+  if(p.lastMovedRound===g.round||p.house>=50)fail('A seleção de personagens deve ocorrer antes do movimento');
+  syncFreeCollection(g,p);
+  if(!Array.isArray(a.ids)||a.ids.length>2||new Set(a.ids).size!==a.ids.length||a.ids.some(id=>!p.ownedCharacters.includes(id)))fail('Selecione até dois personagens da sua coleção');
+  p.characters=a.ids;
+  if(p.missionCharacterId&&!a.ids.includes(p.missionCharacterId))p.missionCharacterId=null;
+ }break;
+ case 'missionCharacterSelect':{
+  activeTurn(g,p);
+  if(p.lastMovedRound===g.round||p.house>=50)fail('O personagem responsável só pode mudar antes do movimento');
+  if(!p.characters.includes(a.characterId))fail('Escolha um dos personagens ativos');
+  p.missionCharacterId=a.characterId;
+ }break;
  case 'convert':if(!['active','rupture-prep'].includes(g.phase))fail('Conversão indisponível');convert(g,p,a);break;
  case 'tradePropose':tradePropose(g,p,a);break;
  case 'tradeAnswer':tradeAnswer(g,p,a);break;
