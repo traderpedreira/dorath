@@ -1291,3 +1291,22 @@ html body #account .dv4-account-mode{display:grid!important;grid-template-column
 html body #account .dv4-account-mode-button{width:100%;min-width:0;margin:0!important;min-height:45px;border:1px solid #a47a44!important;border-radius:9px;background:linear-gradient(#59402a,#32241b)!important;color:#f5ddad!important;font-weight:700}
 html body #account .dv4-account-mode-button.is-active{background:linear-gradient(#d7ae6e,#a77436)!important;color:#281a0e!important;border-color:#e2b978!important;box-shadow:inset 0 0 0 1px #f8dda5!important}
 html body #account #accountSubmit{width:min(100%,190px)!important;min-width:0!important;margin:10px auto 0!important}
+
+
+/* Acesso: opcoes centralizadas e Continuar ajustado ao proprio texto. */
+html body #account .dv4-account-mode{
+ width:min(100%,320px)!important;
+ max-width:320px!important;
+ margin:0 auto 8px!important;
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ justify-content:center!important;
+}
+html body #account #accountSubmit{
+ display:block!important;
+ width:max-content!important;
+ max-width:100%!important;
+ min-width:0!important;
+ padding:11px 24px!important;
+ margin:12px auto 0!important;
+ white-space:nowrap!important;
+}
