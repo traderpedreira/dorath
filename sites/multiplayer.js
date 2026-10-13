@@ -384,22 +384,14 @@ async function showAccount(session,chooseParty=false){
  if(token)await refresh();
  else{$('login').hidden=false;say('Crie uma Partida-mestre ou entre pelo código da sala.')}
 }
-document.querySelectorAll('[data-account-mode]').forEach(button=>button.addEventListener('click',()=>{
- const mode=button.dataset.accountMode;
- $('accountMode').value=mode;
- document.querySelectorAll('[data-account-mode]').forEach(item=>{
-  const selected=item.dataset.accountMode===mode;
-  item.classList.toggle('is-active',selected);
-  item.setAttribute('aria-pressed',String(selected));
- });
-}));
+$('accountCreate').addEventListener('click',()=>{ $('accountMode').value='signup'; $('accountForm').requestSubmit(); });
 $('accountForm').onsubmit=async e=>{
  e.preventDefault();
  if(authBusy)return;
  authBusy=true;
  const email=$('email').value.trim(),password=$('password').value;
  $('accountSubmit').disabled=true;
- $('accountSubmit').textContent='Entrando…';
+ $('accountSubmit').textContent=$('accountMode').value==='signup'?'Criando conta…':'Entrando…';
  say('Validando sua conta…');
  try{
   const result=await withAuthDeadline($('accountMode').value==='signup'
@@ -410,7 +402,7 @@ $('accountForm').onsubmit=async e=>{
   say('Conta autenticada. Recuperando sua partida…');
   await showAccount(result.data.session,true);
  }catch(error){say('Não foi possível entrar: '+(error?.message||'Erro desconhecido'),true)}
- finally{authBusy=false;$('accountSubmit').disabled=false;$('accountSubmit').textContent='Continuar'}
+ finally{authBusy=false;$('accountSubmit').disabled=false;$('accountSubmit').textContent='Entrar';$('accountMode').value='login'}
 };
 $('signout').onclick=async()=>{
  if(authBusy)return;
