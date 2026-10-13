@@ -1253,3 +1253,34 @@ html body #board #player .dv4-recruit-tile .dv4-recruit-actions{margin:0!importa
 html body #board #player .dv4-recruit-tile .dice{margin:0!important}
 html body #board #player .dv4-recruit-note{grid-column:1/-1;margin:0!important;font-size:.87rem;line-height:1.45}
 @media(max-width:370px){html body #board #player .dv4-recruit-tiles{gap:7px}html body #board #player .dv4-recruit-tile{padding:8px}}
+
+
+/* Acesso a conta: titulo, formulario e dialogs alinhados e rotulos acima dos campos. */
+html body #account.mp-card{max-width:560px!important;margin:18px auto!important;padding:clamp(18px,5vw,30px)!important}
+html body #account>h2{text-align:center!important;margin:0 0 22px!important;line-height:1.2!important}
+html body #account #accountForm{display:grid!important;gap:14px!important}
+html body #account #accountForm>label{
+ display:flex!important;flex-direction:column!important;align-items:stretch!important;
+ gap:7px!important;width:100%!important;margin:0!important;text-align:left!important;
+ font-weight:700!important;
+}
+html body #account #accountForm>label :is(input,select){
+ display:block!important;width:100%!important;max-width:100%!important;
+ margin:0!important;min-width:0!important;
+}
+html body #account #accountSubmit{
+ display:block!important;width:min(100%,280px)!important;
+ margin:10px auto 0!important;text-align:center!important;
+}
+html body #account>p{text-align:center!important;line-height:1.5!important}
+html body :is(#dv4ResourceNotice,.dv4-setup-receipt,#dv4modal) {
+ max-width:min(94vw,560px)!important;
+ box-sizing:border-box!important;
+ margin:auto!important;
+}
+html body :is(#dv4ResourceNotice,.dv4-setup-receipt) :is(h2,p){
+ text-align:center!important;
+}
+html body :is(#dv4ResourceNotice,.dv4-setup-receipt) button{
+ display:block!important;max-width:100%!important;margin:12px auto!important;
+}
