@@ -749,3 +749,15 @@ html body #board #dv4 .dv4-nav{
 }
 html body .mp-shell{padding-bottom:calc(125px + env(safe-area-inset-bottom))!important}
 #player .dv4-gallery-pause{font:.8rem/1.45 var(--dv4-type-body);color:#563a1c!important;text-align:center;margin:8px 0}
+
+/* Personagens desbloqueados simultaneamente: escolha gratuita antes da futura aquisição paga. */
+html body #board #player .dv4-free-recruit{
+ margin:12px 0 18px;padding:15px;border:1px solid #a8793c;border-radius:12px;
+ background:linear-gradient(155deg,#fff0cd,#dfbb7f);color:#3c2915;
+}
+html body #board #player .dv4-free-recruit h4{margin:0 0 10px;color:#543314!important}
+html body #board #player .dv4-free-recruit p{margin:0 0 12px;color:#4e351a!important;line-height:1.5}
+html body #board #player .dv4-free-recruit-options{display:grid;grid-template-columns:minmax(0,1fr);gap:7px;margin:10px 0 14px}
+html body #board #player .dv4-free-recruit-options label{display:flex;align-items:center;gap:9px;padding:10px;border:1px solid #b7935d;border-radius:7px;background:#fff5dd;color:#35220f;font-weight:600}
+html body #board #player .dv4-free-recruit-options input{width:18px;height:18px;flex:none}
+html body #board #player .dv4-free-recruit button{width:100%;min-height:44px;background:#65421f;color:#fff1d5;border:1px solid #a77f4d;border-radius:8px;font-weight:700}
