@@ -384,6 +384,15 @@ async function showAccount(session,chooseParty=false){
  if(token)await refresh();
  else{$('login').hidden=false;say('Crie uma Partida-mestre ou entre pelo código da sala.')}
 }
+document.querySelectorAll('[data-account-mode]').forEach(button=>button.addEventListener('click',()=>{
+ const mode=button.dataset.accountMode;
+ $('accountMode').value=mode;
+ document.querySelectorAll('[data-account-mode]').forEach(item=>{
+  const selected=item.dataset.accountMode===mode;
+  item.classList.toggle('is-active',selected);
+  item.setAttribute('aria-pressed',String(selected));
+ });
+}));
 $('accountForm').onsubmit=async e=>{
  e.preventDefault();
  if(authBusy)return;
