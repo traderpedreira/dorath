@@ -1241,3 +1241,15 @@ html body #board .dv4-party-grid button{
  border-radius:9px!important;
 }
 html body #board .dv4-party-grid small{display:block;font-size:.76rem}
+
+
+/* Recrutamento em mosaico responsivo, sem alterar seletores nem acoes. */
+html body #board #player .dv4-recruit-tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-items:stretch}
+html body #board #player .dv4-recruit-tile{min-width:0;padding:11px;border:1px solid #b99660;border-radius:10px;background:rgba(255,249,232,.7);display:flex;flex-direction:column;justify-content:center}
+html body #board #player .dv4-recruit-tile>label{display:grid!important;gap:7px!important;margin:0!important;min-width:0;font-size:.79rem}
+html body #board #player .dv4-recruit-tile :is(select,input){min-width:0;width:100%!important;max-width:100%!important;margin:0!important}
+html body #board #player .dv4-recruit-tile-wide{grid-column:1/-1}
+html body #board #player .dv4-recruit-tile .dv4-recruit-actions{margin:0!important}
+html body #board #player .dv4-recruit-tile .dice{margin:0!important}
+html body #board #player .dv4-recruit-note{grid-column:1/-1;margin:0!important;font-size:.87rem;line-height:1.45}
+@media(max-width:370px){html body #board #player .dv4-recruit-tiles{gap:7px}html body #board #player .dv4-recruit-tile{padding:8px}}
