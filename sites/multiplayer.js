@@ -77,7 +77,7 @@ async function refresh(){
   void audio.update(view);saveCommon();
   $('login').hidden=true;$('board').hidden=false;
   if(changed)draw();
-  say(`Conectado · Partida-Mãe ${view.motherCode} · ${view.playerOrder.length} ${view.playerOrder.length===1?'jogador':'jogadores'} na partida`);
+  say(`Conectado · Partida-mestre ${view.motherCode} · ${view.playerOrder.length} ${view.playerOrder.length===1?'jogador':'jogadores'} na partida`);
   lastRefreshFailure=0;
  }catch(e){
   lastRefreshFailure=Date.now();
@@ -105,14 +105,14 @@ async function correctPosition(){
  if(house===view.me.house){positionFeedback('A peça já está registrada nessa casa.');return}
  await action('correctPosition',{house,reason});
 }
-async function enter(route){try{const secretHistory=JSON.parse(localStorage.getItem(historyKey)||'[]'),commonHistory=JSON.parse(localStorage.getItem(commonKey)||'[]');const res=await api(route,{name:$('name').value,team:$('team').value,code:$('code').value,secretHistory,commonHistory});token=res.token;localStorage.setItem(accountTokenKey(currentUser.id),token);await refresh();if(view?.me.secretMissionId){localStorage.setItem(historyKey,JSON.stringify([...secretHistory,view.me.secretMissionId].slice(-160)))}}catch(e){say(e.message,true)}}
+async function enter(route,mode='multiplayer'){try{const secretHistory=JSON.parse(localStorage.getItem(historyKey)||'[]'),commonHistory=JSON.parse(localStorage.getItem(commonKey)||'[]');const res=await api(route,{name:$('name').value,team:$('team').value,code:$('code').value,mode,secretHistory,commonHistory});token=res.token;localStorage.setItem(accountTokenKey(currentUser.id),token);await refresh();if(view?.me.secretMissionId){localStorage.setItem(historyKey,JSON.stringify([...secretHistory,view.me.secretMissionId].slice(-160)))}}catch(e){say(e.message,true)}}
 const die=(type,max,extra={})=>`<div class="dice">${Array.from({length:max},(_,i)=>`<button data-action="${type}" data-roll="${i+1}" ${Object.entries(extra).map(([k,v])=>`data-${k}="${esc(v)}"`).join(' ')}>${i+1}</button>`).join('')}</div>`;
 const names=()=>view.rooms.flatMap(r=>r.players);
 const choices=(items,skip)=>items.filter(q=>q.id!==skip).map(q=>`<option value="${esc(q.id)}">${esc(q.name)}</option>`).join('');
 const characterCatalog=[["adao","Adão","01_ADAO.webp"],["eva","Eva","02_EVA.webp"],["caim","Caim","03_CAIM.webp"],["abel","Abel","04_ABEL.webp"],["sete","Sete","05_SETE.webp"],["lameque-caim","Lameque (linhagem de Caim)","06_LAMEQUE_LINHAGEM_DE_CAIM.webp"],["enoque-caim","Enoque (linhagem de Caim)","07_ENOQUE_LINHAGEM_DE_CAIM.webp"],["jabal","Jabal","08_JABAL.webp"],["jubal","Jubal","09_JUBAL.webp"],["tubalcaim","Tubalcaim","10_TUBALCAIM.webp"],["enos","Enos","11_ENOS.webp"],["enoque-sete","Enoque (linhagem de Sete)","12_ENOQUE_LINHAGEM_DE_SETE.webp"],["matusalem","Matusalém","13_MATUSALEM.webp"],["lameque-noe","Lameque (linhagem de Sete)","14_LAMEQUE_LINHAGEM_DE_SETE.webp"],["noe","Noé","15_NOE.webp"],["sem","Sem","16_SEM.webp"],["cam","Cam","17_CA.webp"],["jafe","Jafé","18_JAFE.webp"]];
 function draw(){const v=view,p=v.me,host=p.id===v.hostPlayerId,turn=v.turnPlayerId===p.id;
  $('summary').innerHTML=`<h2>${esc(v.house?.code||'P1-'+String(p.house*10).padStart(3,'0'))} · ${esc(v.house?.name||'Casa')}</h2><p>${esc(v.house?.family||'')} · Rodada ${v.round} · ${esc(v.phase)} · Violência ${v.violence}</p><p>${esc(v.house?.rule||'')}</p><p>Arca: ${p.preserved?'PRESERVADO / ENTROU':p.arkFinalized?'NÃO ENTROU':'entrada em aberto'} ${v.preparationClosed?'· fechada':''}</p>`;
- $('rooms').innerHTML=`<h3>Partida-Mãe ${esc(v.motherCode)}</h3>${v.rooms.map(r=>`<p><b>${esc(r.name)} · ${esc(r.code)}</b><br>${r.players.map(q=>`${esc(q.name)} P1-${String(q.house*10).padStart(3,'0')}`).join(' · ')}</p>`).join('')}${v.phase==='lobby'&&host?'<input id="roomName" placeholder="Nome da nova sala"><button data-action="roomCreate">Criar sala</button>':''}`;
+ $('rooms').innerHTML=`<h3>Partida-mestre ${esc(v.motherCode)}</h3>${v.rooms.map(r=>`<p><b>${esc(r.name)} · ${esc(r.code)}</b><br>${r.players.map(q=>`${esc(q.name)} P1-${String(q.house*10).padStart(3,'0')}`).join(' · ')}</p>`).join('')}${v.phase==='lobby'&&host?'<input id="roomName" placeholder="Nome da nova sala"><button data-action="roomCreate">Criar sala</button>':''}`;
  $('player').dataset.setupDone=String(Boolean(p.setupDone));
  $('player').innerHTML=`<h3>${esc(p.name)} · Carta do Jogador</h3><p>${Object.entries(p.resources).map(([k,n])=>`${label[k]}: <b>${n}</b>`).join(' · ')}</p><p><b>Missão Secreta ${esc(v.secretMission?.id)}:</b> ${esc(v.secretMission?.name)} — ${esc(v.secretMission?.condition)} ${p.secretCompletedAt?'✓ cumprida':''}</p><p>Personagens (até 2): ${p.characters.map(esc).join(', ')}</p><p>Conversões: ${p.conversionCount} · Interações: ${p.tradeCount} · Missões: ${p.missionSuccesses}</p>${p.setupDone?`<div class="dv4-character-gallery"><h4>Galeria de Personagens</h4><p>Cartas coloridas estão liberadas. Marque os personagens em uso.</p><div class="dv4-gallery-grid">${characterCatalog.map(([id,name,asset])=>{const c=v.availableCharacters.find(x=>x.id===id);const unlocked=Boolean(c),owned=(p.ownedCharacters||p.characters).includes(id),canEdit=v.phase==='active'&&turn&&p.lastMovedRound!==v.round&&p.house<50;return `<div class="dv4-character-option ${unlocked?'dv4-unlocked':'dv4-locked'} ${owned?'dv4-owned':'dv4-not-owned'}" data-character-id="${id}" data-character-name="${esc(name)}" data-character-stats="${c?`Conhecimento ${c.attributes?.conhecimento??"—"} · Influência ${c.attributes?.influencia??"—"} · Herança ${c.attributes?.heranca??"—"}`:""}" data-character-art="assets/personagens/${asset}"><img class="dv4-gallery-art" loading="lazy" alt="Carta ${esc(name)}" src="assets/personagens/${asset}">${unlocked?(owned?`<label class="dv4-gallery-select"><input class="char-check" type="checkbox" value="${id}" ${p.characters.includes(id)?'checked':''} ${!canEdit?'disabled':''}> Em uso</label>`:'<p class="dv4-available-label">Desbloqueado · não adquirido</p>'):''}</div>`}).join('')}</div>${v.phase==='active'&&turn&&p.lastMovedRound!==v.round&&p.house<50?'<button data-action="characters">Confirmar personagens ativos</button>':'<p class="dv4-gallery-pause">A seleção dos personagens ativos é permitida antes do movimento do seu turno.</p>'}</div>`:''}`;
  if(p.setupDone){
@@ -139,7 +139,7 @@ function draw(){const v=view,p=v.me,host=p.id===v.hostPlayerId,turn=v.turnPlayer
   $('recruitTarget').addEventListener('change',updateNote);updateNote();
  }
  let movement='<h3>Turno e movimento</h3>';
- if(v.phase==='lobby')movement+=!p.setupDone?`<p>Role fisicamente 3D6 e distribua os resultados conforme sua escolha.</p><div class="dv4-setup-rolls">${['conhecimento','influencia','provisoes'].map((k,i)=>`<label class="dv4-setup-row" for="setupRoll${i}"><span>${label[k]}</span><select id="setupRoll${i}" aria-label="Resultado para ${label[k]}">${Array.from({length:6},(_,j)=>`<option value="${j+1}">${j+1}</option>`).join('')}</select></label><input type="hidden" id="setupDest${i}" value="${k}">`).join('')}</div><div class="dv4-setup-actions"><button data-action="setup">Confirmar 3D6</button></div>`:'<p>Recursos iniciais registrados. Aguardando os demais jogadores.</p>';
+ if(v.phase==='lobby')movement+=!p.setupDone?`<p>Role fisicamente 3D6 e distribua os resultados conforme sua escolha.</p><div class="dv4-setup-rolls">${['conhecimento','influencia','provisoes'].map((k,i)=>`<label class="dv4-setup-row" for="setupRoll${i}"><span>${label[k]}</span><select id="setupRoll${i}" aria-label="Resultado para ${label[k]}">${Array.from({length:6},(_,j)=>`<option value="${j+1}">${j+1}</option>`).join('')}</select></label><input type="hidden" id="setupDest${i}" value="${k}">`).join('')}</div><div class="dv4-setup-actions"><button data-action="setup">Confirmar 3D6</button></div>`:(v.mode==='solo'?'<p>Preparação concluída. Iniciando sua aventura solo.</p>':'<p>Recursos iniciais registrados. Aguardando os demais jogadores.</p>');
 
  if(v.phase==='active'&&turn&&p.house<50){movement+=p.lastMovedRound===v.round?(v.round===1&&p.house===2?'<p>Entrada inicial concluída: Casa 02, sem D6. Resolva a bênção e atualize as fichas físicas.</p>':'<p>Movimento desta rodada registrado.</p>'):(v.round===1&&p.house===1?'<p>Na primeira rodada, a entrada na Casa 02 é automática. Aguarde a sincronização.</p>':`<p>Role D6 físico e informe:</p>${die('move',6)}`);movement+='<button data-action="endTurn">Encerrar turno</button>'}
  if(v.phase==='active'&&!turn)movement+='<p>Aguarde seu turno.</p>';
@@ -230,7 +230,7 @@ function showPartyChooser(){
  say(saved?'Escolha: voltar à partida anterior ou entrar em outra pelo código.':'Crie ou entre em uma partida.');
 }
 document.addEventListener('dorath-choose-party',showPartyChooser);
-$('create').onclick=()=>enter('create');$('join').onclick=()=>enter('join');
+$('createSolo').onclick=()=>enter('create','solo');$('create').onclick=()=>enter('create','multiplayer');$('join').onclick=()=>enter('join');
 document.addEventListener('change',e=>{if(e.target.id==='consequenceCard'&&$('consequencePreview'))$('consequencePreview').src='assets/consequencias/'+e.target.selectedOptions[0].dataset.asset});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b||!view)return;const t=b.dataset.action,r=Number(b.dataset.roll);const val=id=>$(id)?.value;
  if(['missionOffer','missionDecline','missionAttempt','missionD4'].includes(t)){
@@ -257,7 +257,7 @@ async function showAccount(session,chooseParty=false){
  token=localStorage.getItem(accountTokenKey(user.id))||'';
  if(chooseParty){showPartyChooser();return}
  if(token)await refresh();
- else{$('login').hidden=false;say('Crie uma Partida-Mãe ou entre pelo código da sala.')}
+ else{$('login').hidden=false;say('Crie uma Partida-mestre ou entre pelo código da sala.')}
 }
 $('accountForm').onsubmit=async e=>{
  e.preventDefault();
