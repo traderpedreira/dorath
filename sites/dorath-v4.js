@@ -43,19 +43,20 @@ document.addEventListener('dorath-photo-update',e=>{playerPhoto=e.detail?.photo|
 const moreButton=nav.querySelector('[data-dv4="more"]');
 const historyButton=extras.querySelector('[data-dv4="history"]');
 const signoutButton=accountMenu.querySelector('#dv4menuSignout');
+// Os tres atalhos extras permanecem no mesmo nav; apenas sua visibilidade muda.
+const extraNavButtons=[historyButton,chooseParty,signoutButton].filter(Boolean);
+for(const button of extraNavButtons){nav.append(button);button.hidden=true}
 function closeMore(){
  nav.classList.remove('dv4-more-open');
  moreButton.hidden=false;
- if(historyButton)extras.insertBefore(historyButton,accountMenu);
- if(chooseParty)accountMenu.insertBefore(chooseParty,signoutButton);
- if(signoutButton)accountMenu.append(signoutButton);
+ for(const button of extraNavButtons)button.hidden=true;
  extras.hidden=true;
 }
 function openMore(){
  accountMenu.querySelector('#dv4menuEmail').textContent=text(document.getElementById('accountEmail'));
  nav.classList.add('dv4-more-open');
  moreButton.hidden=true;
- for(const button of [historyButton,chooseParty,signoutButton])if(button)nav.append(button);
+ for(const button of extraNavButtons)button.hidden=false;
  extras.hidden=false;
 }
 function select(id,user=false){if(!panels.includes(id))return;selected=id;manual=user;for(const key of panels)active(key)?.classList.toggle('dv4-current',key===id);for(const b of nav.querySelectorAll('button'))b.classList.toggle('dv4-selected',b.dataset.dv4===(navItems.some(n=>n[0]===id)?id:'more'));ui.querySelector('#dv4label').textContent=({'movement':'SEU PRÓXIMO PASSO','missions':'MISSÃO','world':'EVENTOS','player':'CARTA DO JOGADOR','rooms':'SALAS DA PARTIDA','threats':'AMEAÇAS COLETIVAS','trades':'TROCAS','history':'HISTÓRICO'})[id];closeMore()}
