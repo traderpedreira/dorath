@@ -1310,3 +1310,8 @@ html body #account #accountSubmit{
  margin:12px auto 0!important;
  white-space:nowrap!important;
 }
+
+
+/* Acesso direto: Entrar e Criar conta alinhados abaixo de e-mail e senha. */
+html body #account .dv4-account-actions{display:flex!important;flex-wrap:wrap!important;align-items:center!important;justify-content:center!important;gap:10px!important;margin:12px auto 0!important;width:100%!important}
+html body #account .dv4-account-actions>button{display:block!important;width:auto!important;max-width:100%!important;min-width:0!important;margin:0!important;padding:11px 22px!important;white-space:nowrap!important}
