@@ -208,7 +208,7 @@ function nextPending(g){
  if(g.pendingThreat){g.phase='threat-spawn';return}
  if(g.pendingConsequencePlayers?.length){g.phase='consequence-draw';return}
  if(g.pendingHouseOccurrence){g.phase='house-occurrence';return}
- if(g.pendingRupture){g.phase='rupture-prep';return}
+ if(g.pendingRupture){g.phase=g.pendingRupture.prepared.length>=g.players.length?'rupture-roll':'rupture-prep';return}
  g.phase='active';
 }
 function afterMove(g,p,old,n){
@@ -465,7 +465,7 @@ export function applyAction(g,p,a){
  }break;
  case 'characters':{
   activeTurn(g,p);
-  if(p.lastMovedRound===g.round||p.house>=50)fail('A seleção de personagens deve ocorrer antes do movimento');
+  if(p.house>=50||p.missionUsedRound===g.round)fail('Altere os personagens antes de realizar a Missão desta rodada');
   syncFreeCollection(g,p);
   if(!Array.isArray(a.ids)||a.ids.length>2||new Set(a.ids).size!==a.ids.length||a.ids.some(id=>!p.ownedCharacters.includes(id)))fail('Selecione até dois personagens da sua coleção');
   p.characters=a.ids;
@@ -475,7 +475,7 @@ export function applyAction(g,p,a){
  }break;
  case 'missionCharacterSelect':{
   activeTurn(g,p);
-  if(p.lastMovedRound===g.round||p.house>=50)fail('O personagem responsável só pode mudar antes do movimento');
+  if(p.house>=50||p.missionUsedRound===g.round)fail('Escolha o personagem responsável antes da Missão desta rodada');
   if(!p.characters.includes(a.characterId))fail('Escolha um dos personagens ativos');
   p.missionCharacterId=a.characterId;
  }break;
