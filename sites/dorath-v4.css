@@ -1154,3 +1154,17 @@ html body #board > nav.dv4-nav > button[hidden],
 html body #board > #dv4extras[hidden]{display:none!important}
 html body #board > nav.dv4-nav.dv4-more-open > button.dv4-more-extra:not([hidden]){display:flex!important}
 html body #board > nav.dv4-nav:not(.dv4-more-open) > button[data-dv4="more"]{display:flex!important}
+
+
+/* Titulo da aba Jogador identico aos demais paineis V4. */
+html body #board .mp-grid > #player.dv4-current > h3.dv4-player-heading{
+ font-size:clamp(1.6rem,6vw,2.6rem)!important;
+ line-height:1.2!important;
+ text-align:center!important;
+ font-family:Georgia,serif!important;
+ font-weight:700!important;
+ color:#462a12!important;
+ border-bottom:1px solid #ac8453!important;
+ padding:0 0 12px!important;
+ margin:0 0 18px!important;
+}
