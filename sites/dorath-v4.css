@@ -1113,3 +1113,35 @@ html body #board > #dv4extras:not([hidden])::after{display:none!important}
 html body #board > #dv4extras:not([hidden]) .dv4-account-menu{display:block!important}
 html body #board > #dv4extras:not([hidden]) .dv4-account-menu>small{display:block!important;text-align:center!important}
 @media(max-width:380px){html body #board > nav.dv4-nav > button:is([data-dv4="history"],#dv4menuSignout),html body #board > nav.dv4-nav > button:not([data-dv4]){min-height:62px!important}}
+
+
+/* Icones SVG do menu principal e menu Mais: mesma hierarquia e proporcao. */
+html body #board > nav.dv4-nav > button{
+ display:flex!important;
+ flex-direction:column!important;
+ align-items:center!important;
+ justify-content:center!important;
+ gap:5px!important;
+}
+html body #board > nav.dv4-nav .dv4-nav-icon{
+ display:block!important;
+ width:24px!important;
+ height:24px!important;
+ min-height:24px!important;
+ flex:0 0 24px!important;
+ color:currentColor!important;
+ stroke:currentColor!important;
+ overflow:visible!important;
+}
+html body #board > nav.dv4-nav > button small{
+ display:block!important;
+ width:100%!important;
+ text-align:center!important;
+ white-space:normal!important;
+ overflow-wrap:normal!important;
+ word-break:normal!important;
+}
+html body #board > nav.dv4-nav > button[hidden]{display:none!important}
+@media(max-width:380px){
+ html body #board > nav.dv4-nav .dv4-nav-icon{width:22px!important;height:22px!important;min-height:22px!important;flex-basis:22px!important}
+}
