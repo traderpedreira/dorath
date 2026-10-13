@@ -183,7 +183,8 @@ function organizePlayerPanels(p,v){
  if(lockedGrid.children.length)locked.append(lockedGrid);
  for(const box of [...root.querySelectorAll('.dv4-free-recruit,.dv4-paid-recruit')]){if(box.classList.contains('dv4-paid-recruit'))box.querySelector('h4')?.remove();recruit.append(box)}
  if(!recruit.querySelector('.dv4-free-recruit'))recruit.append(Object.assign(document.createElement('p'),{textContent:'Nenhuma aquisição disponível neste momento.'}));
- root.replaceChildren(intro,collection,recruit,available,locked);
+ const heading=document.createElement('h3');heading.className='dv4-player-heading';heading.textContent='JOGADOR';
+ root.replaceChildren(heading,intro,collection,recruit,available,locked);
 }
 const characterCatalog=[["adao","Adão","01_ADAO.webp"],["eva","Eva","02_EVA.webp"],["caim","Caim","03_CAIM.webp"],["abel","Abel","04_ABEL.webp"],["sete","Sete","05_SETE.webp"],["lameque-caim","Lameque (linhagem de Caim)","06_LAMEQUE_LINHAGEM_DE_CAIM.webp"],["enoque-caim","Enoque (linhagem de Caim)","07_ENOQUE_LINHAGEM_DE_CAIM.webp"],["jabal","Jabal","08_JABAL.webp"],["jubal","Jubal","09_JUBAL.webp"],["tubalcaim","Tubalcaim","10_TUBALCAIM.webp"],["enos","Enos","11_ENOS.webp"],["enoque-sete","Enoque (linhagem de Sete)","12_ENOQUE_LINHAGEM_DE_SETE.webp"],["matusalem","Matusalém","13_MATUSALEM.webp"],["lameque-noe","Lameque (linhagem de Sete)","14_LAMEQUE_LINHAGEM_DE_SETE.webp"],["noe","Noé","15_NOE.webp"],["sem","Sem","16_SEM.webp"],["cam","Cam","17_CA.webp"],["jafe","Jafé","18_JAFE.webp"]];
 function draw(){const v=view,p=v.me,host=p.id===v.hostPlayerId,turn=v.turnPlayerId===p.id;
