@@ -761,3 +761,12 @@ html body #board #player .dv4-free-recruit-options{display:grid;grid-template-co
 html body #board #player .dv4-free-recruit-options label{display:flex;align-items:center;gap:9px;padding:10px;border:1px solid #b7935d;border-radius:7px;background:#fff5dd;color:#35220f;font-weight:600}
 html body #board #player .dv4-free-recruit-options input{width:18px;height:18px;flex:none}
 html body #board #player .dv4-free-recruit button{width:100%;min-height:44px;background:#65421f;color:#fff1d5;border:1px solid #a77f4d;border-radius:8px;font-weight:700}
+
+html body #board #player .dv4-paid-recruit{margin-top:15px}
+html body #board #player .dv4-paid-recruit>label{display:grid;gap:6px;color:#45301a;font-weight:700;margin:10px 0}
+html body #board #player .dv4-paid-recruit select{width:100%;max-width:100%;padding:11px;border:1px solid #a78150;border-radius:7px;background:#fff6e3;color:#35230f;box-sizing:border-box}
+html body #board #player .dv4-recruit-actions{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;margin:12px 0}
+html body #board #player .dv4-paid-recruit button:disabled{opacity:.45;cursor:not-allowed}
+html body #board #player .dv4-paid-recruit .dice{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px}
+html body #board #player .dv4-paid-recruit .dice button{padding:8px 0;min-width:0}
+html body #board #player #recruitHistoryNote{background:#fff5df;padding:9px;border-radius:6px;border:1px solid #b9986a}
