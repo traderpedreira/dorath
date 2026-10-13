@@ -109,6 +109,45 @@ async function enter(route,mode='multiplayer'){try{const secretHistory=JSON.pars
 const die=(type,max,extra={})=>`<div class="dice">${Array.from({length:max},(_,i)=>`<button data-action="${type}" data-roll="${i+1}" ${Object.entries(extra).map(([k,v])=>`data-${k}="${esc(v)}"`).join(' ')}>${i+1}</button>`).join('')}</div>`;
 const names=()=>view.rooms.flatMap(r=>r.players);
 const choices=(items,skip)=>items.filter(q=>q.id!==skip).map(q=>`<option value="${esc(q.id)}">${esc(q.name)}</option>`).join('');
+// Estado visual local: nao altera regras nem sessao da partida.
+const dv4PlayerExpanded=new Set(['player','collection']);
+function organizePlayerPanels(p){
+ const root=$('player');
+ const gallery=root.querySelector('.dv4-character-gallery');
+ if(!gallery)return;
+ const create=(id,title,open)=>{const details=document.createElement('details');details.className='dv4-player-section';details.dataset.section=id;details.open=dv4PlayerExpanded.has(id);const heading=document.createElement('summary');heading.textContent=title;details.append(heading);details.addEventListener('toggle',()=>{if(details.open)dv4PlayerExpanded.add(id);else dv4PlayerExpanded.delete(id)});return details};
+ const intro=create('player','CARTA DO JOGADOR');
+ const collection=create('collection','MINHA COLEÇÃO');
+ const recruit=create('recruit','RECRUTAR PERSONAGEM');
+ const available=create('available','PERSONAGENS DESBLOQUEADOS');
+ const locked=create('locked','PERSONAGENS BLOQUEADOS');
+ // As linhas originais continuam no DOM para os componentes visuais da V4.
+ [...root.children].filter(el=>el.tagName==='H3'||el.tagName==='P').forEach(el=>intro.append(el));
+ const collectionInfo=root.querySelector('.dv4-collection-panel');
+ if(collectionInfo){collectionInfo.querySelector('h4')?.remove();collection.append(collectionInfo)}
+ const ownedGrid=document.createElement('div');ownedGrid.className='dv4-gallery-grid dv4-owned-grid';
+ const availableGrid=document.createElement('div');availableGrid.className='dv4-gallery-grid';
+ const lockedGrid=document.createElement('div');lockedGrid.className='dv4-gallery-grid';
+ const rows=[...gallery.querySelectorAll('.dv4-character-option')];
+ rows.sort((a,b)=>{
+  const rank=el=>el.classList.contains('dv4-owned')?(p.characters.includes(el.dataset.characterId)?0:1):el.classList.contains('dv4-unlocked')?2:3;
+  return rank(a)-rank(b);
+ });
+ for(const card of rows){
+  if(card.classList.contains('dv4-owned'))ownedGrid.append(card);
+  else if(card.classList.contains('dv4-unlocked'))availableGrid.append(card);
+  else lockedGrid.append(card);
+ }
+ if(ownedGrid.children.length)collection.append(ownedGrid);
+ const confirm=gallery.querySelector('[data-action="characters"]');
+ if(confirm)collection.append(confirm);
+ if(availableGrid.children.length)available.append(availableGrid);
+ else available.append(Object.assign(document.createElement('p'),{textContent:'Nenhuma carta disponível para aquisição neste momento.'}));
+ if(lockedGrid.children.length)locked.append(lockedGrid);
+ for(const box of [...root.querySelectorAll('.dv4-free-recruit,.dv4-paid-recruit')])recruit.append(box);
+ if(!recruit.querySelector('.dv4-free-recruit'))recruit.append(Object.assign(document.createElement('p'),{textContent:'Nenhuma aquisição disponível neste momento.'}));
+ root.replaceChildren(intro,collection,recruit,available,locked);
+}
 const characterCatalog=[["adao","Adão","01_ADAO.webp"],["eva","Eva","02_EVA.webp"],["caim","Caim","03_CAIM.webp"],["abel","Abel","04_ABEL.webp"],["sete","Sete","05_SETE.webp"],["lameque-caim","Lameque (linhagem de Caim)","06_LAMEQUE_LINHAGEM_DE_CAIM.webp"],["enoque-caim","Enoque (linhagem de Caim)","07_ENOQUE_LINHAGEM_DE_CAIM.webp"],["jabal","Jabal","08_JABAL.webp"],["jubal","Jubal","09_JUBAL.webp"],["tubalcaim","Tubalcaim","10_TUBALCAIM.webp"],["enos","Enos","11_ENOS.webp"],["enoque-sete","Enoque (linhagem de Sete)","12_ENOQUE_LINHAGEM_DE_SETE.webp"],["matusalem","Matusalém","13_MATUSALEM.webp"],["lameque-noe","Lameque (linhagem de Sete)","14_LAMEQUE_LINHAGEM_DE_SETE.webp"],["noe","Noé","15_NOE.webp"],["sem","Sem","16_SEM.webp"],["cam","Cam","17_CA.webp"],["jafe","Jafé","18_JAFE.webp"]];
 function draw(){const v=view,p=v.me,host=p.id===v.hostPlayerId,turn=v.turnPlayerId===p.id;
  $('summary').innerHTML=`<h2>${esc(v.house?.code||'P1-'+String(p.house*10).padStart(3,'0'))} · ${esc(v.house?.name||'Casa')}</h2><p>${esc(v.house?.family||'')} · Rodada ${v.round} · ${esc(v.phase)} · Violência ${v.violence}</p><p>${esc(v.house?.rule||'')}</p><p>Arca: ${p.preserved?'PRESERVADO / ENTROU':p.arkFinalized?'NÃO ENTROU':'entrada em aberto'} ${v.preparationClosed?'· fechada':''}</p>`;
@@ -139,6 +178,7 @@ function draw(){const v=view,p=v.me,host=p.id===v.hostPlayerId,turn=v.turnPlayer
   const updateNote=()=>{const h=p.recruitHistory?.[$('recruitTarget')?.value]||{failures:0,lastAttemptRound:0};const usedThisRound=h.lastAttemptRound===v.round;const eligible=h.failures>=2&&!usedThisRound;$('recruitHistoryNote').textContent=`Falhas nesta carta: ${h.failures}/2${h.lastAttemptRound===v.round?' · próxima tentativa na rodada seguinte':''}`;$('recruitGuarantee').disabled=!eligible;document.querySelectorAll('#player [data-action="recruitRoll"]').forEach(b=>{b.disabled=usedThisRound||h.failures>=2})};
   $('recruitTarget').addEventListener('change',updateNote);updateNote();
  }
+ organizePlayerPanels(p);
  let movement='<h3>Turno e movimento</h3>';
  if(v.phase==='lobby')movement+=!p.setupDone?`<p>Role fisicamente 3D6 e distribua os resultados conforme sua escolha.</p><div class="dv4-setup-rolls">${['conhecimento','influencia','provisoes'].map((k,i)=>`<label class="dv4-setup-row" for="setupRoll${i}"><span>${label[k]}</span><select id="setupRoll${i}" aria-label="Resultado para ${label[k]}">${Array.from({length:6},(_,j)=>`<option value="${j+1}">${j+1}</option>`).join('')}</select></label><input type="hidden" id="setupDest${i}" value="${k}">`).join('')}</div><div class="dv4-setup-actions"><button data-action="setup">Confirmar 3D6</button></div>`:(v.mode==='solo'?'<p>Preparação concluída. Iniciando sua aventura solo.</p>':'<p>Recursos iniciais registrados. Aguardando os demais jogadores.</p>');
 
