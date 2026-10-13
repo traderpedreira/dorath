@@ -49,18 +49,17 @@ const extraNavButtons=[historyButton,chooseParty,signoutButton].filter(Boolean);
 function closeMore(){
  nav.classList.remove('dv4-more-open');
  moreButton.hidden=false;
- for(const button of extraNavButtons){button.hidden=false;button.classList.remove('dv4-more-extra')}
- if(historyButton)extras.insertBefore(historyButton,accountMenu);
- if(chooseParty)accountMenu.insertBefore(chooseParty,signoutButton);
- if(signoutButton)accountMenu.append(signoutButton);
+ // Elementos extras ficam FORA do DOM quando Mais esta fechado.
+ // Isso impede que CSS legado os exiba mesmo com o atributo hidden.
+ for(const button of extraNavButtons){button.remove();button.classList.remove('dv4-more-extra')}
+ extras.remove();
  extras.hidden=true;
 }
 function openMore(){
- accountMenu.querySelector('#dv4menuEmail').textContent=text(document.getElementById('accountEmail'));
+ closeMore();
  nav.classList.add('dv4-more-open');
  moreButton.hidden=true;
  for(const button of extraNavButtons){button.classList.add('dv4-more-extra');nav.append(button)}
- extras.hidden=false;
 }
 closeMore();
 function select(id,user=false){if(!panels.includes(id))return;selected=id;manual=user;for(const key of panels)active(key)?.classList.toggle('dv4-current',key===id);for(const b of nav.querySelectorAll('button'))b.classList.toggle('dv4-selected',b.dataset.dv4===(navItems.some(n=>n[0]===id)?id:'more'));closeMore()}
