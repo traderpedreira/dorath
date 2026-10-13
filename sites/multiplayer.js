@@ -74,7 +74,7 @@ async function refresh(){
  try{
   const next=await api('state',{token});
   const changed=!view||next.revision!==view.revision;const prior=view;view=next;recordResourceChanges(prior,next);
-  void audio.update(view);saveCommon();
+  void audio.update(view);saveCommon();rememberParty(view);
   $('login').hidden=true;$('board').hidden=false;
   if(changed)draw();
   say(`Conectado · Partida-mestre ${view.motherCode} · ${view.playerOrder.length} ${view.playerOrder.length===1?'jogador':'jogadores'} na partida`);
@@ -107,6 +107,21 @@ async function correctPosition(){
 }
 async function enter(route,mode='multiplayer'){try{const secretHistory=JSON.parse(localStorage.getItem(historyKey)||'[]'),commonHistory=JSON.parse(localStorage.getItem(commonKey)||'[]');const res=await api(route,{name:$('name').value,team:$('team').value,code:$('code').value,mode,secretHistory,commonHistory});token=res.token;localStorage.setItem(accountTokenKey(currentUser.id),token);await refresh();if(view?.me.secretMissionId){localStorage.setItem(historyKey,JSON.stringify([...secretHistory,view.me.secretMissionId].slice(-160)))}}catch(e){say(e.message,true)}}
 const die=(type,max,extra={})=>`<div class="dice">${Array.from({length:max},(_,i)=>`<button data-action="${type}" data-roll="${i+1}" ${Object.entries(extra).map(([k,v])=>`data-${k}="${esc(v)}"`).join(' ')}>${i+1}</button>`).join('')}</div>`;
+const partyHistoryKey=uid=>'dorath.v4.parties.'+uid;
+function savedParties(){
+ if(!currentUser)return [];
+ try{return (JSON.parse(localStorage.getItem(partyHistoryKey(currentUser.id))||'[]')||[]).filter(x=>x&&x.token&&x.code).slice(0,12)}catch{return []}
+}
+function rememberParty(v){
+ if(!currentUser||!token||!v?.motherCode)return;
+ const others=savedParties().filter(x=>x.token!==token);
+ const entry={token,code:v.motherCode,name:v.me?.name||'Jogador',mode:v.mode||'multiplayer',updated:Date.now()};
+ try{localStorage.setItem(partyHistoryKey(currentUser.id),JSON.stringify([entry,...others].slice(0,12)))}catch{}
+}
+function partyHistoryHTML(){
+ const list=savedParties();
+ return list.length?`<section class="dv4-party-history"><h4>MINHAS PARTIDAS NESTE APARELHO</h4><p>Partidas anteriormente acessadas nesta conta. Os registros permanecem neste navegador até seus dados locais serem apagados.</p><div class="dv4-party-grid">${list.map(x=>`<button type="button" data-party-token="${esc(x.token)}"><b>${esc(x.code)}</b><small>${x.mode==='solo'?'Solo':'Grupo'} · ${esc(x.name)}</small></button>`).join('')}</div></section>`:'';
+}
 const names=()=>view.rooms.flatMap(r=>r.players);
 const choices=(items,skip)=>items.filter(q=>q.id!==skip).map(q=>`<option value="${esc(q.id)}">${esc(q.name)}</option>`).join('');
 // Estado visual local: nao altera regras nem sessao da partida.
@@ -191,6 +206,7 @@ function draw(){const v=view,p=v.me,host=p.id===v.hostPlayerId,turn=v.turnPlayer
  syncSelectedCharacters(p);
  $('summary').innerHTML=`<h2>${esc(v.house?.code||'P1-'+String(p.house*10).padStart(3,'0'))} · ${esc(v.house?.name||'Casa')}</h2><p>${esc(v.house?.family||'')} · Rodada ${v.round} · ${esc(v.phase)} · Violência ${v.violence}</p><p>${esc(v.house?.rule||'')}</p><p>Arca: ${p.preserved?'PRESERVADO / ENTROU':p.arkFinalized?'NÃO ENTROU':'entrada em aberto'} ${v.preparationClosed?'· fechada':''}</p>`;
  $('rooms').innerHTML=`<h3>Partida-mestre ${esc(v.motherCode)}</h3>${v.rooms.map(r=>`<p><b>${esc(r.name)} · ${esc(r.code)}</b><br>${r.players.map(q=>`${esc(q.name)} P1-${String(q.house*10).padStart(3,'0')}`).join(' · ')}</p>`).join('')}${v.phase==='lobby'&&host?'<input id="roomName" placeholder="Nome da nova sala"><button data-action="roomCreate">Criar sala</button>':''}`;
+ $('rooms').insertAdjacentHTML('beforeend',partyHistoryHTML());
  $('player').dataset.setupDone=String(Boolean(p.setupDone));
  $('player').innerHTML=`<h3>${esc(p.name)} · Carta do Jogador</h3><p>${Object.entries(p.resources).map(([k,n])=>`${label[k]}: <b>${n}</b>`).join(' · ')}</p><p><b>Missão Secreta ${esc(v.secretMission?.id)}:</b> ${esc(v.secretMission?.name)} — ${esc(v.secretMission?.condition)} ${p.secretCompletedAt?'✓ cumprida':''}</p><p>Personagens (até 2): ${p.characters.map(esc).join(', ')}</p><p>Conversões: ${p.conversionCount} · Interações: ${p.tradeCount} · Missões: ${p.missionSuccesses}</p>${p.setupDone?`<div class="dv4-character-gallery"><h4>Galeria de Personagens</h4><p>Cartas coloridas estão liberadas. Marque os personagens em uso.</p><div class="dv4-gallery-grid">${characterCatalog.map(([id,name,asset])=>{const c=v.availableCharacters.find(x=>x.id===id);const unlocked=Boolean(c),owned=(p.ownedCharacters||p.characters).includes(id),canEdit=p.setupDone&&v.phase!=='ended'&&p.house<50;return `<div class="dv4-character-option ${unlocked?'dv4-unlocked':'dv4-locked'} ${owned?'dv4-owned':'dv4-not-owned'}" data-character-id="${id}" data-character-name="${esc(name)}" data-character-stats="${c?`Conhecimento ${c.attributes?.conhecimento??"—"} · Influência ${c.attributes?.influencia??"—"} · Herança ${c.attributes?.heranca??"—"}`:""}" data-character-art="assets/personagens/${asset}"><img class="dv4-gallery-art" loading="lazy" alt="Carta ${esc(name)}" src="assets/personagens/${asset}">${unlocked?(owned?`<label class="dv4-gallery-select"><input class="char-check" type="checkbox" value="${id}" ${p.characters.includes(id)?'checked':''} ${!canEdit?'disabled':''}> Em uso</label>`:'<p class="dv4-available-label">Desbloqueado · não adquirido</p>'):''}</div>`}).join('')}</div>${p.setupDone&&v.phase!=='ended'&&p.house<50?'<button data-action="characters">Confirmar personagens ativos</button>':'<p class="dv4-gallery-pause">A seleção de personagens fica disponível após preparar a partida.</p>'}</div>`:''}`;
  if(p.setupDone){
@@ -274,14 +290,15 @@ let mission='<h3>Missão comum</h3>';
  world+=`<h4>Conferência de posição</h4><p>Posição registrada: <b>Casa ${p.house} · P1-${String(p.house*10).padStart(3,'0')} · ${esc(v.house?.name||'Casa')}</b>. Use a correção somente se a peça física e o app divergirem.</p><input id="correctHouse" type="number" min="1" max="49" value="${p.house}" aria-label="Número da casa"><input id="correctReason" placeholder="Motivo da correção (mín. 6 caracteres)" maxlength="180"><p class="dv4-position-hint">Corrige apenas sua peça, até 6 casas de distância e sem atravessar Rupturas pendentes.</p><button data-action="correctPosition">Corrigir posição</button><p id="correctPositionFeedback" class="dv4-position-feedback" role="status" aria-live="polite" hidden></p>`;
  $('world').innerHTML=world;
  let th='<h3>Ameaças coletivas</h3>';
- th+=v.activeThreats.map(t=>`<div class="mp-chip"><b>${esc(t.name).replace(/corruptor/gi,'Corruptor')}</b><div class="dv4-threat-progress" role="group" aria-label="Sucessos contra esta ameaça"><div class="dv4-threat-progress-label"><span>SUCESSOS ACUMULADOS</span><strong>${Math.min(3,Math.max(0,Number(t.successes)||0))}/3</strong></div><div class="dv4-threat-track" role="progressbar" aria-label="Progresso contra ${esc(t.name)}" aria-valuemin="0" aria-valuemax="3" aria-valuenow="${Math.min(3,Math.max(0,Number(t.successes)||0))}"><span style="width:${Math.min(3,Math.max(0,Number(t.successes)||0))*100/3}%"></span></div></div> ${t.aggravated?'· agravado':''}${v.phase==='active'&&turn?`<select id="attr-${esc(t.id)}">${(t.card==='opressor'?['conhecimento','influencia']:t.card==='dominador'?['influencia','heranca']:['conhecimento','heranca']).map(k=>`<option value="${k}">${label[k]}</option>`).join('')}</select>${die('threatAttempt',6,{threat:t.id})}`:''}</div>`).join('');
+ th+=v.activeThreats.map(t=>`<div class="mp-chip"><b>${esc(t.name).replace(/corruptor/gi,'Corruptor')}</b><div class="dv4-threat-progress" role="group" aria-label="Sucessos contra esta ameaça"><div class="dv4-threat-progress-label"><span>SUCESSOS ACUMULADOS</span><strong>${Math.min(3,Math.max(0,Number(t.successes)||0))}/3</strong></div><div class="dv4-threat-track" role="progressbar" aria-label="Progresso contra ${esc(t.name)}" aria-valuemin="0" aria-valuemax="3" aria-valuenow="${Math.min(3,Math.max(0,Number(t.successes)||0))}"><span style="width:${Math.min(3,Math.max(0,Number(t.successes)||0))*100/3}%"></span></div></div> ${t.aggravated?'<p class="dv4-threat-warning"><strong>AMEAÇA AGRAVADA</strong><span>Esta ameaça recebeu agravamento coletivo. Consulte a carta física para o efeito específico; o aplicativo mantém o estado ativo.</span></p>':''}${v.phase==='active'&&turn?`<label class="dv4-threat-attribute">ATRIBUTO DO TESTE<select id="attr-${esc(t.id)}">${(t.card==='opressor'?['conhecimento','influencia']:t.card==='dominador'?['influencia','heranca']:['conhecimento','heranca']).map(k=>`<option value="${k}">${label[k]}</option>`).join('')}</select></label>${die('threatAttempt',6,{threat:t.id})}`:''}</div>`).join('');
  if(['threat-failure','threat-reward'].includes(v.phase)&&v.pendingThreatResult?.by===p.id)th+=`<p>${v.phase==='threat-failure'?'Falha':'Superação'}: D4 físico.</p><select id="threatRewardAttr">${['conhecimento','influencia','heranca'].map(k=>`<option value="${k}">${label[k]}</option>`).join('')}</select>${die('threatD4',4)}`;
  if(v.phase==='dominator-decider'&&v.playerOrder[v.dominator.nextIndex]?.id===p.id)th+=`<p>Role D8 físico: o primeiro 8 define o Decisor.</p>${die('dominatorD8',8)}`;
  if(v.phase==='dominator-tier'&&v.dominator.decider===p.id)th+=`<p>Decisor: D4 da intensidade.</p>${die('dominatorTierD4',4)}`;
  if(v.phase==='dominator-choice'&&v.dominator.decider===p.id)th+=`<p>Escolha uma opção do nível ${v.dominator.tier}:</p>${v.dominator.options.map((o,i)=>`<button data-action="dominatorChoice" data-option="${i}">${esc(o)}</button>`).join('')}<select id="dominatorOther">${choices(names(),p.id)}</select>`;
  $('threats').innerHTML=th;
  let trades='<h3>Interação entre jogadores</h3>';
- if(v.phase==='active'||v.phase==='rupture-prep')trades+=`<select id="tradeTo">${choices(names(),p.id)}</select><select id="offerKey">${['conhecimento','influencia','provisoes'].map(k=>`<option value="${k}">${label[k]}</option>`).join('')}</select><input id="offerQty" type="number" min="1" value="1"><p>Receber (0 = doação):</p><select id="wantKey">${['conhecimento','influencia','provisoes'].map(k=>`<option value="${k}">${label[k]}</option>`).join('')}</select><input id="wantQty" type="number" min="0" value="0"><button data-action="tradePropose">Propor</button>`;
+ if((v.phase==='active'||v.phase==='rupture-prep')&&names().some(q=>q.id!==p.id))trades+=`<label class="dv4-trade-field">JOGADOR DESTINATÁRIO<select id="tradeTo">${choices(names(),p.id)}</select></label><label class="dv4-trade-field">OFERECER<select id="offerKey">${['conhecimento','influencia','provisoes'].map(k=>`<option value="${k}">${label[k]}</option>`).join('')}</select></label><label class="dv4-trade-field">QUANTIDADE OFERECIDA<input id="offerQty" type="number" min="1" value="1"></label><label class="dv4-trade-field">RECEBER (0 = DOAÇÃO)<select id="wantKey">${['conhecimento','influencia','provisoes'].map(k=>`<option value="${k}">${label[k]}</option>`).join('')}</select></label><label class="dv4-trade-field">QUANTIDADE SOLICITADA<input id="wantQty" type="number" min="0" value="0"></label><button data-action="tradePropose">Propor troca</button>`;
+ if(!names().some(q=>q.id!==p.id))trades+=`<p class="dv4-trade-empty">Nenhum outro jogador conectado nesta partida. As trocas estarão disponíveis quando houver um participante elegível.</p>`;
  trades+=v.trades.filter(t=>t.toId===p.id&&t.status==='pending').map(t=>`<p>Oferta: ${t.offer} ${label[t.offerKey]}, pede ${t.want} ${label[t.wantKey]||''}<button data-action="tradeAccept" data-trade="${esc(t.id)}">Aceitar</button><button data-action="tradeDecline" data-trade="${esc(t.id)}">Recusar</button></p>`).join('');
  $('trades').innerHTML=trades;
  $('history').innerHTML='<h3>Histórico</h3><ul class="mp-list">'+v.recentHistory.slice().reverse().map(e=>`<li>${esc(e.message)}</li>`).join('')+'</ul>';
@@ -306,11 +323,20 @@ function showPartyChooser(){
  token='';view=null;
  $('board').hidden=true;$('game').hidden=false;$('login').hidden=false;
  savedPartyChoice.hidden=!saved;
+ savedPartyChoice.insertAdjacentHTML('beforeend',partyHistoryHTML());
  $('dv4RetryConnection').hidden=true;
  say(saved?'Escolha: voltar à partida anterior ou entrar em outra pelo código.':'Crie ou entre em uma partida.');
 }
 document.addEventListener('dorath-choose-party',showPartyChooser);
 $('createSolo').onclick=()=>enter('create','solo');$('create').onclick=()=>enter('create','multiplayer');$('join').onclick=()=>enter('join');
+document.addEventListener('click',async e=>{
+ const button=e.target.closest('button[data-party-token]');
+ if(!button||!currentUser)return;
+ const next=button.dataset.partyToken;
+ if(!next)return;
+ token=next;localStorage.setItem(accountTokenKey(currentUser.id),token);
+ $('login').hidden=true;await refresh();
+});
 document.addEventListener('change',e=>{if(e.target.matches('#player .char-check'))selectAtMostTwo(e.target);if(e.target.id==='consequenceCard'&&$('consequencePreview'))$('consequencePreview').src='assets/consequencias/'+e.target.selectedOptions[0].dataset.asset});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b||!view)return;const t=b.dataset.action,r=Number(b.dataset.roll);const val=id=>$(id)?.value;
  if(['missionOffer','missionDecline','missionAttempt','missionD4'].includes(t)){
