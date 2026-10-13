@@ -150,8 +150,8 @@ function characterMissionBonus(g,p,m,a){
  if(!allowed.length)return {bonus:0,character:'sem atributo definido',attribute:null};
  const attribute=allowed.length===1?allowed[0]:a.attribute;
  if(!allowed.includes(attribute))fail('Selecione o atributo permitido para esta Missão');
- const character=characters.find(c=>c.id===a.characterId&&p.characters.includes(c.id)&&unlocked(p).some(u=>u.id===c.id));
- if(!character)fail('Selecione um Personagem ativo e desbloqueado');
+ const character=characters.find(c=>c.id===p.missionCharacterId&&p.characters.includes(c.id)&&unlocked(p).some(u=>u.id===c.id));
+ if(!character)return {bonus:0,character:'sem personagem responsável',attribute};
  const stat=character.attributes[attribute];
  if(!Number.isInteger(stat))fail('Atributo do Personagem não cadastrado');
  return {bonus:stat>=4?2:stat>=2?1:0,character:character.name,attribute};
