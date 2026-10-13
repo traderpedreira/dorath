@@ -111,6 +111,28 @@ const names=()=>view.rooms.flatMap(r=>r.players);
 const choices=(items,skip)=>items.filter(q=>q.id!==skip).map(q=>`<option value="${esc(q.id)}">${esc(q.name)}</option>`).join('');
 // Estado visual local: nao altera regras nem sessao da partida.
 const dv4PlayerExpanded=new Set(['player','collection']);
+let dv4SelectionOrder=[];
+let dv4SelectionPlayer='';
+function syncSelectedCharacters(p){
+ if(dv4SelectionPlayer!==p.id){dv4SelectionPlayer=p.id;dv4SelectionOrder=[]}
+ const active=new Set(p.characters||[]);
+ dv4SelectionOrder=dv4SelectionOrder.filter(id=>active.has(id));
+ for(const id of p.characters||[])if(!dv4SelectionOrder.includes(id))dv4SelectionOrder.push(id);
+}
+function selectAtMostTwo(target){
+ const checked=[...document.querySelectorAll('#player .char-check:checked')];
+ if(target.checked){
+  dv4SelectionOrder=dv4SelectionOrder.filter(id=>id!==target.value);
+  dv4SelectionOrder.push(target.value);
+ }else dv4SelectionOrder=dv4SelectionOrder.filter(id=>id!==target.value);
+ while(dv4SelectionOrder.length>2){
+  const oldest=dv4SelectionOrder.shift();
+  const previous=[...document.querySelectorAll('#player .char-check')].find(el=>el.value===oldest);
+  if(previous)previous.checked=false;
+ }
+ for(const el of checked)if(!dv4SelectionOrder.includes(el.value))el.checked=false;
+}
+
 function organizePlayerPanels(p,v){
  const root=$('player');
  const gallery=root.querySelector('.dv4-character-gallery');
@@ -165,6 +187,7 @@ function organizePlayerPanels(p,v){
 }
 const characterCatalog=[["adao","Adão","01_ADAO.webp"],["eva","Eva","02_EVA.webp"],["caim","Caim","03_CAIM.webp"],["abel","Abel","04_ABEL.webp"],["sete","Sete","05_SETE.webp"],["lameque-caim","Lameque (linhagem de Caim)","06_LAMEQUE_LINHAGEM_DE_CAIM.webp"],["enoque-caim","Enoque (linhagem de Caim)","07_ENOQUE_LINHAGEM_DE_CAIM.webp"],["jabal","Jabal","08_JABAL.webp"],["jubal","Jubal","09_JUBAL.webp"],["tubalcaim","Tubalcaim","10_TUBALCAIM.webp"],["enos","Enos","11_ENOS.webp"],["enoque-sete","Enoque (linhagem de Sete)","12_ENOQUE_LINHAGEM_DE_SETE.webp"],["matusalem","Matusalém","13_MATUSALEM.webp"],["lameque-noe","Lameque (linhagem de Sete)","14_LAMEQUE_LINHAGEM_DE_SETE.webp"],["noe","Noé","15_NOE.webp"],["sem","Sem","16_SEM.webp"],["cam","Cam","17_CA.webp"],["jafe","Jafé","18_JAFE.webp"]];
 function draw(){const v=view,p=v.me,host=p.id===v.hostPlayerId,turn=v.turnPlayerId===p.id;
+ syncSelectedCharacters(p);
  $('summary').innerHTML=`<h2>${esc(v.house?.code||'P1-'+String(p.house*10).padStart(3,'0'))} · ${esc(v.house?.name||'Casa')}</h2><p>${esc(v.house?.family||'')} · Rodada ${v.round} · ${esc(v.phase)} · Violência ${v.violence}</p><p>${esc(v.house?.rule||'')}</p><p>Arca: ${p.preserved?'PRESERVADO / ENTROU':p.arkFinalized?'NÃO ENTROU':'entrada em aberto'} ${v.preparationClosed?'· fechada':''}</p>`;
  $('rooms').innerHTML=`<h3>Partida-mestre ${esc(v.motherCode)}</h3>${v.rooms.map(r=>`<p><b>${esc(r.name)} · ${esc(r.code)}</b><br>${r.players.map(q=>`${esc(q.name)} P1-${String(q.house*10).padStart(3,'0')}`).join(' · ')}</p>`).join('')}${v.phase==='lobby'&&host?'<input id="roomName" placeholder="Nome da nova sala"><button data-action="roomCreate">Criar sala</button>':''}`;
  $('player').dataset.setupDone=String(Boolean(p.setupDone));
@@ -287,7 +310,7 @@ function showPartyChooser(){
 }
 document.addEventListener('dorath-choose-party',showPartyChooser);
 $('createSolo').onclick=()=>enter('create','solo');$('create').onclick=()=>enter('create','multiplayer');$('join').onclick=()=>enter('join');
-document.addEventListener('change',e=>{if(e.target.id==='consequenceCard'&&$('consequencePreview'))$('consequencePreview').src='assets/consequencias/'+e.target.selectedOptions[0].dataset.asset});
+document.addEventListener('change',e=>{if(e.target.matches('#player .char-check'))selectAtMostTwo(e.target);if(e.target.id==='consequenceCard'&&$('consequencePreview'))$('consequencePreview').src='assets/consequencias/'+e.target.selectedOptions[0].dataset.asset});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b||!view)return;const t=b.dataset.action,r=Number(b.dataset.roll);const val=id=>$(id)?.value;
  if(['missionOffer','missionDecline','missionAttempt','missionD4'].includes(t)){
   if(view.turnPlayerId!==view.me.id){say('Aguarde seu turno.');return}
