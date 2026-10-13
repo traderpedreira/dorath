@@ -1145,3 +1145,12 @@ html body #board > nav.dv4-nav > button[hidden]{display:none!important}
 @media(max-width:380px){
  html body #board > nav.dv4-nav .dv4-nav-icon{width:22px!important;height:22px!important;min-height:22px!important;flex-basis:22px!important}
 }
+
+
+/* Correção definitiva: ocultação dos extras independe das regras antigas com display flex!important. */
+html body #board > nav.dv4-nav:not(.dv4-more-open) > button.dv4-more-extra,
+html body #board > nav.dv4-nav > button.dv4-more-extra[hidden],
+html body #board > nav.dv4-nav > button[hidden],
+html body #board > #dv4extras[hidden]{display:none!important}
+html body #board > nav.dv4-nav.dv4-more-open > button.dv4-more-extra:not([hidden]){display:flex!important}
+html body #board > nav.dv4-nav:not(.dv4-more-open) > button[data-dv4="more"]{display:flex!important}
