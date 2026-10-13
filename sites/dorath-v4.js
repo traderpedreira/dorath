@@ -11,7 +11,7 @@ const extras=document.createElement('div');extras.id='dv4extras';extras.hidden=t
 const chooseParty=document.createElement('button');chooseParty.type='button';chooseParty.textContent='Trocar de partida';chooseParty.addEventListener('click',()=>{extras.hidden=true;document.dispatchEvent(new Event('dorath-choose-party'))});accountMenu.insertBefore(chooseParty,accountMenu.querySelector('#dv4menuSignout'));
 
 // A navegação vem depois do painel de turno, não entre as cartas e as ações.
-host.after(extras,nav);
+host.after(nav,extras);
 accountMenu.querySelector('#dv4menuSignout').addEventListener('click',()=>{if(window.confirm('Deseja desconectar desta partida? Você poderá retomá-la depois.'))document.getElementById('signout')?.click()});
 const text=(el)=>el?.textContent?.trim()||'';
 const escapeHTML=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
