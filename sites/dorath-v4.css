@@ -1037,3 +1037,13 @@ html body #board > nav.dv4-nav > button small{font-size:clamp(.68rem,2.7vw,.86re
  html body #board > nav.dv4-nav{gap:5px!important;padding:6px!important}
  html body #board > nav.dv4-nav > button{min-height:62px!important}
 }
+
+
+/* Progresso coletivo individual de cada Nefilim. */
+html body #board #threats .dv4-threat-progress{display:grid;gap:7px;width:100%;min-width:0;margin:3px 0 8px;padding:11px 12px;background:#f5e6c4;border:1px solid #bea06d;border-radius:10px}
+html body #board #threats .dv4-threat-progress-label{display:flex;justify-content:space-between;align-items:center;gap:8px}
+html body #board #threats .dv4-threat-progress-label span{font:700 .7rem/1.25 system-ui,sans-serif;letter-spacing:.06em;color:#74522c}
+html body #board #threats .dv4-threat-progress-label strong{font:700 1.18rem/1 Georgia,serif;color:#452c15;white-space:nowrap;font-variant-numeric:tabular-nums}
+html body #board #threats .dv4-threat-track{height:10px;width:100%;overflow:hidden;border-radius:999px;border:1px solid #ae8b5b;background:#e4d2af;box-shadow:inset 0 2px 4px #694b3026}
+html body #board #threats .dv4-threat-track>span{display:block;height:100%;background:linear-gradient(90deg,#80602f,#bb914e);border-radius:inherit;transition:width .25s ease}
+@media(prefers-reduced-motion:reduce){html body #board #threats .dv4-threat-track>span{transition:none}}
