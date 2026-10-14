@@ -157,15 +157,19 @@ function characterMissionBonus(g,p,m,a){
  return {bonus:stat>=4?2:stat>=2?1:0,character:character.name,attribute};
 }
 function missionOffer(g,p,replace){
- if(!missionEligible(g,p))fail('Esta casa não oferece nova Missão');
- if(p.mission){if(!replace)fail('Mantenha a Missão atual ou substitua por 1 Influência');if(p.resources.influencia<1)fail('Influência insuficiente');change(p,'influencia',-1)}
- const all=master.commonMissions.filter(m=>m.phase===phaseFor(p.house));
+ const soloRepair=g.mode==='solo'&&p.mission?.id==='M19';
+ if(!soloRepair&&!missionEligible(g,p))fail('Esta casa não oferece nova Missão');
+ if(p.mission&&!soloRepair){if(!replace)fail('Mantenha a Missão atual ou substitua por 1 Influência');if(p.resources.influencia<1)fail('Influência insuficiente');change(p,'influencia',-1)}
+ // Missao com destinatario obrigatorio nao pode ser sorteada em aventura solo.
+ const all=master.commonMissions.filter(m=>m.phase===phaseFor(p.house)&&!(g.mode==='solo'&&m.id==='M19'));
  let pool=all.filter(m=>!p.missionHistory.includes(m.id));
  if(!pool.length)pool=all.filter(m=>m.id!==p.missionHistory.at(-1));
+ if(!pool.length)pool=all;
+ if(!pool.length)fail('Nenhuma Missão disponível nesta etapa');
  const m=pick(pool);p.mission={...m};p.missionHistory.push(m.id);p.offeredMove=g.round+':'+p.house;
  p.missionDonationSnapshot=p.donatedAmount;
  p.missionRandomBonus=null;
- log(g,'missao',`Missão privada oferecida a ${p.name}`,{privateFor:p.id});
+ log(g,'missao',soloRepair?`Missão incompatível com aventura solo substituída gratuitamente para ${p.name}`:`Missão privada oferecida a ${p.name}`,{privateFor:p.id});
 }
 function missionReward(g,p,n,a={}){
  const m=p.mission,amount=master.missionRewardD4ByDifficulty[m.difficulty][n];
