@@ -129,6 +129,14 @@ export function publicView(g,p){return {
  marcos:g.marcos,secretMission:master.secretMissions.find(m=>m.id===p.secretMissionId),
  availableMission:missionEligible(g,p),consequenceCards:master.consequences.distinctCards,
  masterVersion:master.masterVersion,finalScores:g.finalScores||null,
+ finalParticipants:g.phase==='ended'?g.players.map(q=>({
+  id:q.id,name:q.name,preserved:Boolean(q.preserved),
+  heritage:q.resources.heranca||0,
+  secretMissionCompleted:Boolean(q.secretCompletedAt),
+  secretMissionBonus:q.secretCompletedAt?3:0,
+  preservationBonus:q.preserved?(q.preservationBonus||0):0,
+  total:q.preserved?(q.resources.heranca||0)+(q.secretCompletedAt?3:0)+(q.preservationBonus||0):null
+ })):null,
  dominator:g.dominator||null,ruleNotes:g.ruleNotes||[]
 }}
 function missionEligible(g,p){
