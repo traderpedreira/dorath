@@ -250,10 +250,11 @@ function resolveHouseOccurrence(g,p,a){
  g.pendingHouseOccurrence=null;nextPending(g);
 }
 function influenceLabel(k){return {conhecimento:'Conhecimento',influencia:'Influência',provisoes:'Provisões',heranca:'Herança'}[k]||k}
-function arkReady(p){return p.preserved||p.resources.provisoes>=3&&p.characters.length>0}
+function arkCost(p){return 3+(p.mission?2:0)}
+function arkReady(p){return p.preserved||p.resources.provisoes>=arkCost(p)&&p.characters.length>0}
 function enterArk(g,p,id){
- if(!arkReady(p)||!p.characters.includes(id))fail('Faltam 3 Provisões ou Personagem próprio');
- change(p,'provisoes',-3);p.preserved=true;p.preservedCharacterId=id;p.enteredAt48=p.house===48;
+ if(!arkReady(p)||!p.characters.includes(id))fail(`Entrada na Arca exige ${arkCost(p)} Provisões e um Personagem próprio`);
+ change(p,'provisoes',-arkCost(p));p.preserved=true;p.preservedCharacterId=id;p.enteredAt48=p.house===48;
  log(g,'arca',`${p.name} entrou na Arca`,{privateFor:p.id});
 }
 function closeArk(g){
@@ -358,7 +359,7 @@ function firstRoundEntry(g,p){
  log(g,'movimento',`${p.name}: entrada inicial obrigatória P1-010 → P1-020 (sem D6)`);
  afterMove(g,p,1,2);
 }
-function endTurn(g,p){activeTurn(g,p);if(p.lastMovedRound!==g.round&&p.house<50)fail('Informe o D6 de movimento');
+function endTurn(g,p){activeTurn(g,p);
  if(p.missionRewardPending)fail('Resolva o D4 da Missão antes de encerrar');
  g.turnIndex=(g.turnIndex+1)%g.players.length;
  if(g.turnIndex===0){
@@ -371,10 +372,11 @@ function endTurn(g,p){activeTurn(g,p);if(p.lastMovedRound!==g.round&&p.house<50)
 function move(g,p,a){activeTurn(g,p);if(g.round===1&&p.house===1)fail('Na rodada inicial, a entrada na Casa 02 é automática; não role D6');if(p.house>=50)fail('A sequência P1-500 a P1-540 é coletiva e sem D6');
  if(p.lastMovedRound===g.round)fail('Você já se moveu nesta rodada');
  const roll=number(a.roll,1,6),old=p.house;
- let n=Math.min(50,old+roll);const barrier=master.ruptures.find(r=>r.house>old&&r.house<=n&&!g.rupturesResolved[r.id]);
+ const distance=rand(3)+1;
+ let n=Math.min(50,old+distance);const barrier=master.ruptures.find(r=>r.house>old&&r.house<=n&&!g.rupturesResolved[r.id]);
  if(barrier)n=barrier.house;
  p.house=n;p.lastMovedRound=g.round;p.offeredMove=null;
- log(g,'movimento',`${p.name}: P1-${String(old*10).padStart(3,'0')} → P1-${String(n*10).padStart(3,'0')}`,{roll});
+ log(g,'movimento',`${p.name}: D6 físico ${roll}, ritmo ${distance} casa(s), P1-${String(old*10).padStart(3,'0')} → P1-${String(n*10).padStart(3,'0')}`,{roll,distance});
  if(barrier)g.pendingRupture={house:n,initiator:p.id,prepared:[p.id]};
  afterMove(g,p,old,n);
 }
