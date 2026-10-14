@@ -1,0 +1,1362 @@
+/* V4 standalone layout. No prior themes or classic-mode dependencies. */
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{background:#120e0c}
+body{margin:0;font-family:Georgia,'Times New Roman',serif;line-height:1.48;color:#f1ddba;min-height:100vh;background:radial-gradient(circle at 45% 22%,#55402d,#17120f 60%,#0d0b09)!important}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.mp-shell{position:relative;width:100%;max-width:720px;margin:0 auto;padding:12px 12px 110px}
+.topbar{text-align:center;padding:15px 0 10px!important;border:0!important}
+.topbar .eyebrow{letter-spacing:.14em;color:#e2bd84;font:700 .7rem system-ui,sans-serif}
+.topbar h1{color:#f6d598;text-transform:uppercase;letter-spacing:.045em;text-shadow:0 3px 14px #000;line-height:1.15;margin:7px 0}
+.topbar .muted,.muted{color:#bfae94;font:400 .79rem/1.6 system-ui,sans-serif}
+.mp-card{position:relative;padding:16px;background:#211a14;color:#f4dfba;border:1px solid #b1874e;border-radius:12px;min-width:0;margin:0 0 12px}
+.mp-card h2,.mp-card h3,.mp-card h4{font-family:Georgia,serif;margin:0 0 12px}
+.mp-card input:not([type=checkbox]):not([type=range]),.mp-card select,.mp-card textarea{display:block;max-width:100%;width:100%;padding:11px;background:#f9eac7;color:#392410;border:1px solid #a6824f;border-radius:8px;margin:7px 0 12px}
+.mp-card label{display:block;margin:8px 0}
+.mp-card button{padding:11px 14px;margin:4px;border-radius:9px;background:linear-gradient(#78542d,#422b18);color:#fbe7bf;border:1px solid #b18a51;min-height:44px}
+.mp-card button.primary{background:linear-gradient(#e6bf77,#b98135);color:#2b1d12}
+.mp-list{padding-left:22px}
+.mp-chip{display:inline-flex;gap:7px;align-items:center;padding:7px;margin:4px;background:#e5c996;color:#302012;border:1px solid #b08b53;border-radius:8px}
+.dice{display:flex;flex-wrap:wrap;gap:7px}
+.dice button{flex:1 1 45px;min-height:50px}
+.mp-join{max-width:560px;margin:20px auto}
+.mp-status{padding:9px 12px;text-align:center;color:#4b3015;background:linear-gradient(#f7e8bd,#dabb84);border:2px solid #af8345;border-radius:9px;margin:10px 0}
+.mp-error{color:#8f1717!important}
+.card-preview{max-width:100%;max-height:290px;object-fit:contain;display:block;margin:12px auto}
+#summary{padding:14px;border-radius:10px}
+#account,#login{background:#251b14}
+#game>.muted{font-size:.72rem}
+#game>.muted button{padding:6px 10px;background:#38291b;color:#f8dfaf;border:1px solid #a47b47;border-radius:7px}
+.dorath-personal-history{margin-top:22px;padding-top:17px;border-top:1px solid #ad8852}
+.dorath-personal-history label{display:block;font-weight:700}
+.dorath-personal-history textarea{min-height:100px}
+#dorathPersonalStatus{display:block;margin:12px 0}
+.dorath-photo-editor{background:#f1dbaf;padding:14px;border:1px solid #aa8043;border-radius:11px;margin:0 0 20px;color:#402a16}
+.dorath-photo-editor h4,.dorath-photo-editor p{color:#402a16!important}
+.dorath-photo-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.dorath-photo-button{background:linear-gradient(#75512e,#432913);color:#fcebc8!important;border:1px solid #a58250;border-radius:8px;padding:11px;display:flex!important;justify-content:center;align-items:center;font-size:.84rem;font-weight:bold;text-align:center}
+.dorath-photo-actions button{grid-column:span 2}
+#dv4{display:block}
+#dv4 .dv4-cards .dv4-player-card{background:linear-gradient(155deg,#f6dcb1,#d4ab78 78%,#b88c52)!important}
+.dv4-player-card .dv4-portrait{display:flex;justify-content:center;align-items:center;width:100%;height:90px;overflow:hidden;background:linear-gradient(125deg,#b68e57,#6c4c2b);border:2px solid #b38143;border-radius:5px}
+.dv4-player-card .dv4-portrait img{width:100%;height:100%;object-fit:cover;object-position:center 30%;border:none}
+.dv4-player-card .dv4-card-symbol{font-size:2.8rem;color:#f4d79c}
+.dv4-card-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px;width:100%;margin:2px 0}
+.dv4-card-stats span{background:#f1dbb5;border:1px solid #c29c6c;border-radius:4px;padding:2px 1px}
+.dv4-card-stats small{font-size:.45rem;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dv4-card-stats b{font-size:.78rem;display:block}
+body>.mp-shell>section.mp-card label{display:inline-flex;align-items:center;gap:5px}
+body>.mp-shell>section.mp-card input[type=checkbox]{width:auto}
+body>.mp-shell>section.mp-card input[type=range]{width:120px}
+@media(max-width:450px){.dv4-player-card .dv4-portrait{height:78px}.dv4-card-stats small{font-size:.39rem}.dv4-card-stats b{font-size:.69rem}}
+/* DORATH V4 - visual de jogo, camada unicamente de apresentação */
+:root{--v4-gold:#c99a57;--v4-parch:#f4ddab;--v4-ink:#432b17}
+
+html body{background:radial-gradient(circle at 50% 22%,#59402a,#1c1612 63%,#100d0c 100%)!important}
+html .mp-shell{max-width:720px!important;padding:8px 12px 96px!important}
+html .topbar{padding:12px 0!important;margin:0!important}
+html .topbar h1{font-size:clamp(1.5rem,6vw,2.4rem)!important;line-height:1.08!important}
+html .topbar .muted{display:none!important}
+html .topbar::after{display:none}
+html .mp-shell>section.mp-card{padding:12px!important;margin:5px 0 8px!important;border-radius:12px!important}
+html .mp-shell>section.mp-card>strong{display:block;font-size:.8rem}
+html .mp-shell>section.mp-card label{display:inline-flex!important;align-items:center;gap:5px;margin:4px!important}
+html #status{padding:7px 9px!important;margin:6px 0!important;position:relative!important;font-size:.7rem!important}
+html #dorathModeToggle{display:block;width:100%;font-size:.75rem;padding:7px 11px;min-height:38px}
+html #summary{display:none!important}
+html .dorath-card-strip,
+html .dorath-step,
+html .dorath-dock,
+html .dorath-extras{display:none!important}
+#dv4{display:block}
+.dv4-meta{display:grid;grid-template-columns:1.05fr .8fr 1fr;align-items:stretch;background:linear-gradient(100deg,#d5af77,#f9e5bd 43%,#cba06a);color:#3e2918;border:3px ridge #926432;border-radius:7px;margin:9px 0 13px;box-shadow:inset 0 0 13px #7b492a66,0 5px 18px #0008;overflow:hidden}
+.dv4-meta span{font-size:.79rem;text-align:center;padding:10px 4px;font-weight:700;align-self:center;min-width:0}
+.dv4-meta span+span{border-left:1px solid #957044}
+.dv4-meta small{display:block;font-weight:400;font-size:.66rem}
+.dv4-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 0 14px}
+.dv4-card{appearance:none;position:relative;min-width:0;min-height:158px;display:flex;flex-direction:column;gap:5px;align-items:center;justify-content:flex-end;padding:7px 5px!important;background:linear-gradient(145deg,#f4dcb0,#cea06b 70%,#a77a40)!important;border:3px ridge #bf914d!important;border-radius:12px!important;box-shadow:inset 0 0 0 2px #f6e0ad88,0 5px 13px #0009!important;font-family:Georgia,serif!important;color:#352012!important;text-align:center;overflow:hidden}
+.dv4-card::before{content:"";position:absolute;inset:5px;border:1px solid #7851236b;border-radius:6px;pointer-events:none}
+.dv4-card-type{position:relative;z-index:1;display:block;letter-spacing:.08em;font-size:.59rem;font-weight:800;text-transform:uppercase}
+.dv4-card img{width:100%;height:96px;object-fit:cover;object-position:center 22%;border-radius:4px;border:1px solid #936b32}
+.dv4-card-symbol{flex:1;display:grid;place-items:center;font-size:3.4rem;color:#8c5a25}
+.dv4-card strong{position:relative;z-index:1;font-size:clamp(.72rem,3.2vw,.97rem);line-height:1.1;overflow-wrap:anywhere}
+.dv4-card-foot{font-size:.48rem;letter-spacing:.07em;opacity:.7}
+.dv4-label{text-align:center;letter-spacing:.3em;font-size:.71rem;color:#d6b47a;margin:10px 0 14px}
+html .mp-grid{display:block!important;margin:0!important}
+html .mp-grid>.mp-card{display:none!important}
+html .mp-grid>.mp-card.dv4-current{display:block!important;background:linear-gradient(150deg,#f7e8c4,#eacb94 72%,#c8985c)!important;color:var(--v4-ink)!important;border:7px ridge #996a35!important;border-radius:20px!important;padding:clamp(20px,5vw,37px)!important;min-height:330px;box-shadow:inset 0 0 0 2px #fff0c8,inset 0 0 40px #8c50295c,0 13px 29px #000b!important}
+html .mp-grid>.mp-card.dv4-current h3{font-size:clamp(1.6rem,6vw,2.6rem)!important;line-height:1.2;text-align:center!important;color:#462a12!important;text-shadow:none!important;border-bottom:1px solid #ac8453!important;padding:0 0 12px!important;margin:0 0 18px!important}
+html .mp-grid>.mp-card.dv4-current h4{color:#563618!important;text-shadow:none!important}
+html .mp-grid>.mp-card.dv4-current p,
+html .mp-grid>.mp-card.dv4-current label,
+html .mp-grid>.mp-card.dv4-current li{color:#4a321e!important}
+html .mp-grid>.mp-card.dv4-current b,
+html .mp-grid>.mp-card.dv4-current strong{color:#39220e!important}
+html .mp-grid>.mp-card.dv4-current button{background:linear-gradient(#745431,#402c19)!important;border:1px solid #af844b!important;color:#ffeacc!important;box-shadow:inset 0 1px #f9e0ab55,0 3px 6px #0004!important}
+html .mp-grid>.mp-card.dv4-current .dice button{min-width:48px!important;min-height:56px!important;flex:1 1 50px;background:linear-gradient(#a67b43,#654121)!important}
+html .mp-grid>.mp-card.dv4-current input:not([type=checkbox]):not([type=range]),
+html .mp-grid>.mp-card.dv4-current select,
+html .mp-grid>.mp-card.dv4-current textarea{background:#fff2d5!important;border:1px solid #a17c4a!important;color:#382615!important}
+html .mp-grid>.mp-card.dv4-current .mp-chip{background:#dfbb82!important;color:#412911!important}
+html #missions>p:nth-of-type(1){background:#fff4d9!important;color:#422a15!important}
+html #player .dorath-personal-history label{color:#422a15!important}
+.dv4-nav{position:relative;bottom:auto;z-index:24;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;padding:9px 5px max(9px,env(safe-area-inset-bottom));margin:15px -7px 0;border-radius:13px;border:1px solid #a87d46;background:linear-gradient(#35251c,#1a1310);box-shadow:0 -5px 24px #000b}
+.dv4-nav button{min-width:0;min-height:66px;border-radius:9px;border:2px ridge #987243!important;background:linear-gradient(#6c4a2b,#312118)!important;color:#f5d9a8!important;padding:5px 2px!important;display:grid;place-content:center;gap:3px;font-family:Georgia,serif!important}
+.dv4-nav button span{font-size:1.65rem}.dv4-nav button small{font-size:.63rem}
+.dv4-nav button.dv4-selected{background:linear-gradient(#a07336,#5c3c22)!important;box-shadow:0 0 12px #d8ac6455!important}
+#dv4extras{display:flex;flex-wrap:wrap;gap:8px;background:#2c1e16;padding:10px;border:1px solid #9e7849;border-radius:10px;margin:8px 0}
+#dv4extras[hidden]{display:none!important}
+#dv4extras button{flex:1 1 90px;background:#624525!important;color:#f6e1bf;border:1px solid #9b793d;border-radius:7px;padding:10px}
+#dv4modal{max-width:min(95vw,560px);max-height:88vh;border:3px ridge #ac8248;background:linear-gradient(#f5e3bb,#d1a673);border-radius:13px;color:#3e2616;padding:25px 15px;box-shadow:0 15px 45px #000e}
+#dv4modal::backdrop{background:#000d}
+#dv4modal h2{text-align:center;color:#422913;font-size:1.4rem;margin:16px 12px}
+#dv4modal img{display:block;max-width:100%;max-height:67vh;object-fit:contain;margin:0 auto}
+#dv4modal p{color:#412916}
+#dv4close{position:absolute;right:10px;top:6px;background:#573618;color:#fff0cd;border:1px solid #96692f;border-radius:8px;padding:7px 12px}
+@media(max-width:430px){.dv4-card{min-height:138px!important}.dv4-card img{height:78px}.dv4-card-type{font-size:.5rem}.dv4-nav button span{font-size:1.4rem}.dv4-meta span{font-size:.68rem}}
+
+/* Contraste e legibilidade — V4 */
+/* V4 — legibilidade do painel de edição */
+html #board .mp-grid>.mp-card.dv4-current,
+html #board .mp-grid>.mp-card.dv4-current#player,
+html #board .mp-grid>.mp-card.dv4-current#missions,
+html #board .mp-grid>.mp-card.dv4-current#movement,
+html #board .mp-grid>.mp-card.dv4-current#world{
+ background:linear-gradient(154deg,#f9e9c5 0%,#efd6a5 66%,#c89d68 100%)!important;color:#372412!important}
+html #board .mp-grid>.mp-card.dv4-current h3,
+html #board .mp-grid>.mp-card.dv4-current h4,
+html #board .mp-grid>.mp-card.dv4-current p,
+html #board .mp-grid>.mp-card.dv4-current li,
+html #board .mp-grid>.mp-card.dv4-current label,
+html #board .mp-grid>.mp-card.dv4-current .dorath-personal-history h4,
+html #board .mp-grid>.mp-card.dv4-current .dorath-personal-history label,
+html #board .mp-grid>.mp-card.dv4-current .dorath-personal-history p,
+html #board .mp-grid>.mp-card.dv4-current #dorathPersonalStatus,
+html #board .mp-grid>.mp-card.dv4-current #dorathPhotoStatus{color:#3b2513!important;text-shadow:none!important;opacity:1!important}
+html #board .mp-grid>.mp-card.dv4-current b,
+html #board .mp-grid>.mp-card.dv4-current strong{color:#3f2611!important}
+html #board .mp-grid>.mp-card.dv4-current .dorath-personal-history>p{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important}
+html #board .mp-grid>.mp-card.dv4-current#player>p:first-of-type{background:#f6dfb5!important;border:1px solid #a68556!important;padding:13px!important;color:#3b2513!important}
+.dorath-photo-editor{background:#f0d7a9;border:2px solid #ad844d;border-radius:13px;padding:14px;margin:0 0 16px;box-shadow:inset 0 1px #fff7df}
+.dorath-photo-editor h4{margin:0 0 6px!important}
+.dorath-photo-editor p{font-size:.85rem;line-height:1.5}
+.dorath-photo-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.dorath-photo-button{display:flex!important;align-items:center;justify-content:center;min-height:47px;background:linear-gradient(#75502d,#422916);color:#fff0cb!important;border:1px solid #a67e48;border-radius:10px;padding:10px 8px;cursor:pointer;text-align:center;font-weight:700}
+.dorath-photo-button input{display:none!important}
+.dorath-photo-actions button{grid-column:span 2;width:100%}
+html .dv4-card img{width:100%;height:96px;object-fit:cover;object-position:center 30%}
+#dv4modal #dv4content>button{display:block;width:100%;min-height:48px;margin:8px 0 15px;border-radius:9px;border:1px solid #966b32;background:#583c22;color:#fce5b7;font-weight:bold}
+@media(max-width:420px){.dorath-photo-actions{grid-template-columns:1fr 1fr}.dorath-photo-button{font-size:.8rem}}
+
+
+
+/* V4 compact board header and full artwork card strip */
+html .topbar .dv4-brand{font:700 clamp(2.5rem,12vw,4.7rem)/1 Georgia,serif!important;letter-spacing:.075em;margin:12px 0 0!important;color:#efca85;text-shadow:0 2px 0 #684320,0 5px 16px #0b0705}
+html .topbar .dv4-playtest{font:700 .81rem/1.35 Georgia,serif;letter-spacing:.27em;color:#dfb975;margin:7px 0 14px}
+html #dv4nativeAudio,html #dv4accountInfo{display:none!important}
+#dv4 .dv4-cards{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;align-items:start}
+#dv4 .dv4-card{padding:4px!important;min-height:0!important;aspect-ratio:3/4.55;display:flex;flex-direction:column;justify-content:space-between;gap:3px;border-radius:8px!important;overflow:hidden}
+#dv4 .dv4-card .dv4-mini-art{position:relative;display:block;width:100%;flex:1;min-height:0}
+#dv4 .dv4-card .dv4-mini-base{width:100%;height:100%;object-fit:contain;object-position:center;border:0;background:transparent}
+#dv4 .dv4-card .dv4-mini-selfie{position:absolute;left:7%;top:17%;width:54%;height:36%;object-fit:cover;object-position:center;border:0;border-radius:3px}
+#dv4 .dv4-card .dv4-character-art{width:100%;flex:1;min-height:0;height:auto;object-fit:contain;object-position:center;border:0;background:transparent}
+#dv4 .dv4-card .dv4-empty-card{display:grid;place-items:center;flex:1;width:100%;font-size:3rem;color:#86603b}
+#dv4 .dv4-card .dv4-card-foot{display:block;flex:0 0 auto;font-size:clamp(.45rem,1.55vw,.65rem);line-height:1.2;letter-spacing:0;text-align:center;padding:4px 0;opacity:1;font-weight:bold}
+#dv4 .dv4-account-menu{margin-top:10px;padding:12px;border-top:1px solid #b28c57;display:flex;flex-direction:column;align-items:flex-start;gap:10px;overflow-wrap:anywhere}
+#dv4 .dv4-account-menu small{font-size:.75rem}
+#dv4 .dv4-account-menu button{border:1px solid #af8554;background:#3b291c;color:#f5dbac;padding:9px 15px;border-radius:7px}
+
+/* Identidade oficial do Dorath no topo da interface V4. */
+html .topbar .dv4-brand{margin:5px 0 0!important;line-height:1!important}
+html .topbar .dv4-brand-logo{display:block;width:min(84%,430px);max-height:150px;height:auto;object-fit:contain;margin:0 auto;filter:drop-shadow(0 3px 10px #100a07a6)}
+
+/* Full player-card miniature: overlay live fields over the approved card art. */
+#dv4 .dv4-player-card .dv4-mini-art{container-type:inline-size;aspect-ratio:3/4;align-self:center;flex:0 0 auto}
+#dv4 .dv4-player-card .dv4-mini-base{display:block;width:100%;height:100%;object-fit:fill}
+#dv4 .dv4-player-card .dv4-mini-name,
+#dv4 .dv4-player-card .dv4-mini-meta,
+#dv4 .dv4-player-card .dv4-mini-session,
+#dv4 .dv4-player-card .dv4-mini-medals,
+#dv4 .dv4-player-card .dv4-mini-mission{position:absolute;display:block;color:#281706;font-family:Georgia,serif;overflow:hidden;text-align:center}
+#dv4 .dv4-player-card .dv4-mini-name{top:4.3%;left:14%;width:72%;height:3%;font-size:5cqw;font-weight:bold;text-transform:uppercase;white-space:nowrap;text-overflow:ellipsis}
+#dv4 .dv4-player-card .dv4-mini-meta{top:8%;left:13%;width:74%;height:3%;font-size:2.6cqw;font-weight:bold;white-space:nowrap}
+#dv4 .dv4-player-card .dv4-mini-session{top:27%;left:65%;width:29%;font-size:3cqw;font-weight:bold;line-height:1.25}
+#dv4 .dv4-player-card .dv4-mini-medals{left:0;top:65.1%;width:100%;height:1px;overflow:visible}
+#dv4 .dv4-player-card .dv4-mini-medals span{position:absolute;top:0;transform:translate(-50%,-50%);font-size:5cqw;font-weight:bold;line-height:1}
+#dv4 .dv4-player-card .dv4-mini-mission{top:81%;left:17%;width:66%;height:10%;font-size:2.65cqw;line-height:1.25;text-align:left;overflow:hidden;overflow-wrap:anywhere}
+#dv4 .dv4-player-card .dv4-mini-selfie{z-index:1}
+#dv4 .dv4-player-card .dv4-card-foot{margin-top:auto}
+
+/* Miniatura: preservar o nome completo sem cortar nas bordas da arte. */
+#dv4 .dv4-player-card .dv4-mini-name{
+ top:4%;left:5%;width:90%;height:5%;
+ font-size:clamp(5px,4.1cqw,9px);line-height:1.1;
+ white-space:normal;overflow-wrap:anywhere;text-overflow:clip;
+ display:flex;align-items:center;justify-content:center;
+}
+
+/* Carta de personagem: arte sem título externo ou botão X. */
+#dv4modal.dv4-character-modal #dv4close{display:none!important}
+#dv4modal.dv4-character-modal{padding:12px;max-width:min(95vw,560px)}
+#dv4modal.dv4-character-modal #dv4content>img{max-height:80vh}
+
+/* Ordem do tabuleiro V4: cartas -> ação ativa -> menu de navegação. */
+#board>.dv4-nav{margin-top:14px;margin-bottom:10px}
+#board>#dv4extras{margin-top:14px}
+
+/* Preparação inicial: recurso fixo à esquerda e resultado D6 à direita. */
+html .mp-grid #movement .dv4-setup-rolls{display:grid;gap:9px;margin:12px 0 17px}
+html .mp-grid #movement .dv4-setup-row{
+ display:grid!important;grid-template-columns:minmax(0,1fr) minmax(88px,35%);
+ align-items:center;gap:14px;margin:0!important;padding:3px 0;
+ color:#482d16;font-weight:bold;font-size:clamp(1rem,3.8vw,1.2rem);
+}
+html .mp-grid #movement .dv4-setup-row select{
+ display:block!important;width:100%!important;max-width:100%;
+ margin:0!important;padding:8px 10px!important;min-height:44px;
+ font-weight:normal;text-align:center;
+}
+
+/* Android: evita o pull-to-refresh acidental no topo da página.
+   O conteúdo continua rolando normalmente. */
+html,body{overscroll-behavior-y:none}
+html{touch-action:pan-x pan-y}
+
+/* DORATH V4 — Turno e Movimento / preparação D6: acabamento pergaminho e bronze. */
+html .mp-grid #movement.dv4-current{background:linear-gradient(155deg,#f8e9c7 0%,#e9ce9a 62%,#d4ab71 100%)!important}
+html .mp-grid #movement.dv4-current>h3{
+ text-transform:uppercase!important;letter-spacing:.075em!important;
+ font-size:clamp(1.25rem,5.3vw,1.85rem)!important;
+ color:#4b2d12!important;text-shadow:0 1px 0 #ffefcb!important;
+}
+html .mp-grid #movement.dv4-current>p:first-of-type{
+ font-size:clamp(.89rem,3.4vw,1.05rem)!important;
+ line-height:1.5!important;color:#57391c!important;
+ margin:0 0 12px!important;text-align:center;
+}
+html .mp-grid #movement .dv4-setup-rolls{
+ display:grid;gap:8px;margin:13px 0 18px;
+ padding:12px 11px;border:1px solid #ab7f46;border-radius:12px;
+ background:linear-gradient(140deg,#f7e4b9,#ebcc91);
+ box-shadow:inset 0 1px 0 #fff3d8,inset 0 0 18px #a8732d24,0 3px 10px #54311220;
+}
+html .mp-grid #movement .dv4-setup-row{
+ display:grid!important;grid-template-columns:minmax(0,1fr) 88px;
+ align-items:center;gap:10px;margin:0!important;padding:7px 5px!important;
+ border-bottom:1px solid #aa835343;
+ color:#4c2c11!important;font:700 clamp(.82rem,3.5vw,1.06rem)/1.3 Georgia,serif!important;
+ letter-spacing:.045em;text-transform:uppercase;
+}
+html .mp-grid #movement .dv4-setup-row:last-of-type{border-bottom:0}
+html .mp-grid #movement .dv4-setup-row select{
+ appearance:none;-webkit-appearance:none;
+ width:100%!important;min-height:45px!important;
+ margin:0!important;padding:8px 28px 8px 10px!important;
+ text-align:center;text-align-last:center;
+ color:#3f260f!important;background:
+ linear-gradient(45deg,transparent 50%,#744923 50%) right 15px top 19px/6px 6px no-repeat,
+ linear-gradient(135deg,#fff4d7,#e7c38b)!important;
+ border:2px solid #9b6c34!important;border-radius:8px!important;
+ box-shadow:inset 0 1px 1px #fff9e4,0 2px 5px #56301330!important;
+ font:700 1.05rem Georgia,serif!important;
+}
+html .mp-grid #movement .dv4-setup-row select:focus-visible{
+ outline:3px solid #6f481f!important;outline-offset:3px;
+}
+html .mp-grid #movement.dv4-current button[data-action="setup"]{
+ display:block;width:100%;margin:12px 0 0!important;min-height:48px;
+ background:linear-gradient(#80552c,#442812)!important;
+ border:2px ridge #c3985a!important;border-radius:10px!important;
+ color:#ffe7b2!important;letter-spacing:.09em;font-weight:700;
+ text-transform:uppercase;box-shadow:0 4px 10px #47270f38;
+}
+
+/* Preparação: controles de confirmação e início em linha, sem alterar validação do motor. */
+html .mp-grid #movement .dv4-setup-actions{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;
+ margin-top:12px;align-items:stretch;
+}
+html .mp-grid #movement .dv4-setup-actions:has(>button:only-child){grid-template-columns:1fr}
+html .mp-grid #movement.dv4-current .dv4-setup-actions button[data-action="setup"],
+html .mp-grid #movement.dv4-current .dv4-setup-actions button[data-action="start"]{
+ display:block;width:100%;margin:0!important;min-width:0;
+ min-height:48px;padding:10px 7px!important;
+ font:700 clamp(.75rem,3vw,1rem)/1.2 Georgia,serif!important;
+ text-transform:uppercase;letter-spacing:.045em;
+ border:2px ridge #c3985a!important;border-radius:10px!important;
+ color:#ffe7b2!important;background:linear-gradient(#80552c,#442812)!important;
+ box-shadow:0 4px 10px #47270f38;
+}
+html .mp-grid #movement.dv4-current .dv4-setup-actions button[data-action="start"]{
+ background:linear-gradient(#a87937,#67401b)!important;
+}
+
+/* Ações da preparação: botões compactos e centralizados, sem largura desperdiçada. */
+html .mp-grid #movement .dv4-setup-actions{
+ display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;
+ margin:12px 0 0;
+}
+html .mp-grid #movement.dv4-current .dv4-setup-actions button[data-action="setup"],
+html .mp-grid #movement.dv4-current .dv4-setup-actions button[data-action="start"]{
+ width:auto!important;min-width:112px;max-width:calc(50% - 5px);
+ flex:0 1 auto;margin:0!important;padding:10px 13px!important;
+}
+
+/* Missão comum — hierarquia editorial e entradas no padrão Dorath. */
+html #missions.dv4-current .dv4-mission-details{
+ padding:12px 14px;margin:12px 0 18px;
+ border:1px solid #b18a58;border-radius:8px;
+ background:linear-gradient(145deg,#fff4d8,#f2dfb6);
+ box-shadow:inset 0 1px 0 #fff9e8;
+}
+html #missions.dv4-current .dv4-mission-details p{
+ margin:0 0 8px!important;padding:0!important;
+ font-size:clamp(.95rem,3.5vw,1.15rem)!important;line-height:1.4!important;
+ background:transparent!important;color:#452b15!important;
+}
+html #missions.dv4-current .dv4-mission-details p:last-child{margin-bottom:0!important}
+html #missions.dv4-current .dv4-mission-details b{font-size:.87em;letter-spacing:.045em}
+html #missions.dv4-current .dv4-mission-bonus{
+ display:flex;justify-content:space-between;align-items:center;gap:12px;margin:10px 0 3px;
+}
+html #missions.dv4-current .dv4-mission-bonus label{
+ margin:0!important;font:700 clamp(.79rem,3vw,1rem)/1.25 Georgia,serif!important;
+ letter-spacing:.045em;color:#503316;
+}
+html #missions.dv4-current .dv4-mission-bonus select{
+ appearance:none;-webkit-appearance:none;flex:0 0 90px;
+ width:90px!important;min-height:44px!important;margin:0!important;
+ padding:8px 24px 8px 12px!important;text-align:center;text-align-last:center;
+ color:#3f260f!important;border:2px solid #9b6c34!important;border-radius:8px!important;
+ font:700 1rem Georgia,serif!important;
+ background:linear-gradient(45deg,transparent 50%,#744923 50%) right 13px top 18px/6px 6px no-repeat,linear-gradient(135deg,#fff4d7,#e7c38b)!important;
+ box-shadow:inset 0 1px 1px #fff9e4,0 2px 5px #56301330!important;
+}
+html #missions.dv4-current .dv4-mission-hint{display:block;font-size:.72rem;color:#73512f;line-height:1.35}
+html #missions.dv4-current .dv4-mission-roll-title{
+ text-align:center!important;font-weight:700!important;letter-spacing:.08em;
+ margin:18px 0 12px!important;
+}
+html #missions.dv4-current .dv4-mission-dice .dice{
+ display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr));gap:clamp(3px,1.4vw,8px);
+ width:100%;margin:0;
+}
+html #missions.dv4-current .dv4-mission-dice .dice button{
+ box-sizing:border-box;display:grid;place-items:center;
+ width:100%!important;min-width:0!important;min-height:0!important;
+ aspect-ratio:1/1;flex:none!important;margin:0!important;
+ padding:0!important;border-radius:8px!important;
+ font-size:clamp(.95rem,4vw,1.35rem)!important;
+}
+
+/* Seleção voluntária da partida, sem eliminar sessão prévia. */
+#dv4SavedPartyChoice{
+ padding:14px;margin:0 0 18px;border:1px solid #a77d45;border-radius:10px;
+ background:linear-gradient(145deg,#f6e5bf,#d9b480);
+ color:#422916;box-shadow:inset 0 1px 0 #fff4d4;
+}
+#dv4SavedPartyChoice p{margin:0 0 10px;font-size:.98rem;line-height:1.35;color:#422916}
+#login #dv4SavedPartyChoice button{
+ width:100%;margin:0;background:linear-gradient(#80592d,#51341a);
+ color:#ffedc8;border:2px ridge #ae854e;font-weight:700;
+}
+#login #dv4RetryConnection[hidden]{display:none!important}
+
+/* Missão: seis faces do D6 obrigatoriamente na mesma linha em telas estreitas. */
+html body #board #missions.dv4-current .dv4-mission-dice{
+ display:block;width:100%;min-width:0;overflow:visible;
+}
+html body #board #missions.dv4-current .dv4-mission-dice>.dice{
+ display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;
+ grid-auto-flow:column;gap:4px!important;width:100%;min-width:0;
+ flex-wrap:nowrap!important;
+}
+html body #board #missions.dv4-current .dv4-mission-dice>.dice>button{
+ display:grid!important;place-items:center;
+ box-sizing:border-box!important;width:100%!important;max-width:100%!important;
+ min-width:0!important;min-height:0!important;height:auto!important;
+ aspect-ratio:1 / 1;flex:none!important;margin:0!important;padding:0!important;
+ font-size:clamp(.85rem,3.7vw,1.2rem)!important;
+}
+
+/* Mensagens locais da conferência de posição, incluindo recusas do motor. */
+html #world.dv4-current .dv4-position-hint{font-size:.8rem!important;line-height:1.4;margin:7px 0!important;color:#654627!important}
+html #world.dv4-current .dv4-position-feedback{padding:10px 12px!important;margin:10px 0!important;border:1px solid #8e6c3f;border-radius:8px;background:#fff0c9!important;color:#34220d!important;font-size:.92rem;line-height:1.4}
+html #world.dv4-current .dv4-position-feedback.mp-error{border-color:#ad4935!important;background:#ffe2d3!important;color:#802b1d!important}
+html #world.dv4-current .dv4-position-feedback[hidden]{display:none!important}
+
+html #missions.dv4-current .dv4-mission-feedback{display:block;padding:12px;margin:12px 0;border:1px solid #926b3d;border-radius:9px;background:#fff1cd!important;color:#402816!important;line-height:1.4;font-weight:700}
+html #missions.dv4-current .dv4-mission-feedback.mp-error{background:#ffe0d0!important;color:#832e20!important;border-color:#aa5540}
+html #missions.dv4-current .dv4-mission-feedback[hidden]{display:none!important}
+
+/* Padrão universal dos dados físicos: D4, D6 e D8 sempre em uma linha. */
+html body .mp-grid>.mp-card .dice{
+ display:grid!important;
+ grid-template-columns:repeat(6,minmax(0,1fr))!important;
+ gap:clamp(3px,1.2vw,7px)!important;
+ width:100%!important;min-width:0!important;
+ flex-wrap:nowrap!important;
+}
+html body .mp-grid>.mp-card .dice:has(>button:nth-child(4):last-child){
+ grid-template-columns:repeat(4,minmax(0,1fr))!important;
+}
+html body .mp-grid>.mp-card .dice:has(>button:nth-child(8):last-child){
+ grid-template-columns:repeat(8,minmax(0,1fr))!important;
+}
+html body .mp-grid>.mp-card .dice>button{
+ display:grid!important;place-items:center!important;
+ box-sizing:border-box!important;
+ min-width:0!important;min-height:0!important;
+ width:100%!important;max-width:100%!important;height:auto!important;
+ aspect-ratio:1/1!important;
+ flex:none!important;margin:0!important;padding:0!important;
+ font-size:clamp(.8rem,3.5vw,1.2rem)!important;
+}
+
+/* Confirmação obrigatória no aparelho: recursos físicos da mesa. */
+#dv4ResourceNotice{
+ box-sizing:border-box;width:min(92vw,460px);max-width:460px;
+ border:3px ridge #be9352;border-radius:19px;
+ padding:25px 20px 22px;text-align:center;
+ color:#3b2512;background:linear-gradient(145deg,#fff5d8 0%,#efdab0 64%,#d5ac76 100%);
+ box-shadow:0 16px 50px #080503bd,inset 0 2px 0 #fff8df;
+ font-family:Georgia,serif;
+}
+#dv4ResourceNotice::backdrop{background:rgba(12,8,5,.8)}
+#dv4ResourceNotice .dv4-resource-icon{font-size:2.25rem;color:#835a28}
+#dv4ResourceNotice h2{color:#684018;margin:5px 0 12px;letter-spacing:.09em;font-size:1.45rem}
+#dv4ResourceNotice.dv4-resource-loss h2{color:#913d27}
+#dv4ResourceNotice #dv4ResourceMessage{color:#3a2412;font-size:clamp(1.12rem,4.4vw,1.42rem);font-weight:bold;line-height:1.45;margin:12px 0}
+#dv4ResourceNotice .dv4-resource-instruction{color:#64462a;font-size:.98rem;line-height:1.4;margin:15px 0 20px}
+#dv4ResourceNotice #dv4ResourceAck{width:100%;margin:0;padding:13px 9px;border:2px ridge #d9b071;border-radius:10px;color:#ffeccb;background:linear-gradient(#866034,#452b19);font:700 .93rem Georgia,serif;letter-spacing:.02em;min-height:52px}
+
+/* Cartas recolhidas: nome e atributos; arte integral apenas no modal. */
+#dv4 .dv4-character-card{justify-content:center!important;gap:12px!important;padding:10px 5px!important}
+#dv4 .dv4-character-name{font-size:clamp(.76rem,2.8vw,1.04rem);line-height:1.2;text-wrap:balance}
+#dv4 .dv4-character-shortstats{font-size:clamp(.57rem,1.9vw,.81rem);line-height:1.45;overflow-wrap:anywhere}
+.dv4-character-gallery{display:grid;gap:8px;margin:12px 0}
+.dv4-character-gallery h4{margin:3px 0}
+.dv4-character-option{display:grid;grid-template-columns:auto 1fr;column-gap:10px;row-gap:3px;align-items:center;padding:10px;border:1px solid #987447;border-radius:9px;background:#372919}
+.dv4-character-option .char-check{grid-row:span 2;min-width:18px;min-height:18px}
+.dv4-gallery-name{font-weight:700}
+.dv4-gallery-stats{font-size:.82rem;opacity:.9}
+.dv4-full-card-stats{text-align:center;font-weight:bold;color:#eec98d}
+
+/* V4: resumos legíveis das três cartas; arte integral preservada na ampliação. */
+#dv4 .dv4-cards .dv4-summary-card{
+ display:flex!important;flex-direction:column!important;justify-content:space-between!important;
+ align-items:stretch!important;gap:7px!important;padding:10px 7px!important;
+ background:linear-gradient(145deg,#f7e5c2,#d2ab75 75%,#b88a54)!important;
+ min-height:155px!important;aspect-ratio:3/4.55!important;text-align:center!important;
+}
+#dv4 .dv4-summary-type{font-size:clamp(.48rem,1.6vw,.66rem);font-weight:700;letter-spacing:.09em;color:#79522e;line-height:1.2}
+#dv4 .dv4-summary-name{display:grid;place-items:center;flex:1;min-height:28px;font-size:clamp(.78rem,2.8vw,1.08rem);line-height:1.14;color:#39230f;overflow-wrap:anywhere;text-wrap:balance}
+#dv4 .dv4-summary-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;width:100%}
+#dv4 .dv4-summary-stats-player{grid-template-columns:repeat(2,minmax(0,1fr))}
+#dv4 .dv4-summary-stat{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:1px;min-width:0;padding:4px 1px;background:#fff0d1;border:1px solid #ad824a;border-radius:5px;box-shadow:inset 0 1px #fff9e9}
+#dv4 .dv4-summary-stat small{font:700 clamp(.45rem,1.7vw,.66rem) Georgia,serif;letter-spacing:.015em;color:#77502e}
+#dv4 .dv4-summary-stat b{font-size:clamp(.91rem,3vw,1.25rem);line-height:1.05;color:#30200e}
+#dv4 .dv4-summary-footer{display:block;font:700 clamp(.43rem,1.45vw,.61rem) Georgia,serif;color:#64401d;letter-spacing:.025em}
+@media(max-width:385px){#dv4 .dv4-cards .dv4-summary-card{padding:7px 4px!important;gap:4px!important}#dv4 .dv4-summary-stat{padding:3px 1px}}
+
+/* Slots de personagens: mesma grade 2×2 da Carta do Jogador. */
+#dv4 .dv4-summary-stats-character{grid-template-columns:repeat(2,minmax(0,1fr))}
+#dv4 .dv4-summary-swap{display:grid;place-items:center;min-width:0;min-height:44px;padding:3px 1px!important;border:1px solid #936b32!important;border-radius:5px!important;background:linear-gradient(#73502c,#51351d)!important;color:#fff0cc!important;font:700 clamp(.48rem,1.55vw,.69rem)/1.1 Georgia,serif!important;letter-spacing:0!important;text-align:center;cursor:pointer}
+#dv4 .dv4-summary-open{display:block;width:100%;padding:7px 2px!important;border:1px solid #89602f!important;border-radius:5px!important;background:#6e4926!important;color:#fff2d8!important;font:700 clamp(.5rem,1.55vw,.67rem) Georgia,serif!important;text-align:center;cursor:pointer}
+#dv4 .dv4-summary-swap:focus-visible,#dv4 .dv4-summary-open:focus-visible{outline:3px solid #fff4c5;outline-offset:2px}
+#dv4 .dv4-character-card.dv4-summary-card{cursor:default}
+
+/* Revisão visual V4 — galeria de 18 artes e ações de cartas. */
+#dv4 .dv4-summary-open,#dv4 .dv4-summary-footer{line-height:1.15!important;white-space:normal!important;min-height:33px;display:grid!important;place-items:center!important}
+#dv4 .dv4-summary-open{width:100%!important;font-size:clamp(.59rem,1.85vw,.74rem)!important}
+#player .dv4-character-gallery{display:block!important;margin:10px 0}
+#player .dv4-gallery-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+#player .dv4-character-option{display:flex!important;flex-direction:column;position:relative;gap:5px;min-width:0;padding:8px;background:linear-gradient(155deg,#f1dcaf,#ccaa77)!important;color:#3d2913!important;border:2px solid #937247;border-radius:10px;text-align:center}
+#player .dv4-gallery-art{display:block;width:100%;aspect-ratio:3/4.4;object-fit:contain;border:0;border-radius:5px}
+#player .dv4-locked .dv4-gallery-art{filter:grayscale(1) brightness(.56) opacity(.55)}
+#player .dv4-locked{background:#6e665b!important;border-color:#746d66!important;color:#e5d6bd!important}
+#player .dv4-gallery-name{font:700 .9rem Georgia,serif}
+#player .dv4-gallery-stats{font-size:.72rem;color:#5a4227;line-height:1.3}
+#player .dv4-gallery-select{display:flex;align-items:center;justify-content:center;gap:7px;border:1px solid #97774c;background:#fff3d5;border-radius:6px;padding:6px;font-weight:bold;cursor:pointer}
+#player .dv4-gallery-select input{accent-color:#6b4b24;min-width:19px;min-height:19px}
+#player .dv4-gallery-locked{font-size:.7rem;letter-spacing:.1em;font-weight:bold}
+#player .dv4-unlocked .dv4-gallery-art,#player .dv4-unlocked .dv4-gallery-name{cursor:pointer}
+@media(min-width:700px){#player .dv4-gallery-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+/* Identidade tipográfica Dorath V4: títulos ornamentais, nomes clássicos e UI legível. */
+:root{--dv4-type-display:'Cinzel Decorative',Georgia,serif;--dv4-type-title:'Cormorant Garamond',Georgia,serif;--dv4-type-body:'Inter',Arial,sans-serif}
+body,.mp-card p,.mp-card label,.mp-card input,.mp-card select,.mp-card textarea,.muted,.mini,
+#dv4 .dv4-meta,#dv4 .dv4-nav,#dv4 .dv4-label,#player .dv4-gallery-stats,#player .dv4-character-gallery p,
+#player .dv4-gallery-select,#player .dv4-gallery-locked{font-family:var(--dv4-type-body)!important}
+.mp-card h2,.mp-card h3,.mp-card h4,#dv4 .dv4-label,#player .dv4-character-gallery h4{font-family:var(--dv4-type-display)!important;letter-spacing:.035em}
+#dv4 .dv4-summary-name,#player .dv4-gallery-name{font-family:var(--dv4-type-title)!important;font-weight:700!important;letter-spacing:.012em}
+#dv4 .dv4-summary-name{font-size:clamp(.94rem,3.45vw,1.37rem)!important}
+#player .dv4-gallery-name{font-size:1.18rem!important;line-height:1.1}
+#dv4 .dv4-summary-type{font:700 clamp(.47rem,1.6vw,.61rem)/1.2 var(--dv4-type-display)!important}
+#dv4 .dv4-summary-stat small{font-family:var(--dv4-type-body)!important;letter-spacing:.035em}
+#dv4 .dv4-summary-stat b{font-family:var(--dv4-type-title)!important;font-size:clamp(1.02rem,3.45vw,1.48rem)!important}
+#dv4 .dv4-summary-swap,#dv4 .dv4-summary-open,#dv4 .dv4-summary-footer{font-family:var(--dv4-type-display)!important;letter-spacing:.02em!important}
+#dv4 .dv4-summary-footer{font-size:clamp(.43rem,1.45vw,.62rem)!important}
+/* O selo pertence à área visual da carta e não interfere no checkbox. */
+#player .dv4-locked{isolation:isolate;overflow:hidden}
+#player .dv4-locked .dv4-gallery-art{filter:grayscale(1) brightness(.62) opacity(.66)!important}
+#player .dv4-locked::after{
+ content:'BLOQUEADA';position:absolute;z-index:2;left:-12%;top:30%;width:124%;
+ transform:rotate(-19deg);pointer-events:none;text-align:center;
+ color:#ffe4da;background:rgba(132,20,22,.92);
+ border-top:2px solid #f0b9ac;border-bottom:2px solid #f0b9ac;
+ box-shadow:0 0 0 2px rgba(81,9,13,.35),0 5px 12px rgba(0,0,0,.4);
+ font:700 clamp(.85rem,3.6vw,1.27rem)/1.25 var(--dv4-type-display);
+ letter-spacing:.055em;padding:9px 0;text-shadow:0 1px 2px #38090b;
+}
+#player .dv4-unlocked{box-shadow:inset 0 0 0 1px rgba(255,244,212,.6),0 5px 14px #0005}
+#player .dv4-gallery-locked{color:#f0dfd2!important}
+@media(max-width:370px){#player .dv4-locked::after{font-size:.75rem!important;letter-spacing:.02em}}
+
+/* Galeria: somente arte homologada, carimbo vermelho direto na carta bloqueada. */
+#player .dv4-gallery-grid .dv4-character-option{padding:5px!important;gap:5px!important;overflow:hidden!important}
+#player .dv4-gallery-grid .dv4-gallery-art{width:100%!important;height:auto!important;aspect-ratio:3/4.4!important;object-fit:contain!important}
+#player .dv4-gallery-grid .dv4-locked{background:#6a6259!important}
+#player .dv4-gallery-grid .dv4-locked::after{
+ content:'BLOQUEADA'!important;
+ position:absolute!important;z-index:4!important;
+ top:38%!important;left:-9%!important;width:118%!important;
+ transform:rotate(-21deg)!important;
+ display:block!important;padding:6px 0!important;
+ background:rgba(255,255,255,.78)!important;
+ border:0!important;
+ color:#b41c22!important;
+ font:700 clamp(.82rem,4vw,1.4rem)/1.2 var(--dv4-type-display)!important;
+ letter-spacing:.04em!important;text-align:center!important;
+ text-shadow:none!important;box-shadow:none!important;
+ -webkit-text-stroke:0!important;
+ pointer-events:none!important;
+}
+#player .dv4-gallery-grid .dv4-locked .dv4-gallery-art{filter:grayscale(1) brightness(.67) opacity(.72)!important}
+#player .dv4-gallery-grid .dv4-unlocked .dv4-gallery-art{filter:none!important}
+#player .dv4-gallery-grid .dv4-gallery-select{font-family:var(--dv4-type-body)!important;margin:0!important;width:100%;min-height:40px}
+
+/* Espaçamento uniforme e ações alinhadas no rodapé das três cartas. */
+#dv4 .dv4-cards .dv4-summary-card{
+ padding:11px 8px 14px!important;
+ gap:8px!important;
+ box-sizing:border-box!important;
+ justify-content:space-between!important;
+}
+#dv4 .dv4-cards .dv4-summary-card .dv4-summary-open{
+ display:grid!important;
+ place-items:center!important;
+ align-self:stretch!important;
+ width:100%!important;
+ min-height:39px!important;
+ margin:5px 0 0!important;
+ padding:6px 3px!important;
+ background:#6e4926!important;
+ color:#fff2d8!important;
+ border:1px solid #89602f!important;
+ border-radius:5px!important;
+ font:700 clamp(.5rem,1.55vw,.67rem)/1.15 var(--dv4-type-display)!important;
+ letter-spacing:.02em!important;
+ text-align:center!important;
+ cursor:pointer!important;
+}
+@media(max-width:385px){
+ #dv4 .dv4-cards .dv4-summary-card{padding:9px 5px 12px!important;gap:5px!important}
+}
+
+/* Correção de altura: botões jamais ultrapassam a base das cartas compactas. */
+#dv4 .dv4-cards{align-items:stretch!important}
+#dv4 .dv4-cards .dv4-summary-card{
+ aspect-ratio:auto!important;height:auto!important;min-height:230px!important;
+ overflow:visible!important;
+ display:flex!important;flex-direction:column!important;
+ justify-content:flex-start!important;gap:8px!important;
+ padding:12px 8px 13px!important;
+}
+#dv4 .dv4-cards .dv4-summary-card .dv4-summary-name{
+ flex:1 0 auto!important;min-height:39px!important;
+}
+#dv4 .dv4-cards .dv4-summary-card .dv4-summary-stats{flex:0 0 auto!important}
+#dv4 .dv4-cards .dv4-summary-card .dv4-summary-open{
+ position:relative!important;flex:0 0 auto!important;
+ margin:7px 0 0!important;min-height:42px!important;
+ box-sizing:border-box!important;
+}
+#dv4 .dv4-cards .dv4-summary-card .dv4-summary-type{
+ flex:0 0 auto!important;
+}
+@media(max-width:385px){
+ #dv4 .dv4-cards .dv4-summary-card{padding:9px 5px 12px!important;gap:5px!important;min-height:220px!important}
+}
+
+/* Jornada inicial: confirmação da reserva, escolha de Adão e orientação para Eventos. */
+.dv4-setup-receipt{max-width:min(92vw,430px);border:2px solid #c29b5f;border-radius:13px;padding:23px;background:#f1dfbb;color:#392612;text-align:center;box-shadow:0 16px 48px #000b}
+.dv4-setup-receipt::backdrop{background:#080604ce}
+.dv4-setup-receipt h2{font-family:var(--dv4-type-display);margin:0 0 15px;font-size:1.16rem}
+.dv4-setup-receipt p{font-family:var(--dv4-type-body);font-size:.9rem}
+.dv4-setup-receipt button,#player .dv4-intro-adam{display:block;width:100%;background:linear-gradient(#856032,#52361a);border:1px solid #bd985d;border-radius:8px;color:#fff0d4;padding:13px 10px;min-height:45px;font:700 .8rem var(--dv4-type-display);cursor:pointer}
+#player .dv4-intro-adam{margin:10px 0 15px}
+.dv4-intro-event-hint{padding:12px;border:1px solid #c4a166;border-radius:8px;background:#4d3520;color:#ffebc3;font:700 .88rem/1.45 var(--dv4-type-body)}
+
+/* Orientação da ocorrência: contraste garantido também nas regras do painel nativo. */
+#dv4 #movement .dv4-intro-event-hint,
+#movement .dv4-intro-event-hint{
+ display:block!important;
+ background:#51351f!important;
+ color:#fff1d4!important;
+ border:1px solid #c8a36a!important;
+ border-radius:9px!important;
+ padding:14px 12px!important;
+ font-family:var(--dv4-type-body)!important;
+ font-size:.94rem!important;
+ font-weight:700!important;
+ line-height:1.5!important;
+ text-align:center!important;
+ text-shadow:none!important;
+ opacity:1!important;
+}
+#movement .dv4-intro-event-hint strong{color:#fff7e8!important;font-weight:800!important}
+
+/* O painel aplica cor escura aos parágrafos; a orientação usa div independente. */
+html body #board .mp-grid > #movement.dv4-current div.dv4-intro-event-hint{
+ display:block!important;
+ background:#51351f!important;
+ color:#fff1d4!important;
+ border:1px solid #c8a36a!important;
+ border-radius:9px!important;
+ padding:14px 12px!important;
+ margin:14px 0!important;
+ font:700 .98rem/1.5 var(--dv4-type-body)!important;
+ text-align:center!important;
+ text-shadow:none!important;
+ opacity:1!important;
+}
+html body #board .mp-grid > #movement.dv4-current .dv4-intro-event-target{
+ color:#ffffff!important;
+ font-weight:800!important;
+}
+
+/* Mensagens de turno para todos os jogadores, inclusive após passar a vez. */
+html body #board .mp-grid > #movement.dv4-current > p.dv4-movement-status{
+ display:block!important;
+ background:#fff0d0!important;
+ color:#382515!important;
+ border:1px solid #ba955e!important;
+ border-radius:9px!important;
+ box-shadow:none!important;
+ margin:10px 0 14px!important;
+ padding:13px 14px!important;
+ font:600 .94rem/1.5 var(--dv4-type-body)!important;
+ text-align:center!important;
+ text-shadow:none!important;
+ opacity:1!important;
+}
+
+/* Missão: cartões em coluna para não extrapolar a largura do celular. */
+html body #board #missions.dv4-current .dv4-mission-bonus{
+ display:grid!important;
+ grid-template-columns:minmax(0,1fr)!important;
+ gap:9px!important;
+ width:100%!important;
+ min-width:0!important;
+ box-sizing:border-box!important;
+ margin:16px 0!important;
+ padding:14px!important;
+ border:1px solid #b28a57!important;
+ border-radius:10px!important;
+ background:linear-gradient(150deg,#f7e8c6,#e6c995)!important;
+}
+html body #board #missions.dv4-current .dv4-mission-bonus > label,
+html body #board #missions.dv4-current .dv4-mission-bonus > p,
+html body #board #missions.dv4-current .dv4-mission-bonus > small{
+ display:block!important;
+ width:100%!important;
+ min-width:0!important;
+ max-width:100%!important;
+ margin:0!important;
+ color:#442a15!important;
+ line-height:1.45!important;
+ overflow-wrap:break-word!important;
+}
+html body #board #missions.dv4-current .dv4-mission-bonus > label{
+ font:700 .85rem/1.4 var(--dv4-type-display)!important;
+}
+html body #board #missions.dv4-current .dv4-mission-bonus select{
+ display:block!important;
+ width:100%!important;
+ max-width:100%!important;
+ min-width:0!important;
+ flex:none!important;
+ margin:7px 0 0!important;
+ padding:10px 28px 10px 12px!important;
+ font-family:var(--dv4-type-body)!important;
+ font-size:.94rem!important;
+ text-align:left!important;
+ text-align-last:left!important;
+ box-sizing:border-box!important;
+}
+html body #board #missions.dv4-current .dv4-mission-bonus > p{
+ font:600 .92rem/1.45 var(--dv4-type-body)!important;
+}
+html body #board #missions.dv4-current .dv4-mission-bonus > small{
+ font:500 .79rem/1.55 var(--dv4-type-body)!important;
+}
+
+/* Mesmo aviso de espera da aba Jogar, aplicado à aba Missão. */
+html body #board .mp-grid > #missions.dv4-current > p.dv4-mission-wait{
+ display:block!important;
+ background:#fff0d0!important;
+ color:#382515!important;
+ border:1px solid #ba955e!important;
+ border-radius:9px!important;
+ box-shadow:none!important;
+ margin:10px 0 14px!important;
+ padding:13px 14px!important;
+ font:600 .94rem/1.5 var(--dv4-type-body)!important;
+ text-align:center!important;
+ text-shadow:none!important;
+ opacity:1!important;
+}
+
+/* Tabela de conversão dos atributos dos personagens nas Missões. */
+html body #board #missions.dv4-current .dv4-test-attribute{display:flex!important;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding:10px 12px;background:#fff0d1;border:1px solid #c49b63;border-radius:8px}
+html body #board #missions.dv4-current .dv4-test-attribute span{font:700 .68rem var(--dv4-type-display);letter-spacing:.035em;color:#77502c}
+html body #board #missions.dv4-current .dv4-test-attribute strong{font:700 1.12rem var(--dv4-type-title);color:#392511!important}
+html body #board #missions.dv4-current .dv4-bonus-table-wrap{min-width:0;width:100%;margin-top:3px}
+html body #board #missions.dv4-current .dv4-bonus-heading{text-align:center;font:700 .8rem var(--dv4-type-display);color:#503319;margin:7px 0}
+html body #board #missions.dv4-current table.dv4-bonus-table{table-layout:fixed!important;width:100%!important;max-width:100%;border-collapse:separate;border-spacing:3px;font-family:var(--dv4-type-body);color:#392511}
+html body #board #missions.dv4-current .dv4-bonus-table th,html body #board #missions.dv4-current .dv4-bonus-table td{padding:9px 2px!important;text-align:center!important;border:1px solid #b98e54!important;border-radius:5px;background:#fff1d4!important;font-size:clamp(.65rem,2.45vw,.84rem)!important;line-height:1.2!important}
+html body #board #missions.dv4-current .dv4-bonus-table thead th{background:#80572c!important;color:#fff4dc!important;font-weight:700}
+html body #board #missions.dv4-current .dv4-bonus-table tbody th{font-weight:700;color:#61401f!important}
+html body #board #missions.dv4-current .dv4-bonus-table tbody td{font-weight:800;font-size:1.04rem!important}
+html body #board #missions.dv4-current .dv4-bonus-caption{display:block;margin-top:7px!important;font:500 .75rem/1.45 var(--dv4-type-body)!important;text-align:center;color:#67472b!important}
+
+/* Navegação fixa: sempre presente na parte inferior durante a rolagem. */
+html body #board #dv4 .dv4-nav{
+ position:fixed!important;
+ left:50%!important;right:auto!important;
+ bottom:0!important;
+ transform:translateX(-50%)!important;
+ width:calc(100% - 16px)!important;max-width:704px!important;
+ margin:0!important;
+ padding:9px 7px max(12px,env(safe-area-inset-bottom))!important;
+ z-index:100!important;
+ background:linear-gradient(#35251c,#1a1310)!important;
+ border:1px solid #a87d46!important;
+ border-radius:14px 14px 0 0!important;
+ box-shadow:0 -7px 25px #000b!important;
+}
+html body .mp-shell{padding-bottom:calc(125px + env(safe-area-inset-bottom))!important}
+#player .dv4-gallery-pause{font:.8rem/1.45 var(--dv4-type-body);color:#563a1c!important;text-align:center;margin:8px 0}
+
+/* Personagens desbloqueados simultaneamente: escolha gratuita antes da futura aquisição paga. */
+html body #board #player .dv4-free-recruit{
+ margin:12px 0 18px;padding:15px;border:1px solid #a8793c;border-radius:12px;
+ background:linear-gradient(155deg,#fff0cd,#dfbb7f);color:#3c2915;
+}
+html body #board #player .dv4-free-recruit h4{margin:0 0 10px;color:#543314!important}
+html body #board #player .dv4-free-recruit p{margin:0 0 12px;color:#4e351a!important;line-height:1.5}
+html body #board #player .dv4-free-recruit-options{display:grid;grid-template-columns:minmax(0,1fr);gap:7px;margin:10px 0 14px}
+html body #board #player .dv4-free-recruit-options label{display:flex;align-items:center;gap:9px;padding:10px;border:1px solid #b7935d;border-radius:7px;background:#fff5dd;color:#35220f;font-weight:600}
+html body #board #player .dv4-free-recruit-options input{width:18px;height:18px;flex:none}
+html body #board #player .dv4-free-recruit button{width:100%;min-height:44px;background:#65421f;color:#fff1d5;border:1px solid #a77f4d;border-radius:8px;font-weight:700}
+
+html body #board #player .dv4-paid-recruit{margin-top:15px}
+html body #board #player .dv4-paid-recruit>label{display:grid;gap:6px;color:#45301a;font-weight:700;margin:10px 0}
+html body #board #player .dv4-paid-recruit select{width:100%;max-width:100%;padding:11px;border:1px solid #a78150;border-radius:7px;background:#fff6e3;color:#35230f;box-sizing:border-box}
+html body #board #player .dv4-recruit-actions{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;margin:12px 0}
+html body #board #player .dv4-paid-recruit button:disabled{opacity:.45;cursor:not-allowed}
+html body #board #player .dv4-paid-recruit .dice{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px}
+html body #board #player .dv4-paid-recruit .dice button{padding:8px 0;min-width:0}
+html body #board #player #recruitHistoryNote{background:#fff5df;padding:9px;border-radius:6px;border:1px solid #b9986a}
+
+/* Coleção separada da seleção de personagens ativos. */
+html body #board #player .dv4-collection-panel{margin:14px 0;padding:14px;border:1px solid #a6814d;border-radius:11px;background:linear-gradient(145deg,#f9e6bc,#e0bc81);color:#3d2712}
+html body #board #player .dv4-collection-panel h4{margin:0 0 10px;color:#4b2d15}
+html body #board #player .dv4-collection-panel p{margin:7px 0;color:#422a14!important;line-height:1.45}
+html body #board #player .dv4-collection-panel label{display:grid;gap:6px;margin:11px 0;color:#422a14;font-weight:700}
+html body #board #player .dv4-collection-panel select{width:100%;padding:11px;border:1px solid #a78250;border-radius:7px;background:#fff4da;color:#39250f}
+html body #board #player .dv4-collection-panel button{width:100%;padding:12px;border-radius:8px;border:1px solid #a78352;background:#65421f;color:#fff0d5;font-weight:700}
+html body #board #player .dv4-available-label{font-size:.78rem;color:#644323!important;text-align:center;margin:5px 0}
+html body #board #player .dv4-not-owned .dv4-gallery-art{opacity:.8}
+
+
+/* V4 — organizacao modular da aba Jogador */
+#player .dv4-player-section{display:block;margin:0 0 13px;padding:0 12px 12px;border:1px solid #a98854;border-radius:15px;background:linear-gradient(145deg,#f8e8c5,#e6c997);color:#493019;overflow:hidden}
+#player .dv4-player-section>summary{display:list-item;list-style-position:inside;cursor:pointer;padding:15px 6px;font-family:Georgia,serif;font-size:clamp(1rem,4vw,1.22rem);font-weight:700;letter-spacing:.025em;line-height:1.4}
+#player .dv4-player-section[open]>summary{border-bottom:1px solid #c4a675;margin-bottom:12px}
+#player .dv4-player-section:not([open]){padding-bottom:0}
+#player .dv4-player-section .dv4-gallery-grid{margin:10px 0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+#player .dv4-player-section .dv4-character-option{min-width:0;width:100%}
+#player .dv4-player-section .dv4-collection-panel{margin:0 0 14px}
+#player .dv4-player-section .dv4-free-recruit{margin:10px 0}
+#player .dv4-player-section button[data-action="characters"]{display:block;width:100%;margin-top:12px}
+#player .dv4-player-section>h3{margin:0 0 12px}
+#player .dv4-player-section p{overflow-wrap:anywhere}
+
+
+/* Dashboard da Carta do Jogador: dados legados preservados apenas para as cartas V4 */
+#player .dv4-player-section[data-section="player"]>.dv4-legacy-data{display:none!important}
+#player .dv4-player-dashboard{display:grid;gap:14px;padding:2px 0 8px}
+#player .dv4-heritage{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 18px;border:1px solid #9a6c30;border-radius:12px;background:linear-gradient(125deg,#b28a51,#e6c58b 48%,#b98b48);color:#3c2714;box-shadow:inset 0 1px 0 #f9e2b8}
+#player .dv4-heritage span{font-size:.9rem;font-weight:700;letter-spacing:.13em}
+#player .dv4-heritage strong{font-size:clamp(2rem,7vw,3rem);line-height:1;font-variant-numeric:tabular-nums}
+#player .dv4-resource-grid,#player .dv4-history-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+#player .dv4-resource-stat,#player .dv4-history-stat{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;gap:4px;padding:13px 3px;border:1px solid #b79a69;border-radius:10px;background:rgba(255,250,231,.53);text-align:center}
+#player .dv4-resource-stat small,#player .dv4-history-stat small{font:700 clamp(.57rem,2.2vw,.75rem)/1.3 system-ui,sans-serif;letter-spacing:.015em;overflow-wrap:anywhere}
+#player .dv4-resource-stat strong,#player .dv4-history-stat strong{font:700 clamp(1.35rem,5vw,2rem)/1 Georgia,serif;color:#513018;font-variant-numeric:tabular-nums}
+#player .dv4-secret-panel{padding:15px;border:1px solid #b69a68;border-radius:12px;background:rgba(255,247,223,.63)}
+#player .dv4-secret-panel small{display:block;margin-bottom:7px;font:700 .75rem system-ui,sans-serif;letter-spacing:.09em;color:#795325}
+#player .dv4-secret-panel strong{display:block;font-size:1.12rem;line-height:1.35}
+#player .dv4-secret-panel p{margin:8px 0 0;font-size:.95rem;line-height:1.5}
+#player .dv4-history-grid{padding-top:12px;border-top:1px solid #c4a675}
+
+
+/* V4 — linguagem visual compartilhada nas demais abas; exclusivamente apresentacional */
+html body #board .mp-grid>.mp-card.dv4-current:is(#movement,#missions,#world,#rooms,#threats,#trades,#history){
+  color:#3e2917;
+  overflow-wrap:anywhere;
+}
+html body #board .mp-grid>.mp-card.dv4-current:is(#movement,#missions,#world,#rooms,#threats,#trades,#history)>h3{
+  margin:0 0 16px;
+  padding-bottom:12px;
+  border-bottom:1px solid #b99b6a;
+  font:700 clamp(1.1rem,4.5vw,1.45rem)/1.25 Georgia,serif;
+  text-transform:uppercase;
+  letter-spacing:.035em;
+  color:#492e17;
+}
+html body #board .mp-grid>.mp-card.dv4-current:is(#movement,#missions,#world,#rooms,#threats,#trades,#history)>h4{
+  margin:16px 0 9px;
+  font-size:1rem;
+  color:#533619;
+}
+html body #board .mp-grid>.mp-card.dv4-current:is(#movement,#missions,#world,#rooms,#threats,#trades,#history)>p{
+  max-width:100%;
+  line-height:1.55;
+  margin:10px 0 14px;
+}
+html body #board .mp-grid>.mp-card.dv4-current:is(#movement,#missions,#world,#rooms,#threats,#trades,#history) :is(input:not([type="checkbox"]):not([type="range"]),select,textarea){
+  max-width:100%;min-width:0;box-sizing:border-box;
+  background:#fff3d9;color:#3c2916;border:1px solid #a78250;
+  border-radius:9px;
+}
+html body #board .mp-grid>.mp-card.dv4-current:is(#movement,#missions,#world,#rooms,#threats,#trades,#history) label{
+  color:#49321b;line-height:1.4;
+}
+html body #board .mp-grid>.mp-card.dv4-current:is(#movement,#missions,#world,#rooms,#threats,#trades,#history) button[data-action]{
+  min-height:43px;
+  border-radius:9px;
+  font-weight:700;
+}
+html body #board .mp-grid>.mp-card.dv4-current:is(#movement,#missions,#world,#rooms,#threats,#trades,#history) :is(button,select,input):focus-visible,
+html body #board #player .dv4-player-section>summary:focus-visible{
+  outline:3px solid #8e5b23;outline-offset:3px;
+}
+html body #board .mp-grid>.mp-card.dv4-current :is(.dv4-mission-details,.dv4-mission-bonus,.dv4-test-attribute){
+  border-radius:12px;max-width:100%;
+}
+html body #board #missions .dv4-mission-details{
+  display:grid;gap:9px;padding:13px;background:#fff0d0;border:1px solid #b99c6b;
+}
+html body #board #missions .dv4-mission-details p{
+  padding:10px 12px;margin:0!important;background:rgba(255,255,255,.36);
+  border:1px solid rgba(154,116,65,.25);border-radius:8px;
+  line-height:1.5;
+}
+html body #board #missions .dv4-mission-details p b{
+  display:block;margin-bottom:4px;color:#70491f;
+  font:700 .75rem/1.3 system-ui,sans-serif;letter-spacing:.09em;
+}
+html body #board #missions .dv4-mission-bonus{
+  padding:13px;margin-top:12px;border:1px solid #b99c6b;
+  background:#f6e6c5;border-radius:12px;
+}
+html body #board #missions .dv4-mission-leader{
+  margin:6px 0 13px;padding:12px;border-radius:9px;
+  background:#fff5df;border:1px solid #c4a574;
+  font-weight:700;color:#4a2d15;
+}
+html body #board #missions .dv4-mission-dice .dice,
+html body #board :is(#movement,#world,#threats) .dice{
+  gap:5px;max-width:100%;
+}
+html body #board :is(#movement,#missions,#world,#threats) .dice button{
+  min-width:0;padding:8px 2px;font-variant-numeric:tabular-nums;
+}
+html body #board :is(#world,#rooms,#trades,#threats,#history) :is(.mp-chip,.mp-list li){
+  border:1px solid #c3a777;border-radius:10px;
+  background:rgba(255,246,221,.65);
+  padding:12px;margin:7px 0;color:#462e19;
+}
+html body #board :is(#world,#rooms,#trades,#threats,#history) .mp-list{
+  padding-left:0;list-style:none;display:grid;gap:8px;
+}
+html body #board :is(#world,#rooms,#trades,#threats,#history) .mp-list li{
+  margin:0;overflow-wrap:anywhere;
+}
+html body #board #history .mp-list li{font-size:.92rem;line-height:1.5}
+html body #board :is(#rooms,#trades,#threats) p{
+  padding:10px 12px;border-radius:10px;
+  background:rgba(255,248,232,.45);
+}
+@media(max-width:380px){
+ html body #board .mp-grid>.mp-card.dv4-current:is(#movement,#missions,#world,#rooms,#threats,#trades,#history){padding:13px!important}
+ html body #board #missions .dv4-mission-details{padding:9px}
+ html body #board #missions .dv4-mission-details p{padding:9px}
+}
+
+/* Ocultar rótulo externo redundante apenas nestas três abas. */
+html body #board:has(#missions.dv4-current) #dv4label,
+html body #board:has(#world.dv4-current) #dv4label,
+html body #board:has(#player.dv4-current) #dv4label{display:none!important}
+
+
+/* Missão comum: altura estritamente dependente do conteúdo disponível. */
+html body #board .mp-grid > #missions.mp-card.dv4-current{
+ min-height:0!important;
+ height:auto!important;
+ max-height:none!important;
+ display:block!important;
+ align-self:start!important;
+}
+html body #board .mp-grid > #missions.mp-card.dv4-current > :last-child:not([hidden]){
+ margin-bottom:0!important;
+}
+html body #board .mp-grid > #missions.mp-card.dv4-current > h3:only-child{
+ margin-bottom:0!important;
+ padding-bottom:0!important;
+ border-bottom:0!important;
+}
+
+
+/* Jogar: sem altura minima fixa; cresce apenas com o conteudo e controles exibidos. */
+html body #board .mp-grid > #movement.mp-card.dv4-current{
+ min-height:0!important;
+ height:auto!important;
+ max-height:none!important;
+ display:block!important;
+ align-self:start!important;
+}
+html body #board .mp-grid > #movement.mp-card.dv4-current > :last-child:not([hidden]){
+ margin-bottom:0!important;
+}
+html body #board .mp-grid > #movement.mp-card.dv4-current > h3:only-child{
+ margin-bottom:0!important;
+ padding-bottom:0!important;
+ border-bottom:0!important;
+}
+
+
+/* Ameaças coletivas: componentes empilhados e D6 contido no pergaminho. */
+html body #board .mp-grid > #threats.mp-card.dv4-current{
+ min-height:0!important;height:auto!important;max-height:none!important;
+}
+html body #board #threats .mp-chip{
+ display:grid!important;grid-template-columns:minmax(0,1fr)!important;
+ width:100%!important;max-width:100%!important;min-width:0!important;
+ gap:10px!important;margin:10px 0!important;padding:14px!important;
+ white-space:normal!important;overflow-wrap:normal!important;
+ word-break:normal!important;align-items:stretch!important;
+}
+html body #board #threats .mp-chip>b{
+ display:block!important;min-width:0!important;line-height:1.35!important;
+ overflow-wrap:break-word!important;word-break:normal!important;
+}
+html body #board #threats .mp-chip>select{
+ display:block!important;width:100%!important;min-width:0!important;
+ max-width:100%!important;margin:0!important;
+}
+html body #board #threats .mp-chip>.dice{
+ display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;
+ width:100%!important;max-width:100%!important;min-width:0!important;
+ flex-wrap:nowrap!important;gap:4px!important;margin:0!important;
+}
+html body #board #threats .mp-chip>.dice>button{
+ display:block!important;min-width:0!important;width:100%!important;
+ padding:8px 0!important;margin:0!important;min-height:46px!important;
+ font-variant-numeric:tabular-nums;
+}
+@media(max-width:380px){
+ html body #board #threats .mp-chip{padding:10px!important}
+ html body #board #threats .mp-chip>.dice{gap:3px!important}
+}
+
+
+/* Rodapé V4 — oito atalhos em duas linhas de quatro. */
+html body #board>.dv4-nav{
+ display:grid!important;
+ grid-template-columns:repeat(4,minmax(0,1fr))!important;
+ grid-template-rows:repeat(2,auto)!important;
+ gap:6px!important;
+ width:100%!important;
+ max-width:100%!important;
+ margin:12px 0 10px!important;
+ padding:8px!important;
+}
+html body #board>.dv4-nav button{
+ min-width:0!important;
+ min-height:54px!important;
+ padding:6px 2px!important;
+ display:flex!important;
+ flex-direction:column!important;
+ justify-content:center!important;
+ align-items:center!important;
+ gap:2px!important;
+}
+html body #board>.dv4-nav button span{font-size:1.2rem!important;line-height:1.15}
+html body #board>.dv4-nav button small{font-size:clamp(.66rem,2.6vw,.8rem)!important;line-height:1.2}
+html body #board>#dv4extras{margin:10px 0!important}
+@media(max-width:380px){html body #board>.dv4-nav{gap:4px!important;padding:6px!important}html body #board>.dv4-nav button{min-height:51px!important}}
+
+
+/* Rodapé: duas fileiras de 4, ocupando integralmente a largura disponível. */
+html body #board > nav.dv4-nav{
+ display:grid!important;
+ grid-template-columns:repeat(4,minmax(0,1fr))!important;
+ grid-template-rows:repeat(2,minmax(68px,auto))!important;
+ width:calc(100% + 14px)!important;
+ max-width:none!important;
+ margin:12px -7px 10px!important;
+ gap:7px!important;
+ padding:8px!important;
+ align-items:stretch!important;
+}
+html body #board > nav.dv4-nav > button{
+ width:100%!important;
+ height:100%!important;
+ min-width:0!important;
+ min-height:68px!important;
+ margin:0!important;
+ padding:8px 3px!important;
+}
+html body #board > nav.dv4-nav > button span{font-size:1.5rem!important}
+html body #board > nav.dv4-nav > button small{font-size:clamp(.68rem,2.7vw,.86rem)!important}
+@media(max-width:380px){
+ html body #board > nav.dv4-nav{gap:5px!important;padding:6px!important}
+ html body #board > nav.dv4-nav > button{min-height:62px!important}
+}
+
+
+/* Progresso coletivo individual de cada Nefilim. */
+html body #board #threats .dv4-threat-progress{display:grid;gap:7px;width:100%;min-width:0;margin:3px 0 8px;padding:11px 12px;background:#f5e6c4;border:1px solid #bea06d;border-radius:10px}
+html body #board #threats .dv4-threat-progress-label{display:flex;justify-content:space-between;align-items:center;gap:8px}
+html body #board #threats .dv4-threat-progress-label span{font:700 .7rem/1.25 system-ui,sans-serif;letter-spacing:.06em;color:#74522c}
+html body #board #threats .dv4-threat-progress-label strong{font:700 1.18rem/1 Georgia,serif;color:#452c15;white-space:nowrap;font-variant-numeric:tabular-nums}
+html body #board #threats .dv4-threat-track{height:10px;width:100%;overflow:hidden;border-radius:999px;border:1px solid #ae8b5b;background:#e4d2af;box-shadow:inset 0 2px 4px #694b3026}
+html body #board #threats .dv4-threat-track>span{display:block;height:100%;background:linear-gradient(90deg,#80602f,#bb914e);border-radius:inherit;transition:width .25s ease}
+@media(prefers-reduced-motion:reduce){html body #board #threats .dv4-threat-track>span{transition:none}}
+
+
+/* Mais: terceira fileira alinhada ao rodape 4x2, com vaga vazia. */
+html body #board > #dv4extras:not([hidden]){
+ display:grid!important;
+ grid-template-columns:repeat(4,minmax(0,1fr))!important;
+ grid-auto-rows:minmax(68px,auto)!important;
+ gap:7px!important;
+ width:calc(100% + 14px)!important;
+ max-width:none!important;
+ margin:0 -7px 12px!important;
+ padding:8px!important;
+ border-radius:13px!important;
+ align-items:stretch!important;
+}
+html body #board > #dv4extras .dv4-account-menu{display:contents!important}
+html body #board > #dv4extras > button[data-dv4]{order:1!important}
+html body #board > #dv4extras #dv4menuSignout,
+html body #board > #dv4extras .dv4-account-menu > button{
+ flex:none!important;
+ width:100%!important;
+ min-width:0!important;
+ min-height:68px!important;
+ height:100%!important;
+ margin:0!important;
+ padding:8px 3px!important;
+ line-height:1.25!important;
+ font:700 clamp(.68rem,2.7vw,.86rem)/1.25 Georgia,serif!important;
+ white-space:normal!important;
+ overflow-wrap:break-word!important;
+ border:2px ridge #987243!important;
+ border-radius:9px!important;
+ background:linear-gradient(#6c4a2b,#312118)!important;
+ color:#f5d9a8!important;
+}
+html body #board > #dv4extras .dv4-account-menu > button:first-of-type{order:2!important}
+html body #board > #dv4extras #dv4menuSignout{order:3!important}
+html body #board > #dv4extras::after{content:"";order:4;display:block}
+html body #board > #dv4extras .dv4-account-menu > small{
+ order:5!important;grid-column:1/-1!important;
+ text-align:center;color:#f5d9a8!important;overflow-wrap:anywhere;
+ padding:3px 0;
+}
+@media(max-width:380px){
+ html body #board > #dv4extras:not([hidden]){gap:5px!important;padding:6px!important;grid-auto-rows:minmax(62px,auto)!important}
+ html body #board > #dv4extras .dv4-account-menu > button{min-height:62px!important}
+}
+
+
+/* Mais expande na mesma grade: o proprio botao some e entram os atalhos reais. */
+html body #board > nav.dv4-nav.dv4-more-open > button[data-dv4="more"]{display:none!important}
+html body #board > nav.dv4-nav > button:is([data-dv4="history"],#dv4menuSignout),
+html body #board > nav.dv4-nav > button:not([data-dv4]){
+ width:100%!important;height:100%!important;min-height:68px!important;min-width:0!important;
+ padding:8px 3px!important;margin:0!important;
+ display:flex!important;flex-direction:column;align-items:center;justify-content:center;
+ font:700 clamp(.68rem,2.7vw,.86rem)/1.25 Georgia,serif!important;
+ color:#f5d9a8!important;background:linear-gradient(#6c4a2b,#312118)!important;
+ border:2px ridge #987243!important;border-radius:9px!important;
+ white-space:normal!important;overflow-wrap:break-word!important;text-align:center;
+}
+html body #board > #dv4extras:not([hidden]){display:block!important;min-height:0!important;padding:4px 8px!important;margin:0 0 10px!important}
+html body #board > #dv4extras:not([hidden])::after{display:none!important}
+html body #board > #dv4extras:not([hidden]) .dv4-account-menu{display:block!important}
+html body #board > #dv4extras:not([hidden]) .dv4-account-menu>small{display:block!important;text-align:center!important}
+@media(max-width:380px){html body #board > nav.dv4-nav > button:is([data-dv4="history"],#dv4menuSignout),html body #board > nav.dv4-nav > button:not([data-dv4]){min-height:62px!important}}
+
+
+/* Icones SVG do menu principal e menu Mais: mesma hierarquia e proporcao. */
+html body #board > nav.dv4-nav > button{
+ display:flex!important;
+ flex-direction:column!important;
+ align-items:center!important;
+ justify-content:center!important;
+ gap:5px!important;
+}
+html body #board > nav.dv4-nav .dv4-nav-icon{
+ display:block!important;
+ width:24px!important;
+ height:24px!important;
+ min-height:24px!important;
+ flex:0 0 24px!important;
+ color:currentColor!important;
+ stroke:currentColor!important;
+ overflow:visible!important;
+}
+html body #board > nav.dv4-nav > button small{
+ display:block!important;
+ width:100%!important;
+ text-align:center!important;
+ white-space:normal!important;
+ overflow-wrap:normal!important;
+ word-break:normal!important;
+}
+html body #board > nav.dv4-nav > button[hidden]{display:none!important}
+@media(max-width:380px){
+ html body #board > nav.dv4-nav .dv4-nav-icon{width:22px!important;height:22px!important;min-height:22px!important;flex-basis:22px!important}
+}
+
+
+/* Correção definitiva: ocultação dos extras independe das regras antigas com display flex!important. */
+html body #board > nav.dv4-nav:not(.dv4-more-open) > button.dv4-more-extra,
+html body #board > nav.dv4-nav > button.dv4-more-extra[hidden],
+html body #board > nav.dv4-nav > button[hidden],
+html body #board > #dv4extras[hidden]{display:none!important}
+html body #board > nav.dv4-nav.dv4-more-open > button.dv4-more-extra:not([hidden]){display:flex!important}
+html body #board > nav.dv4-nav:not(.dv4-more-open) > button[data-dv4="more"]{display:flex!important}
+
+
+/* Titulo da aba Jogador identico aos demais paineis V4. */
+html body #board .mp-grid > #player.dv4-current > h3.dv4-player-heading{
+ font-size:clamp(1.6rem,6vw,2.6rem)!important;
+ line-height:1.2!important;
+ text-align:center!important;
+ font-family:Georgia,serif!important;
+ font-weight:700!important;
+ color:#462a12!important;
+ border-bottom:1px solid #ac8453!important;
+ padding:0 0 12px!important;
+ margin:0 0 18px!important;
+}
+
+
+/* Controles de acao: alinhamento e dimensoes consistentes */
+html body #board .mp-grid>.mp-card.dv4-current:is(#movement,#missions,#world,#trades,#threats) > button[data-action]{
+ display:block!important;width:fit-content!important;max-width:100%!important;
+ min-width:min(100%,170px)!important;margin:12px auto!important;
+ padding:11px 18px!important;text-align:center!important;
+}
+html body #board .mp-grid>.mp-card.dv4-current:is(#movement,#missions,#world,#trades,#threats) :is(.dv4-setup-actions,.dv4-recruit-actions){
+ justify-content:center!important;justify-items:center!important;
+}
+html body #board #world #conversionRate{
+ display:block!important;width:100%!important;max-width:100%!important;
+ margin:10px 0 13px!important;padding:12px!important;
+ background:#fff5de!important;border:1px solid #a78250!important;
+ border-radius:9px!important;color:#382615!important;
+}
+html body #board #world h4:has(+ #conversionRate){
+ padding:13px 14px 8px!important;margin:16px 0 0!important;
+ background:rgba(255,247,221,.65)!important;
+ border:1px solid #c1a271!important;border-bottom:none!important;
+ border-radius:11px 11px 0 0!important;
+}
+html body #board #world h4:has(+ #conversionRate)+#conversionRate{
+ border-radius:0 0 9px 9px!important;
+}
+html body #board #threats .dv4-threat-warning{
+ display:grid!important;gap:6px!important;
+ padding:12px!important;margin:3px 0 10px!important;
+ background:#ffedcf!important;border:1px solid #af7945!important;
+ border-left:4px solid #98602b!important;border-radius:9px!important;
+ color:#4a2d16!important;line-height:1.45!important;
+}
+html body #board #threats .dv4-threat-warning strong{
+ font:700 .8rem system-ui,sans-serif!important;letter-spacing:.06em;
+}
+html body #board #threats .dv4-threat-warning span{font-size:.89rem}
+html body #board #threats .dv4-threat-attribute{
+ display:grid!important;gap:7px!important;width:100%!important;
+ margin:4px 0!important;font:700 .76rem system-ui,sans-serif!important;
+ letter-spacing:.04em;
+}
+html body #board #threats .dv4-threat-attribute select{width:100%!important;margin:0!important}
+html body #board #trades .dv4-trade-field{
+ display:grid!important;gap:6px!important;
+ padding:11px 13px!important;margin:10px 0!important;
+ background:rgba(255,249,233,.58)!important;
+ border:1px solid #bf9f6c!important;border-radius:10px!important;
+ font:700 .75rem system-ui,sans-serif!important;letter-spacing:.035em;
+}
+html body #board #trades .dv4-trade-field :is(select,input){
+ width:100%!important;min-width:0!important;margin:0!important;
+ font:400 1rem Georgia,serif!important;
+}
+html body #board #trades .dv4-trade-empty{
+ padding:15px!important;margin:10px 0!important;
+ background:#fff0d2!important;border:1px solid #bba075!important;
+ border-radius:11px!important;line-height:1.5!important;
+}
+html body #board .dv4-party-history{
+ padding:12px!important;margin:14px 0!important;
+ background:#f6e7c7!important;color:#4a301a!important;
+ border:1px solid #b49361!important;border-radius:12px!important;
+}
+html body #board .dv4-party-history h4{margin:0 0 8px!important}
+html body #board .dv4-party-history p{font-size:.85rem!important;line-height:1.4!important}
+html body #board .dv4-party-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+html body #board .dv4-party-grid button{
+ display:grid!important;gap:5px!important;min-width:0!important;
+ padding:12px 8px!important;text-align:center!important;
+ border-radius:9px!important;
+}
+html body #board .dv4-party-grid small{display:block;font-size:.76rem}
+
+
+/* Recrutamento em mosaico responsivo, sem alterar seletores nem acoes. */
+html body #board #player .dv4-recruit-tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-items:stretch}
+html body #board #player .dv4-recruit-tile{min-width:0;padding:11px;border:1px solid #b99660;border-radius:10px;background:rgba(255,249,232,.7);display:flex;flex-direction:column;justify-content:center}
+html body #board #player .dv4-recruit-tile>label{display:grid!important;gap:7px!important;margin:0!important;min-width:0;font-size:.79rem}
+html body #board #player .dv4-recruit-tile :is(select,input){min-width:0;width:100%!important;max-width:100%!important;margin:0!important}
+html body #board #player .dv4-recruit-tile-wide{grid-column:1/-1}
+html body #board #player .dv4-recruit-tile .dv4-recruit-actions{margin:0!important}
+html body #board #player .dv4-recruit-tile .dice{margin:0!important}
+html body #board #player .dv4-recruit-note{grid-column:1/-1;margin:0!important;font-size:.87rem;line-height:1.45}
+@media(max-width:370px){html body #board #player .dv4-recruit-tiles{gap:7px}html body #board #player .dv4-recruit-tile{padding:8px}}
+
+
+/* Acesso a conta: titulo, formulario e dialogs alinhados e rotulos acima dos campos. */
+html body #account.mp-card{max-width:560px!important;margin:18px auto!important;padding:clamp(18px,5vw,30px)!important}
+html body #account>h2{text-align:center!important;margin:0 0 22px!important;line-height:1.2!important}
+html body #account #accountForm{display:grid!important;gap:14px!important}
+html body #account #accountForm>label{
+ display:flex!important;flex-direction:column!important;align-items:stretch!important;
+ gap:7px!important;width:100%!important;margin:0!important;text-align:left!important;
+ font-weight:700!important;
+}
+html body #account #accountForm>label :is(input,select){
+ display:block!important;width:100%!important;max-width:100%!important;
+ margin:0!important;min-width:0!important;
+}
+html body #account #accountSubmit{
+ display:block!important;width:min(100%,280px)!important;
+ margin:10px auto 0!important;text-align:center!important;
+}
+html body #account>p{text-align:center!important;line-height:1.5!important}
+html body :is(#dv4ResourceNotice,.dv4-setup-receipt,#dv4modal) {
+ max-width:min(94vw,560px)!important;
+ box-sizing:border-box!important;
+ margin:auto!important;
+}
+html body :is(#dv4ResourceNotice,.dv4-setup-receipt) :is(h2,p){
+ text-align:center!important;
+}
+html body :is(#dv4ResourceNotice,.dv4-setup-receipt) button{
+ display:block!important;max-width:100%!important;margin:12px auto!important;
+}
+
+
+/* Login e cadastro lado a lado; botao Continuar mais compacto. */
+html body #account .dv4-account-mode{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:100%;margin:0 0 4px}
+html body #account .dv4-account-mode-button{width:100%;min-width:0;margin:0!important;min-height:45px;border:1px solid #a47a44!important;border-radius:9px;background:linear-gradient(#59402a,#32241b)!important;color:#f5ddad!important;font-weight:700}
+html body #account .dv4-account-mode-button.is-active{background:linear-gradient(#d7ae6e,#a77436)!important;color:#281a0e!important;border-color:#e2b978!important;box-shadow:inset 0 0 0 1px #f8dda5!important}
+html body #account #accountSubmit{width:min(100%,190px)!important;min-width:0!important;margin:10px auto 0!important}
+
+
+/* Acesso: opcoes centralizadas e Continuar ajustado ao proprio texto. */
+html body #account .dv4-account-mode{
+ width:min(100%,320px)!important;
+ max-width:320px!important;
+ margin:0 auto 8px!important;
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ justify-content:center!important;
+}
+html body #account #accountSubmit{
+ display:block!important;
+ width:max-content!important;
+ max-width:100%!important;
+ min-width:0!important;
+ padding:11px 24px!important;
+ margin:12px auto 0!important;
+ white-space:nowrap!important;
+}
+
+
+/* Acesso direto: Entrar e Criar conta alinhados abaixo de e-mail e senha. */
+html body #account .dv4-account-actions{display:flex!important;flex-wrap:wrap!important;align-items:center!important;justify-content:center!important;gap:10px!important;margin:12px auto 0!important;width:100%!important}
+html body #account .dv4-account-actions>button{display:block!important;width:auto!important;max-width:100%!important;min-width:0!important;margin:0!important;padding:11px 22px!important;white-space:nowrap!important}
+
+
+/* Missao: informacoes hierarquizadas e escolha do personagem na propria aba. */
+html body #board #missions .dv4-mission-details{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;padding:12px!important}
+html body #board #missions .dv4-mission-field{display:grid!important;align-content:start!important;gap:7px!important;min-width:0;padding:12px!important;border:1px solid #c6a574!important;border-radius:11px!important;background:linear-gradient(145deg,#fff3d6,#f2dbae)!important;box-shadow:0 2px 5px #55371512}
+html body #board #missions .dv4-mission-field-name,.dv4-mission-field-reward{grid-column:1/-1}
+html body #board #missions .dv4-mission-field>span{font:700 .73rem/1.2 system-ui,sans-serif!important;letter-spacing:.075em!important;color:#76512c!important}
+html body #board #missions .dv4-mission-field>strong{font:600 clamp(1rem,3.8vw,1.25rem)/1.35 Georgia,serif!important;color:#392719!important;overflow-wrap:anywhere!important}
+html body #board #missions .dv4-mission-field-reward{background:linear-gradient(145deg,#fff0c6,#e9cea0)!important}
+html body #board #missions .dv4-mission-support-heading{text-align:center!important;font:700 clamp(1.04rem,4vw,1.3rem)/1.3 Georgia,serif!important;letter-spacing:.04em!important;margin:2px 0 10px!important;color:#4c301a!important}
+html body #board #missions .dv4-mission-character-buttons{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;margin:0 0 14px!important}
+html body #board #missions .dv4-mission-character-button{width:100%!important;min-height:54px!important;margin:0!important;padding:10px 8px!important;border:1px solid #a8834d!important;border-radius:10px!important;background:#fff0d2!important;color:#55371b!important;font:700 1.03rem Georgia,serif!important;box-shadow:none!important}
+html body #board #missions .dv4-mission-character-button.is-active{background:linear-gradient(#ac7b3e,#60401f)!important;border:2px solid #f2d498!important;color:#fff2d4!important;box-shadow:0 0 0 1px #80582f!important}
+html body #board #missions .dv4-mission-character-button:focus-visible{outline:3px solid #c39b52!important;outline-offset:2px!important}
+
+
+/* Encerramento do Periodo 1: resultado legivel no celular e no multiplayer. */
+html body #board #movement .dv4-final-screen{padding:18px 14px!important;margin:14px 0!important;text-align:center!important;border:2px solid #b78a4c!important;border-radius:16px!important;background:linear-gradient(160deg,#fff3d9,#e8c894)!important;color:#432c17!important;box-shadow:0 8px 22px #50311624!important}
+html body #board #movement .dv4-final-kicker{font:700 .79rem system-ui,sans-serif!important;letter-spacing:.15em!important;color:#845c29!important}
+html body #board #movement .dv4-final-screen h4{font:700 clamp(1.2rem,5vw,1.8rem)/1.25 Georgia,serif!important;margin:9px 0!important;text-align:center!important;color:#442a13!important}
+html body #board #movement .dv4-final-lead{font:400 1rem/1.55 Georgia,serif!important;margin:12px 0 18px!important;text-align:center!important}
+html body #board #movement .dv4-final-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+html body #board #movement .dv4-final-grid>div{display:grid!important;align-content:center!important;gap:7px!important;min-width:0!important;padding:14px 8px!important;background:#fff8e8!important;border:1px solid #bda074!important;border-radius:11px!important}
+html body #board #movement .dv4-final-grid small{font:700 .68rem/1.3 system-ui,sans-serif!important;letter-spacing:.055em!important;color:#75532e!important}
+html body #board #movement .dv4-final-grid strong{font:700 clamp(.91rem,3.5vw,1.2rem)/1.3 Georgia,serif!important;color:#3d2919!important;overflow-wrap:anywhere}
+html body #board #movement .dv4-final-outcome{margin:16px 0 9px!important;padding:12px!important;border-radius:9px!important;background:#f6e3bb!important;font:600 .97rem/1.5 Georgia,serif!important;text-align:center!important}
+html body #board #movement .dv4-final-screen h5{font:700 1rem Georgia,serif!important;margin:18px 0 10px!important;text-align:center!important}
+html body #board #movement .dv4-final-ranking{list-style:decimal!important;padding-left:24px!important;text-align:left!important}
+html body #board #movement .dv4-final-ranking li{padding:9px 4px!important;display:list-item!important}
+html body #board #movement .dv4-final-ranking li span{margin-right:12px}
+html body #board #movement .dv4-final-footnote{font-size:.8rem!important;line-height:1.4!important;margin:16px 0 0!important;text-align:center!important}
+
+
+/* Demonstrativo individual do encerramento, inclusive jogadores nao preservados. */
+html body #board #movement .dv4-final-participants{display:grid!important;gap:13px!important;margin-top:17px!important}
+html body #board #movement .dv4-final-participant{padding:13px!important;border:1px solid #b99866!important;border-radius:12px!important;background:#fff8e8!important;text-align:left!important;color:#422c1b!important}
+html body #board #movement .dv4-final-participant h5{margin:0 0 5px!important;text-align:left!important;font:700 1.12rem Georgia,serif!important;color:#3f2a17!important}
+html body #board #movement .dv4-final-participant h5 small{font:500 .75rem system-ui,sans-serif!important;color:#7b5a38!important}
+html body #board #movement .dv4-final-preserved{font:700 .72rem system-ui,sans-serif!important;letter-spacing:.08em!important;color:#775428!important;margin:0 0 14px!important;text-align:left!important}
+html body #board #movement .dv4-final-breakdown{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;align-items:center!important;column-gap:12px!important;row-gap:10px!important;font:500 .89rem/1.4 system-ui,sans-serif!important}
+html body #board #movement .dv4-final-breakdown strong{font-weight:750!important;text-align:right!important;white-space:nowrap!important}
+html body #board #movement .dv4-final-total{display:flex!important;justify-content:space-between!important;align-items:center!important;gap:10px!important;border-top:1px solid #c6a777!important;margin-top:14px!important;padding-top:13px!important;font-weight:800!important}
+html body #board #movement .dv4-final-total span{font-size:.77rem!important;letter-spacing:.035em!important}
+html body #board #movement .dv4-final-total strong{font-size:1.12rem!important;text-align:right!important}
+html body #board #movement .dv4-final-note{font-size:.82rem!important;line-height:1.4!important;margin:9px 0 0!important;text-align:left!important}

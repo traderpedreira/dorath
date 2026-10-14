@@ -48,24 +48,79 @@ function secretFromHistory(history=[]){
 export function newPlayer(name,room,team,history=[],commonHistory=[]){
  const sid=secretFromHistory(history);
  return {id:uuid(),name:String(name||'Jogador').trim().slice(0,40)||'Jogador',room,team:String(team||'').slice(0,30),
- house:1,resources:{conhecimento:2,influencia:2,provisoes:2,heranca:0},characters:['adao'],
+ house:1,resources:{conhecimento:2,influencia:2,provisoes:2,heranca:0},characters:['adao'],ownedCharacters:['adao'],freeCharacterChoices:[],recruitHistory:{},missionCharacterId:'adao',
  secretMissionId:sid,secretCompletedAt:null,setupDone:false,preserved:false,preservedCharacterId:null,
  arkFinalized:false,preservationBonus:null,consequences:[],mission:null,missionRewardPending:null,
- specialChoices:{},mandamentoChoice:null,lastChanceUsed:false,
+ specialChoices:{},mandamentoChoice:null,lastChanceUsed:false,houseOccurrences:{},house3LandingBonus:null,missionRandomBonus:null,
  missionHistory:Array.isArray(commonHistory)?commonHistory.filter(id=>master.commonMissions.some(m=>m.id===id)).slice(-100):[],missionUsedRound:0,missionSuccesses:0,difficultMissionSuccess:false,
  threatAttempts:{},threatContributions:0,consequenceCount:0,tradeCount:0,donatedAmount:0,
  conversionCount:0,convertedRound:0,tradedRound:0,firstRuptures:0,marcoPersonal:{},
  lastMovedRound:0,offeredMove:null,readyAt47:false,enteredAt48:false,checkpointProvisions:null};
 }
 function unlocked(p){return characters.filter(c=>c.unlockHouse<=Math.max(3,p.house))}
+// Capacidade homologada: 1–2 jogadores: 5 cartas; 3–4: 4; 5–6: 3; 7–8: 2.
+function characterCapacity(count){return count<=2?5:count<=4?4:count<=6?3:2}
+// Preenche gratuitamente slots livres apenas com personagens narrativamente desbloqueados.
+// Em desbloqueios concorrentes com vagas insuficientes, preserva a escolha do jogador.
+function recruitCharacter(g,p,a){
+ activeTurn(g,p);
+ if(p.house>=50||p.lastMovedRound===g.round)fail('Recrutamento disponível somente antes do movimento do turno');
+ syncFreeCollection(g,p);
+ const capacity=characterCapacity(g.players.length);
+ const owned=p.ownedCharacters;
+ if(owned.length<capacity)fail('Conclua primeiro o preenchimento gratuito da coleção');
+ const candidate=unlocked(p).find(c=>c.id===a.characterId&&!owned.includes(c.id));
+ if(!candidate)fail('Personagem indisponível ou já adquirido');
+ const replaced=a.replaceId;
+ if(!owned.includes(replaced))fail('Selecione a carta que será devolvida');
+ if(!['roll','direct','guarantee'].includes(a.method))fail('Modalidade de aquisição inválida');
+ p.recruitHistory||={};
+ const history=p.recruitHistory[candidate.id]||{failures:0,lastAttemptRound:0};
+ if(a.method==='roll'){
+  if(history.lastAttemptRound===g.round)fail('Nova tentativa somente na próxima rodada');
+  if(history.failures>=2)fail('Após duas falhas, utilize a aquisição garantida');
+  if(p.resources.influencia<1)fail('Influência insuficiente');
+  const roll=number(a.roll,1,6);
+  change(p,'influencia',-1);
+  history.lastAttemptRound=g.round;
+  if(roll<4){
+   history.failures++;
+   p.recruitHistory[candidate.id]=history;
+   log(g,'personagem',`${p.name} tentou adquirir ${candidate.name} (D6 ${roll}, falha ${history.failures}/2)`,{privateFor:p.id});
+   return;
+  }
+ }else{
+  if(a.method==='guarantee'&&(history.failures<2||history.lastAttemptRound===g.round))fail('Garantia disponível após duas falhas, em turno posterior');
+  const cost=a.method==='direct'?3:1;
+  if(p.resources.influencia<cost)fail('Influência insuficiente');
+  change(p,'influencia',-cost);
+ }
+ const index=owned.indexOf(replaced);
+ owned.splice(index,1,candidate.id);
+ p.characters=p.characters.filter(id=>id!==replaced);
+ if(p.missionCharacterId===replaced)p.missionCharacterId=null;
+ delete p.recruitHistory[candidate.id];
+ log(g,'personagem',`${p.name} adquiriu ${candidate.name} e devolveu ${characters.find(c=>c.id===replaced)?.name||replaced}`,{privateFor:p.id});
+}
+function syncFreeCollection(g,p){
+ const cap=characterCapacity(g.players.length);
+ p.ownedCharacters=Array.isArray(p.ownedCharacters)?[...new Set(p.ownedCharacters)]:[...new Set(p.characters||[])];
+ const free=Math.max(0,cap-p.ownedCharacters.length);
+ if(!free){p.freeCharacterChoices=[];return}
+ const candidates=unlocked(p).filter(c=>!p.ownedCharacters.includes(c.id));
+ if(candidates.length<=free){
+  for(const c of candidates){p.ownedCharacters.push(c.id);log(g,'personagem',`${p.name} recebeu ${c.name} gratuitamente`,{privateFor:p.id})}
+  p.freeCharacterChoices=[];
+ }else p.freeCharacterChoices=candidates.map(c=>c.id);
+}
 export function publicView(g,p){return {
- revision:g.revision,motherCode:g.motherCode,phase:g.phase,round:g.round,
+ revision:g.revision,motherCode:g.motherCode,mode:g.mode||'multiplayer',phase:g.phase,round:g.round,
  turnPlayerId:g.players[g.turnIndex]?.id||null,hostPlayerId:g.hostPlayerId,
  playerOrder:g.players.map(x=>({id:x.id,name:x.name})),
  rooms:g.rooms.map(r=>({...r,players:g.players.filter(x=>x.room===r.code).map(x=>({id:x.id,name:x.name,house:x.house,team:x.team,preserved:x.preserved,arkFinalized:x.arkFinalized}))})),
- me:p,house:byHouse.get(p.house),availableCharacters:unlocked(p).map(c=>({id:c.id,name:c.name,asset:c.asset})),globalStates:g.globalStates,violence:g.violence,
+ me:{...p,ownedCharacters:Array.isArray(p.ownedCharacters)?p.ownedCharacters:p.characters,missionCharacterId:p.missionCharacterId??null,freeCharacterChoices:p.freeCharacterChoices||[],recruitHistory:p.recruitHistory||{},characterCapacity:characterCapacity(g.players.length)},house:byHouse.get(p.house),availableCharacters:unlocked(p).map(c=>({id:c.id,name:c.name,asset:c.asset,attributes:c.attributes})),globalStates:g.globalStates,violence:g.violence,
  arkOpened:g.arkOpened,preparationClosed:g.preparationClosed,rupturesResolved:g.rupturesResolved,
- pendingMarco:g.pendingMarco,pendingRupture:g.pendingRupture,
+ pendingMarco:g.pendingMarco,pendingRupture:g.pendingRupture,pendingHouseOccurrence:g.pendingHouseOccurrence?.initiator===p.id?g.pendingHouseOccurrence:null,
  pendingConsequencePlayers:g.pendingConsequencePlayers||[],pendingThreat:g.pendingThreat,
  pendingThreatResult:g.pendingThreatResult||null,
  activeThreats:g.activeThreats.map(t=>({id:t.id,card:t.card,name:`Nefilim ${t.card}`,successes:t.successes,aggravated:t.aggravated})),
@@ -74,6 +129,14 @@ export function publicView(g,p){return {
  marcos:g.marcos,secretMission:master.secretMissions.find(m=>m.id===p.secretMissionId),
  availableMission:missionEligible(g,p),consequenceCards:master.consequences.distinctCards,
  masterVersion:master.masterVersion,finalScores:g.finalScores||null,
+ finalParticipants:g.phase==='ended'?g.players.map(q=>({
+  id:q.id,name:q.name,preserved:Boolean(q.preserved),
+  heritage:q.resources.heranca||0,
+  secretMissionCompleted:Boolean(q.secretCompletedAt),
+  secretMissionBonus:q.secretCompletedAt?3:0,
+  preservationBonus:q.preserved?(q.preservationBonus||0):0,
+  total:q.preserved?(q.resources.heranca||0)+(q.secretCompletedAt?3:0)+(q.preservationBonus||0):null
+ })):null,
  dominator:g.dominator||null,ruleNotes:g.ruleNotes||[]
 }}
 function missionEligible(g,p){
@@ -82,15 +145,39 @@ function missionEligible(g,p){
  return master.missionSystem.common.eligibleFamilies.some(f=>h.family.toLowerCase().includes(f.toLowerCase()))
   &&!master.missionSystem.common.ineligible.includes(h.anchorType);
 }
+function missionAttributeChoices(m){
+ const r=m.requirement;
+ if(m.id==='M06'||m.id==='M09'||m.id==='M15')return [];
+ if(r.includes('Conhecimento ou Influência'))return ['conhecimento','influencia'];
+ if(r.includes('Conhecimento'))return ['conhecimento'];
+ if(r.includes('Influência'))return ['influencia'];
+ return [];
+}
+function characterMissionBonus(g,p,m,a){
+ const allowed=missionAttributeChoices(m);
+ if(!allowed.length)return {bonus:0,character:'sem atributo definido',attribute:null};
+ const attribute=allowed.length===1?allowed[0]:a.attribute;
+ if(!allowed.includes(attribute))fail('Selecione o atributo permitido para esta Missão');
+ const character=characters.find(c=>c.id===(p.characters.length===1?p.characters[0]:p.missionCharacterId)&&p.characters.includes(c.id)&&unlocked(p).some(u=>u.id===c.id));
+ if(!character)return {bonus:0,character:'sem personagem responsável',attribute};
+ const stat=character.attributes[attribute];
+ if(!Number.isInteger(stat))fail('Atributo do Personagem não cadastrado');
+ return {bonus:stat>=4?2:stat>=2?1:0,character:character.name,attribute};
+}
 function missionOffer(g,p,replace){
- if(!missionEligible(g,p))fail('Esta casa não oferece nova Missão');
- if(p.mission){if(!replace)fail('Mantenha a Missão atual ou substitua por 1 Influência');if(p.resources.influencia<1)fail('Influência insuficiente');change(p,'influencia',-1)}
- const all=master.commonMissions.filter(m=>m.phase===phaseFor(p.house));
+ const soloRepair=g.mode==='solo'&&p.mission?.id==='M19';
+ if(!soloRepair&&!missionEligible(g,p))fail('Esta casa não oferece nova Missão');
+ if(p.mission&&!soloRepair){if(!replace)fail('Mantenha a Missão atual ou substitua por 1 Influência');if(p.resources.influencia<1)fail('Influência insuficiente');change(p,'influencia',-1)}
+ // Missao com destinatario obrigatorio nao pode ser sorteada em aventura solo.
+ const all=master.commonMissions.filter(m=>m.phase===phaseFor(p.house)&&!(g.mode==='solo'&&m.id==='M19'));
  let pool=all.filter(m=>!p.missionHistory.includes(m.id));
  if(!pool.length)pool=all.filter(m=>m.id!==p.missionHistory.at(-1));
+ if(!pool.length)pool=all;
+ if(!pool.length)fail('Nenhuma Missão disponível nesta etapa');
  const m=pick(pool);p.mission={...m};p.missionHistory.push(m.id);p.offeredMove=g.round+':'+p.house;
  p.missionDonationSnapshot=p.donatedAmount;
- log(g,'missao',`Missão privada oferecida a ${p.name}`,{privateFor:p.id});
+ p.missionRandomBonus=null;
+ log(g,'missao',soloRepair?`Missão incompatível com aventura solo substituída gratuitamente para ${p.name}`:`Missão privada oferecida a ${p.name}`,{privateFor:p.id});
 }
 function missionReward(g,p,n,a={}){
  const m=p.mission,amount=master.missionRewardD4ByDifficulty[m.difficulty][n];
@@ -132,10 +219,12 @@ function nextPending(g){
  g.pendingMarco=null;
  if(g.pendingThreat){g.phase='threat-spawn';return}
  if(g.pendingConsequencePlayers?.length){g.phase='consequence-draw';return}
- if(g.pendingRupture){g.phase='rupture-prep';return}
+ if(g.pendingHouseOccurrence){g.phase='house-occurrence';return}
+ if(g.pendingRupture){g.phase=g.pendingRupture.prepared.length>=g.players.length?'rupture-roll':'rupture-prep';return}
  g.phase='active';
 }
 function afterMove(g,p,old,n){
+ syncFreeCollection(g,p);
  g.marcoQueue=master.marcos.filter(h=>h>old&&h<=n&&!g.marcos[h]).map(h=>({house:h,initiator:p.id,stopped:n===h}));
  if(marco.has(n)&&g.marcos[n]&&!p.marcoPersonal[n])g.personalPending={house:n,initiator:p.id,stopped:true};
  if(old<42&&n>=42){g.arkOpened=true;log(g,'arca','Arca revelada: 3 Provisões e 1 Personagem próprio')}
@@ -144,16 +233,36 @@ function afterMove(g,p,old,n){
   g.pendingThreat={card:pick(threats.filter(t=>!g.seenThreats.includes(t))),reason:'escalada',initiator:p.id};
  }
  if(master.consequences.houses.includes(n)&&n<50)g.pendingConsequencePlayers=[p.id];
+ const occurrence=byHouse.get(n)?.occurrence;
+ p.houseOccurrences ||= {};
+ if(occurrence?.trigger==='exactLanding'&&!p.houseOccurrences[n])g.pendingHouseOccurrence={house:n,initiator:p.id,id:occurrence.id};
  if(n===47){p.readyAt47=p.preserved||arkReady(p);log(g,'arca',`${p.name}: ${p.readyAt47?'PRONTO':'EM RISCO'}`,{privateFor:p.id})}
  if(n===49&&!arkReady(p))log(g,'arca',`${p.name}: Última Oportunidade disponível`,{privateFor:p.id});
  if(n===50){p.checkpointProvisions=p.resources.provisoes;log(g,'arca',`${p.name} chegou ao fechamento da Arca`,{privateFor:p.id})}
  if(g.pendingRupture){g.pendingRupture.prepared=[p.id];p.firstRuptures++}
  nextPending(g);
 }
-function arkReady(p){return p.preserved||p.resources.provisoes>=3&&p.characters.length>0}
+function resolveHouseOccurrence(g,p,a){
+ const pending=g.pendingHouseOccurrence;if(!pending||pending.initiator!==p.id)fail('Ocorrência de casa indisponível');
+ const h=byHouse.get(pending.house),o=h?.occurrence;if(!o||p.house!==pending.house)fail('Ocorrência inválida');
+ p.houseOccurrences ||= {};if(p.houseOccurrences[pending.house])fail('Ocorrência já resolvida');
+ if(o.type==='resourceChoice'){
+  const choice=String(a.choice||'');if(!o.choices.includes(choice))fail('Escolha um recurso válido');
+  gain(g,p,choice,o.amount||1);
+  log(g,'ocorrencia',`${p.name}: ${h.name} — +${o.amount||1} ${influenceLabel(choice)}`,{privateFor:p.id});
+  p.houseOccurrences[pending.house]={choice,round:g.round};
+ }else if(o.type==='narrative'){
+  p.houseOccurrences[pending.house]={acknowledged:true,round:g.round};
+  log(g,'ocorrencia',`${p.name}: ${h.name} — ocorrência narrativa concluída`,{privateFor:p.id});
+ }else fail('Tipo de ocorrência não suportado');
+ g.pendingHouseOccurrence=null;nextPending(g);
+}
+function influenceLabel(k){return {conhecimento:'Conhecimento',influencia:'Influência',provisoes:'Provisões',heranca:'Herança'}[k]||k}
+function arkCost(p){return 3+(p.mission?2:0)}
+function arkReady(p){return p.preserved||p.resources.provisoes>=arkCost(p)&&p.characters.length>0}
 function enterArk(g,p,id){
- if(!arkReady(p)||!p.characters.includes(id))fail('Faltam 3 Provisões ou Personagem próprio');
- change(p,'provisoes',-3);p.preserved=true;p.preservedCharacterId=id;p.enteredAt48=p.house===48;
+ if(!arkReady(p)||!p.characters.includes(id))fail(`Entrada na Arca exige ${arkCost(p)} Provisões e um Personagem próprio`);
+ change(p,'provisoes',-arkCost(p));p.preserved=true;p.preservedCharacterId=id;p.enteredAt48=p.house===48;
  log(g,'arca',`${p.name} entrou na Arca`,{privateFor:p.id});
 }
 function closeArk(g){
@@ -252,7 +361,13 @@ function secretCheck(g,p,final=false){
  if(done){p.secretCompletedAt=g.round*100+g.turnIndex+1;log(g,'missao',`${p.name} cumpriu a Missão Secreta`,{privateFor:p.id})}
 }
 function activeTurn(g,p){if(g.phase!=='active'||g.players[g.turnIndex]?.id!==p.id)fail('Não é seu turno normal')}
-function endTurn(g,p){activeTurn(g,p);if(p.lastMovedRound!==g.round&&p.house<50)fail('Informe o D6 de movimento');
+function firstRoundEntry(g,p){
+ if(g.round!==1||p.house!==1||p.lastMovedRound===g.round)return;
+ p.house=2;p.lastMovedRound=g.round;p.offeredMove=null;
+ log(g,'movimento',`${p.name}: entrada inicial obrigatória P1-010 → P1-020 (sem D6)`);
+ afterMove(g,p,1,2);
+}
+function endTurn(g,p){activeTurn(g,p);
  if(p.missionRewardPending)fail('Resolva o D4 da Missão antes de encerrar');
  g.turnIndex=(g.turnIndex+1)%g.players.length;
  if(g.turnIndex===0){
@@ -260,14 +375,16 @@ function endTurn(g,p){activeTurn(g,p);if(p.lastMovedRound!==g.round&&p.house<50)
   g.players.forEach(q=>{q.consequences=q.consequences.filter(c=>c.expiresRound>=g.round);q.threatAttempts={}});
   log(g,'rodada',`Rodada ${g.round} começou`);
  }
+ firstRoundEntry(g,g.players[g.turnIndex]);
 }
-function move(g,p,a){activeTurn(g,p);if(p.house>=50)fail('A sequência P1-500 a P1-540 é coletiva e sem D6');
+function move(g,p,a){activeTurn(g,p);if(g.round===1&&p.house===1)fail('Na rodada inicial, a entrada na Casa 02 é automática; não role D6');if(p.house>=50)fail('A sequência P1-500 a P1-540 é coletiva e sem D6');
  if(p.lastMovedRound===g.round)fail('Você já se moveu nesta rodada');
  const roll=number(a.roll,1,6),old=p.house;
- let n=Math.min(50,old+roll);const barrier=master.ruptures.find(r=>r.house>old&&r.house<=n&&!g.rupturesResolved[r.id]);
+ const distance=rand(3)+1;
+ let n=Math.min(50,old+distance);const barrier=master.ruptures.find(r=>r.house>old&&r.house<=n&&!g.rupturesResolved[r.id]);
  if(barrier)n=barrier.house;
  p.house=n;p.lastMovedRound=g.round;p.offeredMove=null;
- log(g,'movimento',`${p.name}: P1-${String(old*10).padStart(3,'0')} → P1-${String(n*10).padStart(3,'0')}`,{roll});
+ log(g,'movimento',`${p.name}: D6 físico ${roll}, ritmo ${distance} casa(s), P1-${String(old*10).padStart(3,'0')} → P1-${String(n*10).padStart(3,'0')}`,{roll,distance});
  if(barrier)g.pendingRupture={house:n,initiator:p.id,prepared:[p.id]};
  afterMove(g,p,old,n);
 }
@@ -279,9 +396,12 @@ function missionAttempt(g,p,a){
  if(req.includes('Ameaça ativa')&&!g.activeThreats.length)fail('Não há Ameaça ativa');
  if(req.includes('EM RISCO')&&!g.players.some(q=>q.id!==p.id&&!arkReady(q)))fail('Nenhum jogador EM RISCO');
  if(m.id==='M09'&&p.donatedAmount<=(p.missionDonationSnapshot||0))fail('Transfira voluntariamente 1 recurso após receber esta Missão');
- const bonus=number(a.bonus??0,0,3)+(p.nextCooperationBonus||0);
+ const support=characterMissionBonus(g,p,m,a);
+ const bonus=support.bonus+(p.nextCooperationBonus||0);
+ p.missionRandomBonus=null;
  p.nextCooperationBonus=0;p.missionUsedRound=g.round;
  const success=number(a.roll,1,6)+bonus>=m.target;
+ log(g,'missao',`Teste de ${m.name}: ${support.character}${support.attribute?' / '+support.attribute:''} (+${support.bonus}), outros bônus +${bonus-support.bonus}, D6 ${a.roll}, alvo ${m.target}`,{privateFor:p.id});
  if(success){p.missionRewardPending=true;log(g,'missao',`${p.name} passou no teste de ${m.name}; D4 separado pendente`,{privateFor:p.id})}
  else {if(m.failure.startsWith('-1 Provis'))change(p,'provisoes',-1);if(m.failure.startsWith('-1 Conhecimento'))change(p,'conhecimento',-1);if(m.failure.startsWith('-1 Influência'))change(p,'influencia',-1);
   log(g,'missao',`${p.name} falhou em ${m.name}`,{privateFor:p.id})}
@@ -333,20 +453,44 @@ export function applyAction(g,p,a){
  if(!a||typeof a.type!=='string')fail('Ação inválida');
  switch(a.type){
  case 'roomCreate':if(p.id!==g.hostPlayerId||g.phase!=='lobby'||g.rooms.length>=5)fail('Sala indisponível');{let c=code();while(g.rooms.some(r=>r.code===c)||c===g.motherCode)c=code();g.rooms.push({code:c,name:String(a.name||`Sala ${g.rooms.length+1}`).slice(0,40),team:String(a.team||'').slice(0,30)});log(g,'sala',`Sala ${c} criada`)}break;
- case 'setup':if(g.phase!=='lobby'||p.setupDone)fail('Preparação inicial indisponível');if(!Array.isArray(a.rolls)||a.rolls.length!==3||!Array.isArray(a.order)||new Set(a.order).size!==3||a.order.some(k=>!admin.includes(k)))fail('Informe 3D6 e a distribuição dos recursos');a.order.forEach((k,i)=>p.resources[k]=2+Math.floor((number(a.rolls[i],1,6)-1)/2));p.setupDone=true;break;
- case 'start':if(p.id!==g.hostPlayerId||g.phase!=='lobby'||g.players.length<2||g.players.some(q=>!q.setupDone))fail('O anfitrião inicia após todos prepararem os recursos');g.phase='active';log(g,'partida','Partida iniciada');break;
+ case 'setup':if(g.phase!=='lobby'||p.setupDone)fail('Preparação inicial indisponível');if(!Array.isArray(a.rolls)||a.rolls.length!==3||!Array.isArray(a.order)||new Set(a.order).size!==3||a.order.some(k=>!admin.includes(k)))fail('Informe 3D6 e a distribuição dos recursos');a.order.forEach((k,i)=>p.resources[k]=2+Math.floor((number(a.rolls[i],1,6)-1)/2));p.setupDone=true;if((g.mode==='solo'||g.players.length>=2)&&g.players.every(q=>q.setupDone)){g.phase='active';log(g,'partida','Todos os jogadores preparados; partida iniciada automaticamente');firstRoundEntry(g,g.players[g.turnIndex])}break;
+ case 'start':if(p.id!==g.hostPlayerId||g.phase!=='lobby'||(g.mode!=='solo'&&g.players.length<2)||g.players.some(q=>!q.setupDone))fail('O anfitrião inicia após todos prepararem os recursos');g.phase='active';log(g,'partida','Partida iniciada');firstRoundEntry(g,g.players[g.turnIndex]);break;
  case 'move':move(g,p,a);break;
  case 'endTurn':endTurn(g,p);break;
+ case 'houseOccurrence':resolveHouseOccurrence(g,p,a);break;
  case 'missionOffer':activeTurn(g,p);missionOffer(g,p,!!a.replace);break;
  case 'missionDecline':activeTurn(g,p);if(!missionEligible(g,p))fail('Oportunidade indisponível');p.offeredMove=g.round+':'+p.house;break;
  case 'missionAttempt':activeTurn(g,p);missionAttempt(g,p,a);break;
  case 'missionD4':if(!p.missionRewardPending)fail('Recompensa de Missão ausente');missionReward(g,p,number(a.d4,1,4),a);break;
- case 'mandamentoChoice':if(g.phase!=='active'||!g.globalStates.MANDAMENTO||p.mandamentoChoice)fail('Escolha do Mandamento indisponível');p.mandamentoChoice=a.refuse?'recusou':'não recusou';if(a.refuse){const roll=g.marcos[6]?.d4||2;gain(g,p,'heranca',roll>=3?2:1);if(roll===4)gain(g,p,'influencia',1)}break;
+ case 'mandamentoChoice':if(!g.globalStates.MANDAMENTO||p.house!==6||p.mandamentoChoice)fail('Escolha do Mandamento indisponível para este jogador nesta casa');p.mandamentoChoice=a.refuse?'recusou':'não recusou';if(a.refuse){const roll=g.marcos[6]?.d4||2;gain(g,p,'heranca',roll>=3?2:1);if(roll===4)gain(g,p,'influencia',1)}break;
  case 'specialChoice':if(g.phase!=='active'||p.house!==7||!g.globalStates.MANDAMENTO||p.specialChoices[a.card])fail('Carta Especial indisponível nesta casa');
   if(a.card==='vida'){if(a.option==='heranca')gain(g,p,'heranca',2);else if(a.option==='provisoes')gain(g,p,'provisoes',2);else fail('Escolha inválida')}
-  else if(a.card==='conhecimento'){if(a.option==='aceitar'){gain(g,p,'conhecimento',3);change(p,'heranca',-5)}else if(a.option!=='recusar')fail('Escolha inválida')}
+  else if(a.card==='conhecimento'){if(p.mandamentoChoice!=='não recusou')fail('A escolha do fruto na Casa 07 exige ter mantido a decisão aberta na Casa 06');if(a.option==='aceitar'){gain(g,p,'conhecimento',3);change(p,'heranca',-5)}else if(a.option!=='recusar')fail('Escolha inválida')}
   else fail('Carta Especial inválida');p.specialChoices[a.card]=a.option;log(g,'especial',`${p.name} resolveu ${a.card==='vida'?'Árvore da Vida':'Árvore do Conhecimento'}`,{privateFor:p.id});break;
- case 'characters':if(g.phase!=='active')fail('Personagens indisponíveis');if(!Array.isArray(a.ids)||a.ids.length>2||new Set(a.ids).size!==a.ids.length||a.ids.some(id=>!unlocked(p).some(c=>c.id===id)))fail('Seleção de Personagens inválida');p.characters=a.ids;break;
+ case 'recruitCharacter':recruitCharacter(g,p,a);break;
+ case 'freeCharacterChoice':{
+  const cap=characterCapacity(g.players.length);
+  syncFreeCollection(g,p);
+  const free=cap-p.ownedCharacters.length;
+  if(!free||!p.freeCharacterChoices?.length)fail('Não há escolha gratuita pendente');
+  if(!Array.isArray(a.ids)||a.ids.length!==free||new Set(a.ids).size!==a.ids.length||a.ids.some(id=>!p.freeCharacterChoices.includes(id)))fail(`Selecione exatamente ${free} personagem(ns) desbloqueado(s)`);
+  for(const id of a.ids){p.ownedCharacters.push(id);log(g,'personagem',`${p.name} escolheu ${characters.find(c=>c.id===id)?.name} gratuitamente`,{privateFor:p.id})}
+  p.freeCharacterChoices=[];
+ }break;
+ case 'characters':{
+  if(!p.setupDone||g.phase==='ended'||p.house>=50)fail('Seleção de personagens indisponível');
+  syncFreeCollection(g,p);
+  if(!Array.isArray(a.ids)||a.ids.length>2||new Set(a.ids).size!==a.ids.length||a.ids.some(id=>!p.ownedCharacters.includes(id)))fail('Selecione até dois personagens da sua coleção');
+  p.characters=a.ids;
+  // A selecao na aba Jogador define o personagem usado nas missoes.
+  // Um personagem ativo e assumido automaticamente; com dois, exige nova escolha.
+  p.missionCharacterId=a.ids.length===1?a.ids[0]:null;
+ }break;
+ case 'missionCharacterSelect':{
+  if(!p.setupDone||g.phase==='ended'||p.house>=50)fail('Seleção do responsável indisponível');
+  if(!p.characters.includes(a.characterId))fail('Escolha um dos personagens ativos');
+  p.missionCharacterId=a.characterId;
+ }break;
  case 'convert':if(!['active','rupture-prep'].includes(g.phase))fail('Conversão indisponível');convert(g,p,a);break;
  case 'tradePropose':tradePropose(g,p,a);break;
  case 'tradeAnswer':tradeAnswer(g,p,a);break;
@@ -392,5 +536,5 @@ export function applyAction(g,p,a){
   const code='P1-'+String(to*10).padStart(3,'0');p.house=to;log(g,'correcao',`${p.name} corrigiu posição para ${code}: ${reason}`,{privateFor:p.id})}break;
  default:fail('Ação desconhecida');
  }
- for(const q of g.players)secretCheck(g,q);
+ for(const q of g.players){syncFreeCollection(g,q);secretCheck(g,q)}
 }

@@ -1,0 +1,31 @@
+/* V4.1: leitura e criação da carta pessoal — corrige CSS herdado V2/V3 */
+html:not(.dorath-classic) #board .mp-grid>.mp-card.dv4-current,
+html:not(.dorath-classic) #board .mp-grid>.mp-card.dv4-current#player,
+html:not(.dorath-classic) #board .mp-grid>.mp-card.dv4-current#missions,
+html:not(.dorath-classic) #board .mp-grid>.mp-card.dv4-current#movement,
+html:not(.dorath-classic) #board .mp-grid>.mp-card.dv4-current#world{
+ background:linear-gradient(154deg,#f9e9c5 0%,#efd6a5 66%,#c89d68 100%)!important;color:#372412!important}
+html:not(.dorath-classic) #board .mp-grid>.mp-card.dv4-current h3,
+html:not(.dorath-classic) #board .mp-grid>.mp-card.dv4-current h4,
+html:not(.dorath-classic) #board .mp-grid>.mp-card.dv4-current p,
+html:not(.dorath-classic) #board .mp-grid>.mp-card.dv4-current li,
+html:not(.dorath-classic) #board .mp-grid>.mp-card.dv4-current label,
+html:not(.dorath-classic) #board .mp-grid>.mp-card.dv4-current .dorath-personal-history h4,
+html:not(.dorath-classic) #board .mp-grid>.mp-card.dv4-current .dorath-personal-history label,
+html:not(.dorath-classic) #board .mp-grid>.mp-card.dv4-current .dorath-personal-history p,
+html:not(.dorath-classic) #board .mp-grid>.mp-card.dv4-current #dorathPersonalStatus,
+html:not(.dorath-classic) #board .mp-grid>.mp-card.dv4-current #dorathPhotoStatus{color:#3b2513!important;text-shadow:none!important;opacity:1!important}
+html:not(.dorath-classic) #board .mp-grid>.mp-card.dv4-current b,
+html:not(.dorath-classic) #board .mp-grid>.mp-card.dv4-current strong{color:#3f2611!important}
+html:not(.dorath-classic) #board .mp-grid>.mp-card.dv4-current .dorath-personal-history>p{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important}
+html:not(.dorath-classic) #board .mp-grid>.mp-card.dv4-current#player>p:first-of-type{background:#f6dfb5!important;border:1px solid #a68556!important;padding:13px!important;color:#3b2513!important}
+.dorath-photo-editor{background:#f0d7a9;border:2px solid #ad844d;border-radius:13px;padding:14px;margin:0 0 16px;box-shadow:inset 0 1px #fff7df}
+.dorath-photo-editor h4{margin:0 0 6px!important}
+.dorath-photo-editor p{font-size:.85rem;line-height:1.5}
+.dorath-photo-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.dorath-photo-button{display:flex!important;align-items:center;justify-content:center;min-height:47px;background:linear-gradient(#75502d,#422916);color:#fff0cb!important;border:1px solid #a67e48;border-radius:10px;padding:10px 8px;cursor:pointer;text-align:center;font-weight:700}
+.dorath-photo-button input{display:none!important}
+.dorath-photo-actions button{grid-column:span 2;width:100%}
+html:not(.dorath-classic) .dv4-card img{width:100%;height:96px;object-fit:cover;object-position:center 30%}
+#dv4modal #dv4content>button{display:block;width:100%;min-height:48px;margin:8px 0 15px;border-radius:9px;border:1px solid #966b32;background:#583c22;color:#fce5b7;font-weight:bold}
+@media(max-width:420px){.dorath-photo-actions{grid-template-columns:1fr 1fr}.dorath-photo-button{font-size:.8rem}}

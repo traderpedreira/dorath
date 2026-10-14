@@ -1,7 +1,7 @@
 name: Dorath tests
 on:
   push:
-    branches: [ main ]
+    branches: [ main, feature/dorath-mobile-v4 ]
   workflow_dispatch:
 jobs:
   test:

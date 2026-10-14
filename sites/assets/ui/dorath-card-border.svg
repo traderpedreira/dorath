@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 1014" preserveAspectRatio="none">
+<defs><linearGradient id="gold" x2="0" y2="1"><stop stop-color="#f5d98c"/><stop offset=".25" stop-color="#a8782c"/><stop offset=".55" stop-color="#f9e1a4"/><stop offset="1" stop-color="#77501c"/></linearGradient>
+<g id="corner" fill="none" stroke="url(#gold)" stroke-linecap="round"><path d="M7 155V48Q7 7 49 7H172" stroke-width="7"/><path d="M17 154V50Q17 17 51 17H169" stroke-width="2"/><path d="M27 120Q28 38 98 32Q133 30 147 7" stroke-width="3"/><path d="M18 59Q74 44 65 7M19 95Q86 84 105 9M19 130Q80 110 126 10" stroke-width="1.6"/>
+<path d="M19 80Q10 42 39 28Q67 10 81 31Q96 58 59 70Q33 75 34 49Q38 30 58 35Q70 46 55 53" stroke-width="3"/>
+<path d="M37 27Q58 1 82 17Q59 22 37 27M53 60Q89 57 107 37Q85 36 53 60M28 93Q53 90 72 70Q49 68 28 93M88 23Q108 7 128 11Q116 33 88 23" stroke-width="1.6" fill="#657038"/>
+<circle cx="13" cy="13" r="7" fill="#d7a54a" stroke="#643f16" stroke-width="2"/></g>
+<pattern id="paper" width="37" height="37" patternUnits="userSpaceOnUse"><path d="M0 0L37 37M37 0L0 37" stroke="#986631" opacity=".06" stroke-width=".5"/></pattern>
+</defs>
+<rect width="720" height="1014" fill="url(#paper)"/>
+<rect x="5" y="5" width="710" height="1004" rx="14" fill="none" stroke="#8e5d26" stroke-width="4"/>
+<rect x="13" y="13" width="694" height="988" rx="11" fill="none" stroke="url(#gold)" stroke-width="2"/>
+<rect x="20" y="20" width="680" height="974" rx="7" fill="none" stroke="#7b5328" stroke-width="1" opacity=".7"/>
+<use href="#corner"/><use href="#corner" transform="translate(720 0) scale(-1 1)"/><use href="#corner" transform="translate(0 1014) scale(1 -1)"/><use href="#corner" transform="translate(720 1014) scale(-1 -1)"/>
+<g fill="none" stroke="url(#gold)" stroke-width="2"><path d="M244 8Q278 15 302 7Q335 0 360 16Q385 0 418 7Q442 15 476 8"/><path d="M244 1006Q278 999 302 1007Q335 1014 360 998Q385 1014 418 1007Q442 999 476 1006"/></g>
+<g fill="#bd8b42" stroke="#6e451d" stroke-width="1"><path d="M360 4L369 15L360 27L351 15Z"/><path d="M360 1010L369 999L360 987L351 999Z"/></g>
+</svg>
