@@ -1329,3 +1329,20 @@ html body #board #missions .dv4-mission-character-buttons{display:grid!important
 html body #board #missions .dv4-mission-character-button{width:100%!important;min-height:54px!important;margin:0!important;padding:10px 8px!important;border:1px solid #a8834d!important;border-radius:10px!important;background:#fff0d2!important;color:#55371b!important;font:700 1.03rem Georgia,serif!important;box-shadow:none!important}
 html body #board #missions .dv4-mission-character-button.is-active{background:linear-gradient(#ac7b3e,#60401f)!important;border:2px solid #f2d498!important;color:#fff2d4!important;box-shadow:0 0 0 1px #80582f!important}
 html body #board #missions .dv4-mission-character-button:focus-visible{outline:3px solid #c39b52!important;outline-offset:2px!important}
+
+
+/* Encerramento do Periodo 1: resultado legivel no celular e no multiplayer. */
+html body #board #movement .dv4-final-screen{padding:18px 14px!important;margin:14px 0!important;text-align:center!important;border:2px solid #b78a4c!important;border-radius:16px!important;background:linear-gradient(160deg,#fff3d9,#e8c894)!important;color:#432c17!important;box-shadow:0 8px 22px #50311624!important}
+html body #board #movement .dv4-final-kicker{font:700 .79rem system-ui,sans-serif!important;letter-spacing:.15em!important;color:#845c29!important}
+html body #board #movement .dv4-final-screen h4{font:700 clamp(1.2rem,5vw,1.8rem)/1.25 Georgia,serif!important;margin:9px 0!important;text-align:center!important;color:#442a13!important}
+html body #board #movement .dv4-final-lead{font:400 1rem/1.55 Georgia,serif!important;margin:12px 0 18px!important;text-align:center!important}
+html body #board #movement .dv4-final-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+html body #board #movement .dv4-final-grid>div{display:grid!important;align-content:center!important;gap:7px!important;min-width:0!important;padding:14px 8px!important;background:#fff8e8!important;border:1px solid #bda074!important;border-radius:11px!important}
+html body #board #movement .dv4-final-grid small{font:700 .68rem/1.3 system-ui,sans-serif!important;letter-spacing:.055em!important;color:#75532e!important}
+html body #board #movement .dv4-final-grid strong{font:700 clamp(.91rem,3.5vw,1.2rem)/1.3 Georgia,serif!important;color:#3d2919!important;overflow-wrap:anywhere}
+html body #board #movement .dv4-final-outcome{margin:16px 0 9px!important;padding:12px!important;border-radius:9px!important;background:#f6e3bb!important;font:600 .97rem/1.5 Georgia,serif!important;text-align:center!important}
+html body #board #movement .dv4-final-screen h5{font:700 1rem Georgia,serif!important;margin:18px 0 10px!important;text-align:center!important}
+html body #board #movement .dv4-final-ranking{list-style:decimal!important;padding-left:24px!important;text-align:left!important}
+html body #board #movement .dv4-final-ranking li{padding:9px 4px!important;display:list-item!important}
+html body #board #movement .dv4-final-ranking li span{margin-right:12px}
+html body #board #movement .dv4-final-footnote{font-size:.8rem!important;line-height:1.4!important;margin:16px 0 0!important;text-align:center!important}
