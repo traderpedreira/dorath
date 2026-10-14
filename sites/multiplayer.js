@@ -268,24 +268,25 @@ function draw(){const v=view,p=v.me,host=p.id===v.hostPlayerId,turn=v.turnPlayer
  if(v.preparationClosed&&host&&v.phase==='active'&&[50,51,53].includes(p.house))movement+='<button data-action="advanceFinal">Avançar sequência final coletiva</button>';
  if(v.phase==='ended'){
   const ranking=v.finalScores||[];
-  const myResult=ranking.find(result=>result.id===p.id);
-  const secretDone=Boolean(p.secretCompletedAt);
-  const single=v.mode==='solo'||v.playerOrder.length===1;
+  const participants=v.finalParticipants||[];
+  const ordered=[...ranking.map(x=>participants.find(q=>q.id===x.id)).filter(Boolean),...participants.filter(q=>!q.preserved)];
+  const isSolo=v.mode==='solo'||v.playerOrder.length===1;
+  const breakdown=ordered.map((q,index)=>`<article class="dv4-final-participant">
+   <h5>${q.preserved&&!isSolo?esc(String(index+1)+'º · '):''}${esc(q.name)} ${q.id===p.id?'<small>(você)</small>':''}</h5>
+   <p class="dv4-final-preserved">${q.preserved?'PRESERVADO NA ARCA':'NÃO PRESERVADO'}</p>
+   <div class="dv4-final-breakdown"><span>Heranças acumuladas</span><strong>${q.heritage}</strong>
+   <span>Missão Secreta · ${q.secretMissionCompleted?'cumprida':'não cumprida'}</span><strong>+${q.secretMissionBonus}</strong>
+   <span>D6 de Preservação</span><strong>${q.preserved?'+'+q.preservationBonus:'Não aplicável'}</strong></div>
+   <div class="dv4-final-total"><span>${q.preserved?'TOTAL DE PONTOS':'PONTUAÇÃO CLASSIFICATÓRIA'}</span><strong>${q.preserved?q.total+' pontos':'Não classificado'}</strong></div>
+   ${!q.preserved?'<p class="dv4-final-note">Não entrou na Arca; não participa da classificação final.</p>':''}
+  </article>`).join('');
   movement+=`<section class="dv4-final-screen" aria-label="Conclusão do Período 1" role="status">
-    <div class="dv4-final-kicker">JORNADA CONCLUÍDA</div>
-    <h4>PERÍODO 1 · ÉDEN AO DILÚVIO</h4>
-    <p class="dv4-final-lead">Você chegou à última casa da jornada. O resultado do Período 1 foi registrado.</p>
-    <div class="dv4-final-grid">
-      <div><small>CASA FINAL</small><strong>54</strong></div>
-      <div><small>ARCA</small><strong>${p.preserved?'ENTROU':'NÃO ENTROU'}</strong></div>
-      <div><small>MISSÃO SECRETA</small><strong>${secretDone?'CUMPRIDA':'NÃO CUMPRIDA'}</strong></div>
-      <div><small>PONTUAÇÃO</small><strong>${myResult?myResult.score+' pontos':'Sem pontuação classificatória'}</strong></div>
-    </div>
-    ${p.preserved?'<p class="dv4-final-outcome">Seu personagem foi preservado na Arca.</p>':'<p class="dv4-final-outcome">Seu personagem não entrou na Arca. A pontuação classificatória é reservada aos preservados.</p>'}
-    ${!single?'<h5>CLASSIFICAÇÃO FINAL</h5>':''}
-    ${!single?(ranking.length?`<ol class="dv4-final-ranking">${ranking.map(result=>`<li><span>${esc(result.name)}</span><strong>${result.score} pontos</strong></li>`).join('')}</ol>`:'<p>Nenhum jogador preservado para classificação.</p>'):''}
-    <p class="dv4-final-footnote">A pontuação e o cumprimento da Missão Secreta seguem as regras registradas da partida.</p>
-   </section>`;
+   <div class="dv4-final-kicker">JORNADA CONCLUÍDA</div>
+   <h4>PERÍODO 1 · ÉDEN AO DILÚVIO</h4>
+   <p class="dv4-final-lead">A jornada terminou. Confira a composição de cada resultado.</p>
+   <div class="dv4-final-participants">${breakdown||'<p>Resultado ainda não disponível.</p>'}</div>
+   <p class="dv4-final-footnote">Classificação dos preservados: pontos de Herança + 3 por Missão Secreta cumprida + D6 de Preservação.</p>
+  </section>`;
  }
  const hasMissionStep=v.phase==='active'&&turn&&(
   Boolean(p.missionRewardPending)||
