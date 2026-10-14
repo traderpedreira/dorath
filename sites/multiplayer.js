@@ -266,7 +266,27 @@ function draw(){const v=view,p=v.me,host=p.id===v.hostPlayerId,turn=v.turnPlayer
  if(v.phase==='active'&&p.house===48&&!p.preserved)movement+=`<p>Entrada antecipada possível somente nesta casa.</p><select id="arkEarlyCharacter">${p.characters.map(id=>`<option>${esc(id)}</option>`).join('')}</select><button data-action="arkEnter">Entrar na Arca</button>`;
  if(v.preparationClosed&&p.preserved&&p.preservationBonus===null)movement+=`<p>Role seu D6 secreto de Preservação. Ele só será aplicado em P1-540.</p>${die('preservationD6',6)}`;
  if(v.preparationClosed&&host&&v.phase==='active'&&[50,51,53].includes(p.house))movement+='<button data-action="advanceFinal">Avançar sequência final coletiva</button>';
- if(v.phase==='ended')movement+=`<h4>Resultado</h4><ol>${(v.finalScores||[]).map(s=>`<li>${esc(s.name)}: ${s.score} pontos</li>`).join('')}</ol>`;
+ if(v.phase==='ended'){
+  const ranking=v.finalScores||[];
+  const myResult=ranking.find(result=>result.id===p.id);
+  const secretDone=Boolean(p.secretCompletedAt);
+  const single=v.mode==='solo'||v.playerOrder.length===1;
+  movement+=`<section class="dv4-final-screen" aria-label="Conclusão do Período 1" role="status">
+    <div class="dv4-final-kicker">JORNADA CONCLUÍDA</div>
+    <h4>PERÍODO 1 · ÉDEN AO DILÚVIO</h4>
+    <p class="dv4-final-lead">Você chegou à última casa da jornada. O resultado do Período 1 foi registrado.</p>
+    <div class="dv4-final-grid">
+      <div><small>CASA FINAL</small><strong>54</strong></div>
+      <div><small>ARCA</small><strong>${p.preserved?'ENTROU':'NÃO ENTROU'}</strong></div>
+      <div><small>MISSÃO SECRETA</small><strong>${secretDone?'CUMPRIDA':'NÃO CUMPRIDA'}</strong></div>
+      <div><small>PONTUAÇÃO</small><strong>${myResult?myResult.score+' pontos':'Sem pontuação classificatória'}</strong></div>
+    </div>
+    ${p.preserved?'<p class="dv4-final-outcome">Seu personagem foi preservado na Arca.</p>':'<p class="dv4-final-outcome">Seu personagem não entrou na Arca. A pontuação classificatória é reservada aos preservados.</p>'}
+    ${!single?'<h5>CLASSIFICAÇÃO FINAL</h5>':''}
+    ${!single?(ranking.length?`<ol class="dv4-final-ranking">${ranking.map(result=>`<li><span>${esc(result.name)}</span><strong>${result.score} pontos</strong></li>`).join('')}</ol>`:'<p>Nenhum jogador preservado para classificação.</p>'):''}
+    <p class="dv4-final-footnote">A pontuação e o cumprimento da Missão Secreta seguem as regras registradas da partida.</p>
+   </section>`;
+ }
  const hasMissionStep=v.phase==='active'&&turn&&p.lastMovedRound===v.round&&(
   Boolean(p.missionRewardPending)||
   (p.missionUsedRound!==v.round&&(
