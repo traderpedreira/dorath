@@ -255,7 +255,7 @@ function draw(){const v=view,p=v.me,host=p.id===v.hostPlayerId,turn=v.turnPlayer
  let movement='<h3>Turno e movimento</h3>';
  if(v.phase==='lobby')movement+=!p.setupDone?`<p>Role fisicamente 3D6 e distribua os resultados conforme sua escolha.</p><div class="dv4-setup-rolls">${['conhecimento','influencia','provisoes'].map((k,i)=>`<label class="dv4-setup-row" for="setupRoll${i}"><span>${label[k]}</span><select id="setupRoll${i}" aria-label="Resultado para ${label[k]}">${Array.from({length:6},(_,j)=>`<option value="${j+1}">${j+1}</option>`).join('')}</select></label><input type="hidden" id="setupDest${i}" value="${k}">`).join('')}</div><div class="dv4-setup-actions"><button data-action="setup">Confirmar 3D6</button></div>`:(v.mode==='solo'?'<p>Preparação concluída. Iniciando sua aventura solo.</p>':'<p>Recursos iniciais registrados. Aguardando os demais jogadores.</p>');
 
- if(v.phase==='active'&&turn&&p.house<50){movement+=p.lastMovedRound===v.round?(v.round===1&&p.house===2?'<p>Entrada inicial concluída: Casa 02, sem D6. Resolva a bênção e atualize as fichas físicas.</p>':'<p>Movimento desta rodada registrado.</p>'):(v.round===1&&p.house===1?'<p>Na primeira rodada, a entrada na Casa 02 é automática. Aguarde a sincronização.</p>':`<p>Role D6 físico e informe:</p>${die('move',6)}`);movement+='<button data-action="endTurn">Encerrar turno</button>'}
+ if(v.phase==='active'&&turn&&p.house<50){movement+=p.lastMovedRound===v.round?(v.round===1&&p.house===2?'<p>Entrada inicial concluída: Casa 02, sem D6. Resolva a bênção e atualize as fichas físicas.</p>':'<p>Movimento desta rodada registrado.</p>'):(v.round===1&&p.house===1?'<p>Na primeira rodada, a entrada na Casa 02 é automática. Aguarde a sincronização.</p>':'<p>Antes de avançar, você pode tentar sua Missão, negociar, converter recursos ou enfrentar Ameaças. Para avançar, role o D6 físico e informe o número: o aplicativo sorteará um deslocamento obrigatório de 1 a 3 casas.</p>'+die('move',6));movement+='<button data-action="endTurn">'+(p.lastMovedRound===v.round?'Encerrar turno':'Permanecer e encerrar turno')+'</button>'}
  if(v.phase==='active'&&!turn)movement+='<p>Aguarde seu turno.</p>';
  if(v.phase==='house-occurrence')movement+=v.pendingHouseOccurrence?.initiator===p.id?'<div class="dv4-intro-event-hint" role="status">Resolva a ocorrência na aba <span class="dv4-intro-event-target">Eventos</span> antes de continuar.</div>':'<p>Aguarde a resolução da ocorrência pelo jogador atual.</p>';
  if(v.phase==='marco-roll')movement+=`<p>Marco ${v.pendingMarco.house}: D4 coletivo pelo primeiro jogador.</p>${v.pendingMarco.initiator===p.id?die('marcoD4',4):''}`;
@@ -287,15 +287,13 @@ function draw(){const v=view,p=v.me,host=p.id===v.hostPlayerId,turn=v.turnPlayer
     <p class="dv4-final-footnote">A pontuação e o cumprimento da Missão Secreta seguem as regras registradas da partida.</p>
    </section>`;
  }
- const hasMissionStep=v.phase==='active'&&turn&&p.lastMovedRound===v.round&&(
+ const hasMissionStep=v.phase==='active'&&turn&&(
   Boolean(p.missionRewardPending)||
   (p.missionUsedRound!==v.round&&(
     Boolean(p.mission)||Boolean(v.availableMission)
   ))
  );
- if(v.phase==='active'&&turn&&p.house<50&&hasMissionStep){
-  movement=movement.replace('<button data-action="endTurn">Encerrar turno</button>','');
- }
+
  $('movement').innerHTML=movement.replace(/<p(?=>)/g,'<p class="dv4-movement-status"');
  $('movement').dataset.missionStep=String(hasMissionStep);
  $('movement').dataset.isMyTurn=String(turn);
