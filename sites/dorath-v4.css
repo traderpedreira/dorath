@@ -1346,3 +1346,17 @@ html body #board #movement .dv4-final-ranking{list-style:decimal!important;paddi
 html body #board #movement .dv4-final-ranking li{padding:9px 4px!important;display:list-item!important}
 html body #board #movement .dv4-final-ranking li span{margin-right:12px}
 html body #board #movement .dv4-final-footnote{font-size:.8rem!important;line-height:1.4!important;margin:16px 0 0!important;text-align:center!important}
+
+
+/* Demonstrativo individual do encerramento, inclusive jogadores nao preservados. */
+html body #board #movement .dv4-final-participants{display:grid!important;gap:13px!important;margin-top:17px!important}
+html body #board #movement .dv4-final-participant{padding:13px!important;border:1px solid #b99866!important;border-radius:12px!important;background:#fff8e8!important;text-align:left!important;color:#422c1b!important}
+html body #board #movement .dv4-final-participant h5{margin:0 0 5px!important;text-align:left!important;font:700 1.12rem Georgia,serif!important;color:#3f2a17!important}
+html body #board #movement .dv4-final-participant h5 small{font:500 .75rem system-ui,sans-serif!important;color:#7b5a38!important}
+html body #board #movement .dv4-final-preserved{font:700 .72rem system-ui,sans-serif!important;letter-spacing:.08em!important;color:#775428!important;margin:0 0 14px!important;text-align:left!important}
+html body #board #movement .dv4-final-breakdown{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;align-items:center!important;column-gap:12px!important;row-gap:10px!important;font:500 .89rem/1.4 system-ui,sans-serif!important}
+html body #board #movement .dv4-final-breakdown strong{font-weight:750!important;text-align:right!important;white-space:nowrap!important}
+html body #board #movement .dv4-final-total{display:flex!important;justify-content:space-between!important;align-items:center!important;gap:10px!important;border-top:1px solid #c6a777!important;margin-top:14px!important;padding-top:13px!important;font-weight:800!important}
+html body #board #movement .dv4-final-total span{font-size:.77rem!important;letter-spacing:.035em!important}
+html body #board #movement .dv4-final-total strong{font-size:1.12rem!important;text-align:right!important}
+html body #board #movement .dv4-final-note{font-size:.82rem!important;line-height:1.4!important;margin:9px 0 0!important;text-align:left!important}
