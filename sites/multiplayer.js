@@ -98,7 +98,20 @@ async function refresh(){
 }
 function missionFeedback(message,error=false){const el=$('dv4MissionFeedback');if(el){el.hidden=false;el.textContent=message;el.classList.toggle('mp-error',error)}}
 function positionFeedback(message,error=false){const el=$('correctPositionFeedback');if(el){el.hidden=false;el.textContent=message;el.classList.toggle('mp-error',error)}}
-async function action(type,data={}){if(busy){if(type==='missionAttempt')missionFeedback('Aguarde a conclusão da ação anterior.');return}busy=true;try{const prior=view;view=await api('action',{token,expectedRevision:view.revision,type,...data});recordResourceChanges(prior,view);if(type==='setup'&&view.me.setupDone){resourceQueue.length=0;resourceDialog?.close()}saveCommon();void audio.update(view);draw();if(type==='setup'&&view.me.setupDone)showInitialResourceReceipt(view.me);say(`Ação registrada · rodada ${view.round}`);if(type==='correctPosition')positionFeedback(`Posição atualizada para a casa ${view.me.house}.`);if(type==='missionAttempt')missionFeedback(view.me.missionRewardPending?'SUCESSO! Role o D4 físico para determinar a recompensa.':'Teste registrado: missão não concluída nesta tentativa.');if(type==='missionD4')missionFeedback('Recompensa da missão registrada.')}catch(e){const msg=e.message;await refresh();say(msg,true);if(type==='correctPosition')positionFeedback('Correção não realizada: '+msg,true);if(type==='missionAttempt'||type==='missionD4')missionFeedback('Não foi possível registrar o dado: '+msg,true)}finally{busy=false}}
+async function action(type,data={}){if(busy){if(type==='missionAttempt')missionFeedback('Aguarde a conclusão da ação anterior.');return}busy=true;try{const prior=view;view=await api('action',{token,expectedRevision:view.revision,type,...data});recordResourceChanges(prior,view);if(type==='setup'&&view.me.setupDone){resourceQueue.length=0;resourceDialog?.close()}saveCommon();void audio.update(view);draw();if(type==='setup'&&view.me.setupDone)showInitialResourceReceipt(view.me);
+if(type==='move'&&view.me.house!==prior?.me?.house){
+ const house=view.me.house;
+ const spot=document.getElementById('dv4house');
+ if(spot){spot.classList.remove('dv4-house-flash');void spot.offsetWidth;spot.classList.add('dv4-house-flash');}
+ const movement=document.getElementById('movement');
+ if(movement){
+  const old=movement.querySelector('.dv4-arrival-notice');if(old)old.remove();
+  const notice=document.createElement('div');notice.className='dv4-arrival-notice';notice.setAttribute('role','status');
+  notice.textContent='Avance para a casa '+house;
+  movement.prepend(notice);
+ }
+}
+say(`Ação registrada · rodada ${view.round}`);if(type==='correctPosition')positionFeedback(`Posição atualizada para a casa ${view.me.house}.`);if(type==='missionAttempt')missionFeedback(view.me.missionRewardPending?'SUCESSO! Role o D4 físico para determinar a recompensa.':'Teste registrado: missão não concluída nesta tentativa.');if(type==='missionD4')missionFeedback('Recompensa da missão registrada.')}catch(e){const msg=e.message;await refresh();say(msg,true);if(type==='correctPosition')positionFeedback('Correção não realizada: '+msg,true);if(type==='missionAttempt'||type==='missionD4')missionFeedback('Não foi possível registrar o dado: '+msg,true)}finally{busy=false}}
 async function correctPosition(){
  const house=Number($('correctHouse')?.value),reason=($('correctReason')?.value||'').trim();
  if(view?.phase!=='active'){positionFeedback('A correção só é permitida durante a partida ativa.',true);return}
