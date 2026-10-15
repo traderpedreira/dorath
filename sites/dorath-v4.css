@@ -1360,3 +1360,9 @@ html body #board #movement .dv4-final-total{display:flex!important;justify-conte
 html body #board #movement .dv4-final-total span{font-size:.77rem!important;letter-spacing:.035em!important}
 html body #board #movement .dv4-final-total strong{font-size:1.12rem!important;text-align:right!important}
 html body #board #movement .dv4-final-note{font-size:.82rem!important;line-height:1.4!important;margin:9px 0 0!important;text-align:left!important}
+
+/* Destaque de destino do movimento V4: informativo, sem alterar a mecânica. */
+@keyframes dv4-house-pulse{0%,100%{transform:scale(1);filter:brightness(1)}20%,60%{transform:scale(1.09);filter:brightness(1.5)}40%,80%{transform:scale(1);filter:brightness(1)}}
+#dv4house.dv4-house-flash{animation:dv4-house-pulse .5s ease-in-out 4;outline:2px solid #cba66b;outline-offset:2px;border-radius:8px}
+#movement .dv4-arrival-notice{padding:14px 12px;margin:0 0 12px;border:2px solid #bf9865;border-radius:12px;background:#f7ead3;color:#342719;text-align:center;font-size:1.15rem;font-weight:800}
+@media(prefers-reduced-motion:reduce){#dv4house.dv4-house-flash{animation:none;outline:3px solid #bf9865}}
