@@ -244,7 +244,7 @@ const priority=()=>{
  if(active('world')?.querySelector('.dv4-house-occurrence'))return 'movement';
  if(introAwaitEvent&&active('movement')?.querySelector('.dv4-intro-event-hint'))return 'movement';
  if(introAwaitEvent)introAwaitEvent=false;
- // A rolagem de movimento sempre abre o turno; a missão vem após a chegada.
+ // O movimento é opcional; ações elegíveis podem ocorrer antes de avançar.
  if(active('movement')?.querySelector('[data-action="move"],[data-action="setup"]'))return 'movement';
  // Enquanto há missão a decidir ou resolver, não desviar para Encerrar turno.
  if(active('missions')?.dataset.missionStep==='true')return 'missions';
