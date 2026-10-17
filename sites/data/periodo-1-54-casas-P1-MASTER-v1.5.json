@@ -741,7 +741,7 @@
       "family": "Checkpoint de preparação",
       "intensity": "Média",
       "execution": "VARIÁVEL",
-      "rule": "App informa PRONTO se o jogador já estiver Preservado OU possuir 3 Provisões + 1 Personagem elegível; caso contrário EM RISCO. Não há pagamento nesta casa.",
+      "rule": "Checkpoint PRONTO / EM RISCO, sem pagamento. Requisito atual: 3 Provisões, ou 5 com Missão comum pendente, e 1 Personagem próprio ativo.",
       "status": "PLAYTEST DINÂMICO",
       "name": "Checkpoint da Arca",
       "legacyType": "EVENTO",
@@ -755,7 +755,7 @@
       "family": "Entrada na Arca",
       "intensity": "Alta",
       "execution": "FIXO + VARIÁVEL",
-      "rule": "Somente quem TERMINAR o movimento exatamente aqui pode entrar antecipadamente: pagar 3 Provisões, escolher 1 Personagem próprio elegível e registrar PRESERVADO/ENTROU. A entrada individual não fecha a preparação coletiva.",
+      "rule": "Entrada antecipada somente ao parar nesta casa: pagar 3 Provisões, ou 5 com Missão comum pendente, e escolher 1 Personagem próprio ativo como Preservado.",
       "status": "PLAYTEST DINÂMICO",
       "name": "Entrada na Arca",
       "legacyType": "EVENTO",
@@ -783,7 +783,7 @@
       "family": "Fechamento da Arca",
       "intensity": "Alta",
       "execution": "FIXO",
-      "rule": "BARREIRA OBRIGATÓRIA. Ninguém ultrapassa. Quem já entrou confirma ENTROU sem novo pagamento; quem ainda não entrou e possui 3 Provisões + 1 Personagem elegível pode pagar e entrar; quem não possui registra NÃO ENTROU. Depois de todos resolvidos: fechar admissões, travar ENTROU/NÃO_ENTROU e PRESERVADO/NÃO_PRESERVADO, encerrar conversões e ESCALADA_NEFILIM. A partir daqui não há D6 de movimento.",
+      "rule": "BARREIRA de fechamento obrigatório. Quem já entrou confirma sem novo pagamento. Demais jogadores pagam 3 Provisões, ou 5 com Missão comum pendente, e escolhem 1 Personagem próprio ativo; caso contrário registram NÃO ENTROU. Após todos finalizarem, não há nova entrada.",
       "status": "PLAYTEST DINÂMICO",
       "name": "Fechamento da Arca",
       "legacyType": "MARCO",
@@ -914,7 +914,7 @@
     "normalMovementDie": "D6 físico",
     "appRollsDice": false,
     "normalMovementRange": {
-      "fromHouse": 1,
+      "fromHouse": 2,
       "throughHouse": 49
     },
     "marcos": {
@@ -942,7 +942,20 @@
       53,
       54
     ],
-    "movementDieDisabledFromHouse": 50
+    "movementDieDisabledFromHouse": 50,
+    "movementOptional": true,
+    "randomDistanceRange": [
+      1,
+      3
+    ],
+    "physicalDieFaceDeterminesDistance": false,
+    "initialEntry": {
+      "fromHouse": 1,
+      "toHouse": 2,
+      "automatic": true,
+      "die": null
+    },
+    "actionsBeforeMovement": true
   },
   "initialSetup": {
     "startingCharacter": "Adão",
@@ -955,7 +968,8 @@
         "5-6": 4
       },
       "assignment": "Distribuir os três valores entre Provisões, Conhecimento e Influência."
-    }
+    },
+    "sameForSoloAndGroup": true
   },
   "resources": {
     "administrable": [
@@ -1848,7 +1862,11 @@
     "specialCardRevealHouse": 42,
     "entryRequirement": {
       "Provisões": 3,
-      "eligibleOwnedCharacter": 1
+      "eligibleOwnedCharacter": 1,
+      "pendingCommonMissionSurcharge": 2,
+      "totalWithPendingCommonMission": 5,
+      "characterMustBeActive": true,
+      "payAgainAt50IfEnteredAt48": false
     },
     "checkpointHouse": 47,
     "earlyEntryHouse": 48,
@@ -1904,12 +1922,12 @@
   },
   "implementationStatus": {
     "rulesInThisMaster": "HOMOLOGADAS PARA PLAYTEST",
-    "appImplementation": "ALVO DA BUILD v0.8.0; validar pelos testes e implantação",
+    "appImplementation": "Motor V4; unificação editorial de preparação, turno e Arca em 17/10/2026. A publicação deve ser verificada por build.",
     "physicalQrVerification": "ENCERRADO POR DESCONTINUAÇÃO — QR não integra mais o sistema oficial.",
     "consequenceCards": "HOMOLOGADAS — efeitos-base, duração e tabelas digitais D4 incorporados ao Master v1.1",
     "cardArtCorrections": "Consequências P1 finalizadas; demais correções de arte seguem em chat próprio.",
     "qrAppIntegration": "CANCELADA — sem leitor QR ou dependência de QR.",
-    "boardAppSynchronization": "posição anterior + D6 físico informado; correção manual registrada",
+    "boardAppSynchronization": "O app registra o D6 físico e sorteia independentemente um deslocamento obrigatório de 1 a 3 casas quando o jogador decide avançar; a posição considera barreiras. A entrada 01→02 é automática e o final 50→54 é guiado.",
     "zone1BuildTarget": "App v0.8.0 / Master P1 v1.5"
   },
   "physicalAssets": {
@@ -1980,7 +1998,7 @@
   },
   "boardAppSync": {
     "status": "HOMOLOGADO — MODELO OFICIAL",
-    "principle": "O app mantém a posição oficial a partir da posição anterior e do resultado do dado físico informado pelo jogador.",
+    "principle": "O app registra o D6 físico e sorteia independentemente um deslocamento obrigatório de 1 a 3 casas quando o jogador decide avançar; a posição considera barreiras. A entrada 01→02 é automática e o final 50→54 é guiado.",
     "positionDisplay": {
       "showHouseNumber": true,
       "showP1Code": true,
