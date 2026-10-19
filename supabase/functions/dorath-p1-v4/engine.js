@@ -1,5 +1,5 @@
 import { master } from './master-data.js';
-import { characters } from './characters-data.js';
+import { characters, characterAvailableAtHouse, hasCharacterTag } from './characters-data.js';
 
 // All actions mutate a copy of one game in the Edge Function. Postgres commits it by revision.
 const keys = ['conhecimento','influencia','provisoes','heranca'];
@@ -57,7 +57,7 @@ export function newPlayer(name,room,team,history=[],commonHistory=[]){
  conversionCount:0,convertedRound:0,tradedRound:0,firstRuptures:0,marcoPersonal:{},
  lastMovedRound:0,offeredMove:null,readyAt47:false,enteredAt48:false,checkpointProvisions:null};
 }
-function unlocked(p){return characters.filter(c=>c.unlockHouse<=Math.max(3,p.house))}
+function unlocked(p){return characters.filter(c=>characterAvailableAtHouse(c,p.house))}
 // Capacidade homologada: 1–2 jogadores: 5 cartas; 3–4: 4; 5–6: 3; 7–8: 2.
 function characterCapacity(count){return count<=2?5:count<=4?4:count<=6?3:2}
 // Preenche gratuitamente slots livres apenas com personagens narrativamente desbloqueados.
@@ -118,7 +118,7 @@ export function publicView(g,p){return {
  turnPlayerId:g.players[g.turnIndex]?.id||null,hostPlayerId:g.hostPlayerId,
  playerOrder:g.players.map(x=>({id:x.id,name:x.name})),
  rooms:g.rooms.map(r=>({...r,players:g.players.filter(x=>x.room===r.code).map(x=>({id:x.id,name:x.name,house:x.house,team:x.team,preserved:x.preserved,arkFinalized:x.arkFinalized}))})),
- me:{...p,ownedCharacters:Array.isArray(p.ownedCharacters)?p.ownedCharacters:p.characters,missionCharacterId:p.missionCharacterId??null,freeCharacterChoices:p.freeCharacterChoices||[],recruitHistory:p.recruitHistory||{},characterCapacity:characterCapacity(g.players.length)},house:byHouse.get(p.house),availableCharacters:unlocked(p).map(c=>({id:c.id,name:c.name,asset:c.asset,attributes:c.attributes})),globalStates:g.globalStates,violence:g.violence,
+ me:{...p,ownedCharacters:Array.isArray(p.ownedCharacters)?p.ownedCharacters:p.characters,missionCharacterId:p.missionCharacterId??null,freeCharacterChoices:p.freeCharacterChoices||[],recruitHistory:p.recruitHistory||{},characterCapacity:characterCapacity(g.players.length)},house:byHouse.get(p.house),availableCharacters:unlocked(p).map(c=>({id:c.id,name:c.name,asset:c.asset,attributes:c.attributes,lineage:c.lineage,roles:c.roles||[],familyTags:c.familyTags||[],relationships:c.relationships||[],unlockPhase:c.unlockPhase||null})),globalStates:g.globalStates,violence:g.violence,
  arkOpened:g.arkOpened,preparationClosed:g.preparationClosed,rupturesResolved:g.rupturesResolved,
  pendingMarco:g.pendingMarco,pendingRupture:g.pendingRupture,pendingHouseOccurrence:g.pendingHouseOccurrence?.initiator===p.id?g.pendingHouseOccurrence:null,
  pendingConsequencePlayers:g.pendingConsequencePlayers||[],pendingThreat:g.pendingThreat,
@@ -164,12 +164,22 @@ function characterMissionBonus(g,p,m,a){
  if(!Number.isInteger(stat))fail('Atributo do Personagem não cadastrado');
  return {bonus:stat>=4?2:stat>=2?1:0,character:character.name,attribute};
 }
+function missionCharacterRequirementsMet(p,m){
+ const available=unlocked(p);
+ const requiredIds=Array.isArray(m.requiredCharacterIds)?m.requiredCharacterIds:[];
+ const anyTags=Array.isArray(m.requiredCharacterTagsAny)?m.requiredCharacterTagsAny:[];
+ const allTags=Array.isArray(m.requiredCharacterTagsAll)?m.requiredCharacterTagsAll:[];
+ if(requiredIds.some(id=>!available.some(c=>c.id===id)))return false;
+ if(anyTags.length&&!anyTags.some(tag=>available.some(c=>hasCharacterTag(c,tag))))return false;
+ if(allTags.some(tag=>!available.some(c=>hasCharacterTag(c,tag))))return false;
+ return true;
+}
 function missionOffer(g,p,replace){
  const soloRepair=g.mode==='solo'&&p.mission?.id==='M19';
  if(!soloRepair&&!missionEligible(g,p))fail('Esta casa não oferece nova Missão');
  if(p.mission&&!soloRepair){if(!replace)fail('Mantenha a Missão atual ou substitua por 1 Influência');if(p.resources.influencia<1)fail('Influência insuficiente');change(p,'influencia',-1)}
  // Missao com destinatario obrigatorio nao pode ser sorteada em aventura solo.
- const all=master.commonMissions.filter(m=>m.phase===phaseFor(p.house)&&!(g.mode==='solo'&&m.id==='M19'));
+ const all=master.commonMissions.filter(m=>m.phase===phaseFor(p.house)&&!(g.mode==='solo'&&m.id==='M19')&&missionCharacterRequirementsMet(p,m));
  let pool=all.filter(m=>!p.missionHistory.includes(m.id));
  if(!pool.length)pool=all.filter(m=>m.id!==p.missionHistory.at(-1));
  if(!pool.length)pool=all;
