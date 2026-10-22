@@ -228,7 +228,71 @@ function organizePlayerPanels(p,v){
  root.replaceChildren(heading,intro,collection,recruit,available,...(lockedGrid.children.length?[locked]:[]));
 }
 const characterCatalog=[["adao","Adão","01_ADAO.webp"],["eva","Eva","02_EVA.webp"],["caim","Caim","03_CAIM.webp"],["abel","Abel","04_ABEL.webp"],["sete","Sete","05_SETE.webp"],["lameque-caim","Lameque (linhagem de Caim)","06_LAMEQUE_LINHAGEM_DE_CAIM.webp"],["enoque-caim","Enoque (linhagem de Caim)","07_ENOQUE_LINHAGEM_DE_CAIM.webp"],["jabal","Jabal","08_JABAL.webp"],["jubal","Jubal","09_JUBAL.webp"],["tubalcaim","Tubalcaim","10_TUBALCAIM.webp"],["enos","Enos","11_ENOS.webp"],["enoque-sete","Enoque (linhagem de Sete)","12_ENOQUE_LINHAGEM_DE_SETE.webp"],["matusalem","Matusalém","13_MATUSALEM.webp"],["lameque-noe","Lameque (linhagem de Sete)","14_LAMEQUE_LINHAGEM_DE_SETE.webp"],["noe","Noé","15_NOE.webp"],["sem","Sem","16_SEM.webp"],["cam","Cam","17_CA.webp"],["jafe","Jafé","18_JAFE.webp"]];
+
+const cardCatalog={
+ marcos:{
+  6:{title:'O Mandamento no Jardim',src:'assets/marcos/06_O_Mandamento.png',state:'MANDAMENTO'},
+  10:{title:'A Criação de Eva',src:'assets/marcos/10_A_Criacao_de_Eva.png',state:'HARMONIA_NO_EDEN'},
+  22:{title:'As Ofertas',src:'assets/marcos/22_As_Ofertas_HOMOLOGADA.png',state:'RESSENTIMENTO'},
+  27:{title:'A Cidade de Enoque',src:'assets/marcos/27_A_Cidade_de_Enoque.png',state:'CIDADE_DE_ENOQUE'},
+  37:{title:'Os Anjos Rebeldes',src:'assets/marcos/37_Os_Anjos_Rebeldes.png',state:'DESCIDA_DOS_ANJOS'},
+  41:{title:'O Chamado de Noé',src:'assets/marcos/41_O_Chamado_de_Noe.png',state:'PREPARACAO_DA_ARCA'}
+ },
+ rupturas:{
+  12:{title:'A Queda',src:'assets/rupturas/01_Queda.png'},
+  18:{title:'Expulsão do Éden',src:'assets/rupturas/02_Expulsão.png'},
+  24:{title:'Morte de Abel',src:'assets/rupturas/03_Morte_de_Abel.png'},
+  39:{title:'Corrupção da Humanidade',src:'assets/rupturas/04_Corrupção_da_Humanidade.png'},
+  52:{title:'O Dilúvio',src:'assets/rupturas/05_Dilúvio.png'}
+ },
+ ameacas:{
+  opressor:{title:'Nefilim Opressor',src:'assets/ameacas/nefilim_opressor_carta.png'},
+  dominador:{title:'Nefilim Dominador',src:'assets/ameacas/nefilim_dominador_carta.png'},
+  corruptor:{title:'Nefilim Corruptor',src:'assets/ameacas/nefilim_corruptor_carta.png'}
+ },
+ especiais:{
+  vida:{title:'Árvore da Vida',src:'assets/especiais/carta_especial_arviore_da_vida.png'},
+  conhecimento:{title:'Árvore do Conhecimento',src:'assets/especiais/carta_especial_arviore_do_conhecimento.png'},
+  arca:{title:'Arca de Noé',src:'assets/especiais/carta_especial_arca.png'}
+ }
+};
+function collectActiveCards(v,p){
+ const out=[],seen=new Set(),add=(kind,key,card,status='ATIVA')=>{if(!card)return;const id=kind+':'+key;if(seen.has(id))return;seen.add(id);out.push({id,kind,key,title:card.title,src:card.src,status})};
+ for(const [house,card] of Object.entries(cardCatalog.marcos)){
+  if(v.globalStates?.[card.state]||Number(v.pendingMarco?.house)===Number(house))add('MARCO',house,card,v.globalStates?.[card.state]?'ATIVO':'EM RESOLUÇÃO');
+ }
+ if(v.pendingRupture?.house)add('RUPTURA',v.pendingRupture.house,cardCatalog.rupturas[v.pendingRupture.house],'EM RESOLUÇÃO');
+ if(v.pendingThreat?.card)add('AMEAÇA',v.pendingThreat.card,cardCatalog.ameacas[v.pendingThreat.card],'SURGINDO');
+ for(const t of v.activeThreats||[])add('AMEAÇA',t.card,cardCatalog.ameacas[t.card],t.aggravated?'ATIVA · AGRAVADA':'ATIVA');
+ if((p.house===4||(p.house===7&&v.globalStates?.MANDAMENTO))&&!p.specialChoices?.vida)add('ESPECIAL','vida',cardCatalog.especiais.vida,p.house===4?'APRESENTADA':'DISPONÍVEL');
+ if((p.house===4||(p.house===7&&v.globalStates?.MANDAMENTO))&&!p.specialChoices?.conhecimento)add('ESPECIAL','conhecimento',cardCatalog.especiais.conhecimento,p.house===4?'APRESENTADA':'DISPONÍVEL');
+ if(v.arkOpened&&!v.preparationClosed)add('ESPECIAL','arca',cardCatalog.especiais.arca,'ATIVA');
+ const consequenceById=Object.fromEntries((v.consequenceCards||[]).map(c=>[c.id,c]));
+ for(const c of p.consequences||[]){const meta=consequenceById[c.id];if(meta)add('CONSEQUÊNCIA',c.id,{title:meta.name,src:'assets/consequencias/'+meta.asset},'ATIVA');}
+ if(v.phase==='consequence-draw'&&v.pendingConsequencePlayers?.[0]===p.id){
+  const first=v.consequenceCards?.[0];if(first)add('CONSEQUÊNCIA','pending',{title:'Consequência pendente',src:'assets/consequencias/'+first.asset},'ESCOLHA A CARTA');
+ }
+ return out;
+}
+function renderActiveCards(){
+ const host=$('activeCards');if(!host||!view?.me)return;
+ const cards=collectActiveCards(view,view.me);
+ host.hidden=!cards.length;
+ if(!cards.length){host.innerHTML='';return}
+ host.innerHTML='<div class="dv4-active-head"><strong>CARTAS ATIVAS</strong><small>Toque para ampliar</small></div><div class="dv4-active-strip">'+cards.map(c=>'<button type="button" class="dv4-active-card" data-card-src="'+esc(c.src)+'" data-card-title="'+esc(c.title)+'"><span>'+esc(c.kind)+'</span><img src="'+esc(c.src)+'" alt="'+esc(c.title)+'" loading="lazy"><b>'+esc(c.title)+'</b><small>'+esc(c.status)+'</small></button>').join('')+'</div>';
+}
+function openActiveCard(src,title){
+ const modal=$('activeCardModal'),img=$('activeCardModalImage'),heading=$('activeCardModalTitle');if(!modal||!img)return;
+ img.src=src;img.alt=title||'Carta Dorath';if(heading)heading.textContent=title||'Carta ativa';
+ if(typeof modal.showModal==='function')modal.showModal();else modal.setAttribute('open','');
+}
+document.addEventListener('click',e=>{
+ const card=e.target.closest?.('.dv4-active-card');if(card){openActiveCard(card.dataset.cardSrc,card.dataset.cardTitle);return}
+ if(e.target.closest?.('#activeCardModalClose'))$('activeCardModal')?.close?.();
+});
+
 function draw(){const v=view,p=v.me,host=p.id===v.hostPlayerId,turn=v.turnPlayerId===p.id;
+ renderActiveCards();
  syncSelectedCharacters(p);
  $('summary').innerHTML=`<h2>${esc(v.house?.code||'P1-'+String(p.house*10).padStart(3,'0'))} · ${esc(v.house?.name||'Casa')}</h2><p>${esc(v.house?.family||'')} · Rodada ${v.round} · ${esc(v.phase)} · Violência ${v.violence}</p><p>${esc(v.house?.rule||'')}</p><p>Arca: ${p.preserved?'PRESERVADO / ENTROU':p.arkFinalized?'NÃO ENTROU':'entrada em aberto'} ${v.preparationClosed?'· fechada':''}</p>`;
  $('rooms').innerHTML=`<h3>Partida-mestre ${esc(v.motherCode)}</h3>${v.rooms.map(r=>`<p><b>${esc(r.name)} · ${esc(r.code)}</b><br>${r.players.map(q=>`${esc(q.name)} P1-${String(q.house*10).padStart(3,'0')}`).join(' · ')}</p>`).join('')}${v.phase==='lobby'&&host?'<input id="roomName" placeholder="Nome da nova sala"><button data-action="roomCreate">Criar sala</button>':''}`;
