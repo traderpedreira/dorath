@@ -1384,3 +1384,26 @@ html body #board #movement .dv4-final-note{font-size:.82rem!important;line-heigh
 .dv4-active-modal img{display:block;max-width:100%;max-height:78vh;object-fit:contain;margin:0 auto}
 #activeCardModalClose{position:absolute;right:8px;top:7px;width:36px;height:36px;padding:0;border-radius:50%;border:1px solid #b68a4f;background:#50351e;color:#ffe7bb;font-size:1.45rem;line-height:1}
 @media(max-width:430px){.dv4-active-strip{grid-auto-columns:minmax(108px,42%)}}
+
+/* Cartas ativas — ocupar o espaço conforme a quantidade real de cartas */
+.dv4-active-strip{display:grid!important;grid-template-columns:repeat(var(--dv4-active-cols,1),minmax(0,1fr))!important;gap:10px!important;overflow:visible!important}
+#activeCards[data-count="1"]{--dv4-active-cols:1}
+#activeCards[data-count="2"]{--dv4-active-cols:2}
+#activeCards[data-count="3"]{--dv4-active-cols:3}
+#activeCards[data-count="1"] .dv4-active-card{width:min(100%,330px);justify-self:center}
+.dv4-active-card{min-width:0!important}
+.dv4-active-card>b{display:none!important}
+.dv4-active-card img{height:auto!important;max-height:none!important;aspect-ratio:auto!important;object-fit:contain!important}
+@media(max-width:520px){
+ #activeCards[data-count="3"] .dv4-active-strip{gap:5px!important}
+ #activeCards[data-count="3"] .dv4-active-card{padding:4px!important}
+ #activeCards[data-count="3"] .dv4-active-card>span{font-size:.45rem}
+ #activeCards[data-count="3"] .dv4-active-card>small{font-size:.42rem}
+}
+
+/* Galeria de personagens — nunca ocultar uma carta só porque a arte ainda não foi enviada */
+.dv4-gallery-art-shell{position:relative;width:100%;aspect-ratio:3/4.55;display:grid;place-items:center;overflow:hidden;border-radius:7px}
+.dv4-gallery-art-shell .dv4-gallery-art{width:100%;height:100%;object-fit:contain}
+.dv4-gallery-fallback{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:10px;background:linear-gradient(145deg,#d9ba86,#9c7548);color:#35220f;font-weight:800;font-size:.8rem;line-height:1.15;border:1px solid #8b6336}
+.dv4-gallery-fallback small{display:block;margin-top:8px;font:700 .52rem/1.2 system-ui,sans-serif;letter-spacing:.08em;opacity:.72}
+.dv4-locked .dv4-gallery-fallback{filter:grayscale(.75);opacity:.68}
