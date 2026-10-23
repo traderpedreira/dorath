@@ -1384,3 +1384,58 @@ html body #board #movement .dv4-final-note{font-size:.82rem!important;line-heigh
 .dv4-active-modal img{display:block;max-width:100%;max-height:78vh;object-fit:contain;margin:0 auto}
 #activeCardModalClose{position:absolute;right:8px;top:7px;width:36px;height:36px;padding:0;border-radius:50%;border:1px solid #b68a4f;background:#50351e;color:#ffe7bb;font-size:1.45rem;line-height:1}
 @media(max-width:430px){.dv4-active-strip{grid-auto-columns:minmax(108px,42%)}}
+
+/* Dorath V4 — resumo compacto à esquerda + carta ativa à direita */
+#dv4 .dv4-session-overview{
+ display:grid;grid-template-columns:minmax(0,1.12fr) minmax(138px,.88fr);gap:10px;
+ align-items:stretch;margin:7px 0 12px;
+}
+#dv4 .dv4-session-info{
+ min-width:0;padding:12px 11px;border:2px ridge #9b6f3d;border-radius:12px;
+ background:linear-gradient(145deg,#e5c18a,#f5dfb5 48%,#c99d62);
+ color:#402812;box-shadow:inset 0 0 14px #7b4f2750,0 5px 15px #0007;
+ display:flex;flex-direction:column;justify-content:center;gap:6px;
+}
+#dv4 .dv4-session-brand{
+ font-size:clamp(1.12rem,5.1vw,1.65rem);letter-spacing:.11em;line-height:1;
+ border-bottom:1px solid #9b7445;padding-bottom:7px;margin-bottom:1px;
+}
+#dv4 .dv4-session-info>span{
+ display:block;font:700 clamp(.67rem,2.7vw,.83rem)/1.22 system-ui,sans-serif;
+ letter-spacing:.035em;overflow-wrap:anywhere;
+}
+#dv4 .dv4-session-info>span small{
+ display:block;font-size:.68em;font-weight:600;letter-spacing:.02em;opacity:.72;margin-top:1px;
+}
+#dv4 .dv4-active-slot{min-width:0;display:flex}
+#dv4 .dv4-active-slot .dv4-active-cards{
+ width:100%;margin:0;padding:8px 7px 7px;border-radius:12px;
+ display:flex;flex-direction:column;justify-content:center;min-height:100%;
+}
+#dv4 .dv4-active-title{
+ display:block;text-align:center;color:#eac78a;font:800 .58rem/1.2 system-ui,sans-serif;
+ letter-spacing:.1em;margin:0 0 5px;
+}
+#dv4 .dv4-active-slot .dv4-active-strip{
+ display:flex;gap:6px;overflow-x:auto;padding:0 0 4px;scroll-snap-type:x mandatory;
+}
+#dv4 .dv4-active-slot .dv4-active-card{
+ flex:0 0 100%;scroll-snap-align:center;padding:5px!important;
+ grid-template-rows:auto 1fr auto auto;
+}
+#dv4 .dv4-active-slot .dv4-active-card img{
+ width:100%;max-height:176px;aspect-ratio:3/4.45;object-fit:contain;
+}
+#dv4 .dv4-active-slot .dv4-active-card b{font-size:.62rem}
+#dv4 .dv4-active-slot .dv4-active-card small{font-size:.46rem}
+#dv4 .dv4-active-hint{
+ display:block;text-align:center;color:#c8ad82;font:700 .49rem/1.2 system-ui,sans-serif;
+ letter-spacing:.08em;margin-top:4px;
+}
+/* A antiga faixa isolada de metadados deixa de ocupar espaço; os mesmos dados vivem no resumo lateral. */
+#dv4 .dv4-meta{display:none!important}
+@media(max-width:380px){
+ #dv4 .dv4-session-overview{grid-template-columns:minmax(0,1fr) minmax(124px,.82fr);gap:7px}
+ #dv4 .dv4-session-info{padding:9px 8px;gap:5px}
+ #dv4 .dv4-active-slot .dv4-active-card img{max-height:150px}
+}
