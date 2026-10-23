@@ -3,10 +3,8 @@
 const board=document.getElementById('board');if(!board)return;
 const host=board.querySelector('.mp-grid');const panels=['movement','missions','world','player','rooms','threats','trades','history'];
 const active=(id)=>document.getElementById(id);
-const ui=document.createElement('section');ui.id='dv4';ui.innerHTML='<section class="dv4-session-overview" aria-label="Resumo da partida"><div class="dv4-session-info"><strong class="dv4-session-brand">DORATH</strong><span>PERÍODO 1 <small>Éden ao Dilúvio</small></span><span id="dv4round">RODADA —</span><span id="dv4house">CASA —</span><span id="dv4room">SALA —</span><span id="dv4connection">CONECTADO</span></div><div class="dv4-active-slot" id="dv4ActiveSlot"></div></section><div class="dv4-cards" id="dv4cards" aria-label="Cartas do jogador"></div><nav class="dv4-nav" aria-label="Navegação do Dorath"></nav><dialog id="dv4modal" aria-label="Carta ampliada"><button type="button" id="dv4close" aria-label="Fechar carta">✕</button><div id="dv4content"></div></dialog>';
+const ui=document.createElement('section');ui.id='dv4';ui.innerHTML='<div class="dv4-meta" aria-label="Informações da partida"><span>PERÍODO 1<small>Éden ao Dilúvio</small></span><span id="dv4round">RODADA —</span><span id="dv4house">CASA —</span></div><div class="dv4-cards" id="dv4cards" aria-label="Cartas do jogador"></div><nav class="dv4-nav" aria-label="Navegação do Dorath"></nav><dialog id="dv4modal" aria-label="Carta ampliada"><button type="button" id="dv4close" aria-label="Fechar carta">✕</button><div id="dv4content"></div></dialog>';
 board.insertBefore(ui,host);const cards=ui.querySelector('#dv4cards'),nav=ui.querySelector('.dv4-nav'),modal=ui.querySelector('#dv4modal');
-const activeCardsPanel=document.getElementById('activeCards'),activeSlot=ui.querySelector('#dv4ActiveSlot');
-if(activeCardsPanel&&activeSlot)activeSlot.append(activeCardsPanel);
 const navItems=[['movement','Jogar','◈'],['missions','Missão','✦'],['world','Eventos','❢'],['player','Jogador','♛'],['threats','Ameaças','⚔'],['trades','Trocas','⇄'],['rooms','Salas','⌂'],['more','Mais','☰']];
 // Icones vetoriais embutidos (sem dependencia de fontes ou bibliotecas externas).
 const navIconPaths={
@@ -270,10 +268,6 @@ function update(){
  const s=fingerprint();renderCards();updateIntroSelection();
  const summary=text(document.querySelector('#summary h2'));const code=(summary.match(/P[1-8]-(\d{3})/)||[])[1];ui.querySelector('#dv4house').textContent=code?'CASA '+String(Math.round(Number(code)/10)).padStart(2,'0'):'CASA —';
  const raw=text(document.querySelector('#summary p'));const rd=raw.match(/Rodada\s+(\d+)/i);ui.querySelector('#dv4round').textContent=rd?'RODADA '+rd[1]:'RODADA —';
- const roomTitle=text(active('rooms')?.querySelector('p b'))||text(active('rooms')?.querySelector('h3'))||'Sala —';
- ui.querySelector('#dv4room').textContent=roomTitle.toUpperCase();
- const connection=text(document.getElementById('status')).split(' · ')[0]||'Conectado';
- ui.querySelector('#dv4connection').textContent=connection.toUpperCase();
  if(sig!==s){sig=s;if(!initialAdamOpen&&!initialAdamPending)select(priority(),false)}else if(!manual&&!initialAdamOpen&&!initialAdamPending)select(selected,false);
 }
 let scheduled=false;const observer=new MutationObserver(()=>{if(scheduled)return;scheduled=true;queueMicrotask(()=>{scheduled=false;update()})});for(const id of panels)observer.observe(active(id),{childList:true,subtree:true});observer.observe(board,{attributes:true,attributeFilter:['hidden']});select('movement');update();
