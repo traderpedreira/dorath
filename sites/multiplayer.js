@@ -279,7 +279,7 @@ function renderActiveCards(){
  const cards=collectActiveCards(view,view.me);
  host.hidden=!cards.length;
  if(!cards.length){host.innerHTML='';return}
- host.innerHTML='<div class="dv4-active-head"><strong>CARTAS ATIVAS</strong><small>Toque para ampliar</small></div><div class="dv4-active-strip">'+cards.map(c=>'<button type="button" class="dv4-active-card" data-card-src="'+esc(c.src)+'" data-card-title="'+esc(c.title)+'"><span>'+esc(c.kind)+'</span><img src="'+esc(c.src)+'" alt="'+esc(c.title)+'" loading="lazy"><b>'+esc(c.title)+'</b><small>'+esc(c.status)+'</small></button>').join('')+'</div>';
+ host.innerHTML='<strong class="dv4-active-title">CARTA ATIVA'+(cards.length>1?'S':'')+'</strong><div class="dv4-active-strip">'+cards.map(c=>'<button type="button" class="dv4-active-card" data-card-src="'+esc(c.src)+'" data-card-title="'+esc(c.title)+'"><span>'+esc(c.kind)+'</span><img src="'+esc(c.src)+'" alt="'+esc(c.title)+'" loading="lazy"><b>'+esc(c.title)+'</b><small>'+esc(c.status)+'</small></button>').join('')+'</div><small class="dv4-active-hint">TOQUE PARA AMPLIAR</small>';
 }
 function openActiveCard(src,title){
  const modal=$('activeCardModal'),img=$('activeCardModalImage'),heading=$('activeCardModalTitle');if(!modal||!img)return;
