@@ -1,0 +1,19 @@
+/* Leitor isolado das regras homologadas. */
+.dorath-step{position:relative}
+.dorath-rules-help{margin-left:12px;width:32px;height:32px;min-width:32px;border-radius:50%;border:2px solid #dcb778;background:#172f48;color:#ffe5a9;font-weight:800;font-size:17px;cursor:pointer;vertical-align:middle}
+.dorath-rules-dialog{width:min(96vw,750px);max-height:92dvh;overflow:auto;padding:0;border:1px solid #bb925c;border-radius:14px;background:#10283d;color:#f5ead7;box-shadow:0 12px 40px #0009}
+.dorath-rules-dialog::backdrop{background:#000b}
+.dorath-rules-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;background:#071a2b;color:#f5dca7}
+.dorath-rules-close{font-size:20px;min-width:40px;min-height:40px;cursor:pointer}
+.dorath-rules-choices{display:flex;gap:8px;padding:10px 14px;border-bottom:1px solid #b18f6099}
+.dorath-rules-choices button{flex:1;min-height:44px;cursor:pointer}
+.dorath-rules-choices [aria-selected=true]{outline:2px solid #e5bf80}
+.dorath-rules-body{padding:12px 15px 20px;text-align:center}
+.dorath-rules-card img{display:block;width:100%;max-height:65dvh;object-fit:contain;margin:auto}
+.dorath-rules-pager{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:12px auto}
+.dorath-rules-pager button{min-height:42px}
+.dorath-rules-inline{margin-top:4px;min-height:40px}
+.dorath-rules-manual iframe{width:100%;height:min(64dvh,750px);border:0;background:white}
+.dorath-rules-manual a{display:block;margin:12px;color:#ffe1a2}
+.dorath-rules-unavailable{margin:24px 0;color:#f8cfa0;overflow-wrap:anywhere}
+@media(max-width:420px){.dorath-rules-choices{flex-direction:column}.dorath-rules-pager{font-size:12px}}
