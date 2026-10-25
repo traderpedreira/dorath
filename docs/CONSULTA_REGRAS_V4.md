@@ -17,7 +17,7 @@ Copiar os documentos finais aprovados para estes nomes/caminhos no site:
 
 Fontes documentais de referência:
 - `DORATH_3_Cartas_Consulta_P1_v1.1.pdf` (extrair as 3 páginas como imagens sem alterar arte ou texto).
-- `DORATH_Livro_de_Regras_P1_v3.1.pdf` (versão de 17/10/2026).
+- `DORATH_Livro_de_Regras_P1_v3.2_2026-10-25.pdf` (versão de 25/10/2026).
 
 **IMPORTANTE:** os PDFs/imagens ainda não foram incorporados nesta branch. O leitor mostra aviso de arquivo indisponível enquanto eles não estiverem presentes. **Não fazer merge/produção antes de incorporar e validar os quatro recursos.** A branch foi mantida isolada para evitar publicação parcial.
 
@@ -27,3 +27,7 @@ Fontes documentais de referência:
 3. Percorrer as 3 cartas, ampliar/rolar e consultar o PDF.
 4. Trocar abas e repetir; nenhum estado do jogo ou Supabase deve mudar.
 5. Verificar celular e desktop, console sem erros e retorno à partida.
+
+## Preparação dos arquivos em 25/10/2026
+
+Arquivo entregue: `DORATH_Regras_V4_Arquivos_2026-10-25.zip`, com as três cartas oficiais v1.1 separadas em WebP e o PDF integral do Livro de Regras v3.2. O pacote já está organizado em `sites/regras/`. Os arquivos binários precisam ser adicionados à branch antes do merge; esta etapa ainda não está feita no GitHub. Não confundir preparação do ZIP com deploy ou homologação.
