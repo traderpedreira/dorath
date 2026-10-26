@@ -18,5 +18,5 @@
 .dorath-rules-unavailable{margin:24px 0;color:#f8cfa0;overflow-wrap:anywhere}
 @media(max-width:420px){.dorath-rules-choices{flex-direction:column}.dorath-rules-pager{font-size:12px}}
 
-#movement>.dorath-rules-help{position:absolute;right:12px;top:10px;z-index:3;margin:0}
+#movement h3>.dorath-rules-help,#movement h2>.dorath-rules-help{position:static;float:right;margin:0 0 4px 8px;display:inline-flex;align-items:center;justify-content:center;z-index:3}
 .dorath-rules-menu{min-height:45px;cursor:pointer}
