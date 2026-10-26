@@ -10,9 +10,9 @@
   // Arquivos de consulta armazenados diretamente em sites/.
   // Não se substitui conteúdo ausente por regras reconstruídas.
   const cards = [
-    { label: 'Carta 1', path: 'guia-rapido-1.webp' },
-    { label: 'Carta 2', path: 'guia-rapido-2.webp' },
-    { label: 'Carta 3', path: 'guia-rapido-3.webp' }
+    { label: 'Carta 1', path: 'guia-rapido-1.png' },
+    { label: 'Carta 2', path: 'guia-rapido-2.png' },
+    { label: 'Carta 3', path: 'guia-rapido-3.png' }
   ];
   let manualPath = 'livro-de-regras.pdf';
   let combinedGuide = '';
