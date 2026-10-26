@@ -129,3 +129,21 @@
 #dv4modal .dv4tpl-v5 .dv4tpl-provisions{
  transform:translate(-50%,-56%);
 }
+
+/* Fix mobile V4: o limite genérico de 67vh em #dv4modal img
+   truncava a arte-base enquanto os overlays permaneciam na altura total. */
+#dv4modal .dv4tpl-card.dv4tpl-v5{width:100%;height:auto;aspect-ratio:3/4;display:block;box-sizing:border-box}
+#dv4modal .dv4tpl-card.dv4tpl-v5 > img.dv4tpl-base{
+ position:absolute!important;inset:0!important;width:100%!important;height:100%!important;
+ max-width:none!important;max-height:none!important;margin:0!important;
+ object-fit:fill!important;display:block!important;
+}
+#dv4modal .dv4tpl-card.dv4tpl-v5 .dv4tpl-portrait img{
+ width:100%!important;height:100%!important;max-width:none!important;
+ max-height:none!important;margin:0!important;object-fit:cover!important;
+}
+@media(max-width:600px){
+ #dv4modal:has(.dv4tpl-card){width:calc(100vw - 18px);max-width:calc(100vw - 18px);padding:5px;box-sizing:border-box}
+ #dv4modal .dv4tpl-v5 .dv4tpl-controls{overflow-y:auto}
+ #dv4modal .dv4tpl-v5 .dv4tpl-controls .dv4tpl-audio-toggle{min-height:0}
+}
