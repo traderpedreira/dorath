@@ -7,14 +7,14 @@
   const movement = document.getElementById('movement');
   if (!nav || !movement) return;
 
-  // Os quatro arquivos homologados devem ser publicados em sites/regras/.
+  // Arquivos de consulta armazenados diretamente em sites/.
   // Não se substitui conteúdo ausente por regras reconstruídas.
   const cards = [
-    { label: 'Carta 1', path: 'regras/guia-rapido-1.webp' },
-    { label: 'Carta 2', path: 'regras/guia-rapido-2.webp' },
-    { label: 'Carta 3', path: 'regras/guia-rapido-3.webp' }
+    { label: 'Carta 1', path: 'guia-rapido-1.webp' },
+    { label: 'Carta 2', path: 'guia-rapido-2.webp' },
+    { label: 'Carta 3', path: 'guia-rapido-3.webp' }
   ];
-  const manualPath = 'regras/livro-de-regras.pdf';
+  const manualPath = 'livro-de-regras.pdf';
   const make = (tag, cls, label) => {
     const el = document.createElement(tag);
     if (cls) el.className = cls;
