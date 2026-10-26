@@ -101,20 +101,43 @@
     manual.type = 'button'; manual.onclick = () => setView('manual');
     body.replaceChildren(holder, controls, manual);
   }
-  function showManual() {
+  async function showManual() {
     const holder = make('div', 'dorath-rules-manual');
-    const iframe = document.createElement('iframe');
-    iframe.title = 'Livro de regras do DORATH';
-    iframe.loading = 'eager';
-    iframe.src = manualPath + '#view=FitH';
-    const link = make('a', '', 'Abrir livro de regras em outra aba');
-    link.href = manualPath;
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
-    link.className = 'dorath-rules-external';
-    link.setAttribute('aria-label', 'Abrir livro de regras em nova aba, mantendo o jogo aberto');
-    holder.append(iframe, link);
+    const status = make('p', 'dorath-rules-loading', 'Carregando livro de regras…');
+    holder.append(status);
     body.replaceChildren(holder);
+    try {
+      const response = await fetch(manualPath);
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      const bytes = await response.arrayBuffer();
+      if (body.firstChild !== holder) return;
+      const pdfjs = await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs');
+      pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs';
+      const pdf = await pdfjs.getDocument({data:bytes}).promise;
+      if (body.firstChild !== holder) return;
+      const pages = make('div', 'dorath-rules-pdf-pages');
+      holder.replaceChildren(pages);
+      for (let i=1;i<=pdf.numPages;i++) {
+        if (body.firstChild !== holder) break;
+        const page=await pdf.getPage(i);
+        const base=page.getViewport({scale:1});
+        const scale=Math.min(2.2, Math.max(1, (Math.min(holder.clientWidth||650,750)*1.7)/base.width));
+        const viewport=page.getViewport({scale});
+        const canvas=document.createElement('canvas');
+        canvas.width=Math.ceil(viewport.width);canvas.height=Math.ceil(viewport.height);
+        canvas.style.width='100%';canvas.style.height='auto';canvas.style.display='block';
+        canvas.setAttribute('aria-label','Página '+i+' de '+pdf.numPages);
+        const item=make('div','dorath-rules-pdf-page');
+        item.append(canvas);pages.append(item);
+        await page.render({canvasContext:canvas.getContext('2d'),viewport}).promise;
+      }
+    } catch(err) {
+      if (body.firstChild !== holder) return;
+      const message=make('p','dorath-rules-unavailable','Não foi possível mostrar o PDF dentro da janela.');
+      const link=make('a','dorath-rules-external','Abrir livro de regras em outra aba');
+      link.href=manualPath;link.target='_blank';link.rel='noopener noreferrer';
+      holder.replaceChildren(message,link);
+    }
   }
   function setView(view) {
     dialog.querySelectorAll('[data-rules-view]').forEach(btn => {
