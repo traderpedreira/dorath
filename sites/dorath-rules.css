@@ -20,3 +20,5 @@
 
 #movement h3>.dorath-rules-help,#movement h2>.dorath-rules-help{position:static;float:right;margin:0 0 4px 8px;display:inline-flex;align-items:center;justify-content:center;z-index:3}
 .dorath-rules-menu{min-height:45px;cursor:pointer}
+
+.dorath-rules-pdf-pages{display:grid;gap:12px}.dorath-rules-pdf-page{background:white;box-shadow:0 2px 10px #0005}.dorath-rules-loading{padding:40px 10px}.dorath-rules-external{display:block;margin:14px;color:#ffe1a2}
