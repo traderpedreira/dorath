@@ -14,7 +14,36 @@
     { label: 'Carta 2', path: 'guia-rapido-2.webp' },
     { label: 'Carta 3', path: 'guia-rapido-3.webp' }
   ];
-  const manualPath = 'livro-de-regras.pdf';
+  let manualPath = 'livro-de-regras.pdf';
+  let combinedGuide = '';
+  let discovered = false;
+  // Descobre os nomes publicados em sites/ sem alterar o motor ou o servidor.
+  // Este repositório é público; se a API estiver indisponível, há nomes locais de reserva.
+  async function discoverFiles() {
+    if (discovered) return;
+    discovered = true;
+    let names = [];
+    try {
+      const response = await fetch('https://api.github.com/repos/traderpedreira/dorath/contents/sites?ref=feature%2Fdorath-mobile-v4', {cache:'no-store'});
+      if (response.ok) {
+        const items = await response.json();
+        if (Array.isArray(items)) names = items.filter(x=>x.type==='file').map(x=>x.name);
+      }
+    } catch (_) {}
+    const lower = v=>v.toLocaleLowerCase('pt-BR').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'');
+    const isPdf = v=>/\\.pdf$/i.test(v);
+    const isImage = v=>/\\.(webp|png|jpe?g)$/i.test(v);
+    const sorted = names.slice().sort((a,b)=>a.localeCompare(b,'pt-BR'));
+    const manual = sorted.filter(n=>isPdf(n)&&/livro.*regras|manual.*periodo|regras.*v3[._-]?2/i.test(lower(n))).sort((a,b)=>Number(/v3[._-]?2/i.test(lower(b)))-Number(/v3[._-]?2/i.test(lower(a))))[0];
+    if (manual) manualPath = encodeURIComponent(manual);
+    const guidePDF = sorted.find(n=>isPdf(n)&&(/3.*cartas.*consulta|cartas.*consulta|guia.*rapido/i.test(lower(n))));
+    if (guidePDF) combinedGuide=encodeURIComponent(guidePDF);
+    const images=sorted.filter(n=>isImage(n)&&/guia|consulta|carta.*[123]/i.test(lower(n)));
+    for (let i=0;i<3;i++) {
+      const n=images.find(n=>new RegExp('(?:^|[^0-9])'+(i+1)+'(?:[^0-9]|$)').test(n))||images[i];
+      if (n) cards[i].path=encodeURIComponent(n);
+    }
+  }
   const make = (tag, cls, label) => {
     const el = document.createElement(tag);
     if (cls) el.className = cls;
@@ -48,7 +77,15 @@
     const img = document.createElement('img');
     img.alt = 'Guia rápido · ' + item.label;
     img.loading = 'lazy';
-    img.onerror = () => unavailable(holder, item.path);
+    img.onerror = () => {
+      if (combinedGuide) {
+        const fallback = document.createElement('iframe');
+        fallback.title='Três cartas de consulta — documento original';
+        fallback.src=combinedGuide+'#toolbar=1&view=Fit';
+        fallback.style.cssText='width:100%;height:55dvh;border:0;background:white';
+        holder.replaceChildren(fallback);
+      } else unavailable(holder, decodeURIComponent(item.path));
+    };
     holder.append(img);
     img.src = item.path;
     const controls = make('div', 'dorath-rules-pager');
@@ -93,8 +130,9 @@
     if (view === 'manual') showManual();
     else showCard(selected);
   }
-  function open(view) {
+  async function open(view) {
     previousFocus = document.activeElement;
+    await discoverFiles();
     if (typeof dialog.showModal === 'function' && !dialog.open) dialog.showModal();
     else if (typeof dialog.showModal !== 'function') dialog.setAttribute('open', '');
     setView(view);
