@@ -49,8 +49,8 @@
     img.alt = 'Guia rápido · ' + item.label;
     img.loading = 'lazy';
     img.onerror = () => unavailable(holder, item.path);
-    img.src = item.path;
     holder.append(img);
+    img.src = item.path;
     const controls = make('div', 'dorath-rules-pager');
     const prev = make('button', '', '← Anterior');
     prev.type = 'button'; prev.disabled = selected === 0;
@@ -75,7 +75,7 @@
     body.replaceChildren(holder);
     try {
       const response = await fetch(manualPath, { method: 'HEAD' });
-      if (!response.ok || !dialog.open || body.firstChild !== holder) {
+      if (!response.ok || body.firstChild !== holder) {
         if (!response.ok && body.firstChild === holder) unavailable(body, manualPath);
         return;
       }
@@ -95,9 +95,9 @@
   }
   function open(view) {
     previousFocus = document.activeElement;
+    if (typeof dialog.showModal === 'function' && !dialog.open) dialog.showModal();
+    else if (typeof dialog.showModal !== 'function') dialog.setAttribute('open', '');
     setView(view);
-    if (typeof dialog.showModal === 'function') dialog.showModal();
-    else dialog.setAttribute('open', '');
   }
   function close() {
     if (typeof dialog.close === 'function' && dialog.open) dialog.close();
@@ -116,8 +116,12 @@
   help.addEventListener('click', () => open('guide'));
   // O conteúdo do painel Jogar é renderizado novamente durante a partida.
   // O observador mantém exclusivamente o botão, sem alterar ações do jogo.
-  function syncHelp() { if (!movement.contains(help)) movement.append(help); }
+  function syncHelp() {
+    const title = movement.querySelector('h3, h2');
+    if (title && help.parentNode !== title) title.append(help);
+    else if (!title && help.parentNode) help.remove();
+  }
   const observer = new MutationObserver(syncHelp);
-  observer.observe(movement, {childList:true});
+  observer.observe(movement, {childList:true,subtree:true});
   syncHelp();
 })();
