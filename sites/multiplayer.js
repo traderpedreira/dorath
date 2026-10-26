@@ -136,7 +136,7 @@ function partyHistoryHTML(){
 const names=()=>view.rooms.flatMap(r=>r.players);
 const choices=(items,skip)=>items.filter(q=>q.id!==skip).map(q=>`<option value="${esc(q.id)}">${esc(q.name)}</option>`).join('');
 // Estado visual local: nao altera regras nem sessao da partida.
-const dv4PlayerExpanded=new Set(['player','collection']);
+const dv4PlayerExpanded=new Set(window.matchMedia('(min-width:900px)').matches ? ['player','collection','recruit','available','locked'] : ['player','collection']);
 let dv4SelectionOrder=[];
 let dv4SelectionPlayer='';
 function syncSelectedCharacters(p){
