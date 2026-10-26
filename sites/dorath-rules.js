@@ -101,25 +101,20 @@
     manual.type = 'button'; manual.onclick = () => setView('manual');
     body.replaceChildren(holder, controls, manual);
   }
-  async function showManual() {
+  function showManual() {
     const holder = make('div', 'dorath-rules-manual');
     const iframe = document.createElement('iframe');
     iframe.title = 'Livro de regras do DORATH';
-    iframe.loading = 'lazy';
-    const link = make('a', '', 'Abrir manual em outra aba');
-    link.href = manualPath; link.target = '_blank'; link.rel = 'noopener';
+    iframe.loading = 'eager';
+    iframe.src = manualPath + '#view=FitH';
+    const link = make('a', '', 'Abrir livro de regras em outra aba');
+    link.href = manualPath;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.className = 'dorath-rules-external';
+    link.setAttribute('aria-label', 'Abrir livro de regras em nova aba, mantendo o jogo aberto');
     holder.append(iframe, link);
     body.replaceChildren(holder);
-    try {
-      const response = await fetch(manualPath, { method: 'HEAD' });
-      if (!response.ok || body.firstChild !== holder) {
-        if (!response.ok && body.firstChild === holder) unavailable(body, manualPath);
-        return;
-      }
-      iframe.src = manualPath;
-    } catch {
-      if (body.firstChild === holder) unavailable(body, manualPath);
-    }
   }
   function setView(view) {
     dialog.querySelectorAll('[data-rules-view]').forEach(btn => {
