@@ -285,7 +285,7 @@ function resolveMarco(g,p,n){
 function resolvePersonal(g,p,n){
  const h=g.pendingMarco.house,r=number(n,1,4);if(g.pendingMarco.initiator!==p.id)fail('Envolvimento reservado ao jogador que parou no Marco');
  const effects={6:[{}, {conhecimento:1},{conhecimento:1,heranca:1},{conhecimento:2,heranca:1}],
- 10:[{influencia:1},{influencia:1},{influencia:1},{influencia:2}],
+ 10:[{influencia:1},{influencia:1},{influencia:1,conhecimento:1},{influencia:2,conhecimento:1}],
  22:[{}, {influencia:-1},{influencia:-1,heranca:-1},{influencia:-2,heranca:-1}],
  27:[{conhecimento:1},{conhecimento:1},{conhecimento:2},{conhecimento:2,influencia:1}],
  37:[{}, {influencia:-1},{influencia:-1,provisoes:-1},{influencia:-2,provisoes:-1}],
