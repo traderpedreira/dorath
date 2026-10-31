@@ -77,10 +77,11 @@ function ensureDiceDialog(){
  return dialog;
 }
 function diceGlyph(max,value){
- if(max===6)return '<span class="dv4-die dv4-d6" aria-hidden="true"><span class="dv4-cube"><i class="front">'+value+'</i><i class="back">'+value+'</i><i class="right">'+value+'</i><i class="left">'+value+'</i><i class="top">'+value+'</i><i class="bottom">'+value+'</i></span></span>';
- if(max===4)return '<span class="dv4-die dv4-d4" aria-hidden="true"><span class="dv4-poly dv4-tetra"><i>'+value+'</i></span></span>';
- if(max===8)return '<span class="dv4-die dv4-d8" aria-hidden="true"><span class="dv4-poly dv4-octa"><i>'+value+'</i></span></span>';
- return '<span class="dv4-die" aria-hidden="true"><b>'+value+'</b></span>';
+ const n='<span class="dv4-die-value">'+value+'</span>';
+ if(max===6)return '<span class="dv4-die dv4-d6" aria-hidden="true"><span class="dv4-cube"><i class="front">'+n+'</i><i class="back">'+n+'</i><i class="right">'+n+'</i><i class="left">'+n+'</i><i class="top">'+n+'</i><i class="bottom">'+n+'</i></span></span>';
+ if(max===4)return '<span class="dv4-die dv4-d4" aria-hidden="true"><span class="dv4-poly dv4-tetra"><i>'+n+'</i></span></span>';
+ if(max===8)return '<span class="dv4-die dv4-d8" aria-hidden="true"><span class="dv4-poly dv4-octa"><i>'+n+'</i></span></span>';
+ return '<span class="dv4-die" aria-hidden="true"><b>'+n+'</b></span>';
 }
 function diceImpactSound(){
  try{
