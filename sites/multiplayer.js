@@ -1,6 +1,6 @@
 import { DorathAudio } from './dorath-audio.js';
 import { EDGE_FUNCTION_URL, SUPABASE_PUBLISHABLE_KEY } from './supabase-config.js';
-import { supabase, validSession, accountTokenKey } from './auth.js';
+import { supabase, validSession, accountTokenKey, ensurePlaytestSession } from './auth.js';
 const $=id=>document.getElementById(id), esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const label={conhecimento:'Conhecimento',influencia:'Influência',provisoes:'Provisões',heranca:'Herança'};
 let token='',view=null,busy=false,stream=null,currentUser=null,sessionAccessToken='';
@@ -134,12 +134,18 @@ function savedParties(){
 function rememberParty(v){
  if(!currentUser||!token||!v?.motherCode)return;
  const others=savedParties().filter(x=>x.token!==token);
- const entry={token,code:v.motherCode,name:v.me?.name||'Jogador',mode:v.mode||'multiplayer',updated:Date.now()};
+ const entry={token,code:v.motherCode,name:v.me?.name||'Jogador',mode:v.mode||'multiplayer',host:v.me?.id===v.hostPlayerId,updated:Date.now()};
  try{localStorage.setItem(partyHistoryKey(currentUser.id),JSON.stringify([entry,...others].slice(0,12)))}catch{}
+}
+function forgetParty(localToken){
+ if(!currentUser||!localToken)return;
+ const list=savedParties().filter(x=>x.token!==localToken);
+ try{localStorage.setItem(partyHistoryKey(currentUser.id),JSON.stringify(list))}catch{}
+ if(localStorage.getItem(accountTokenKey(currentUser.id))===localToken)localStorage.removeItem(accountTokenKey(currentUser.id));
 }
 function partyHistoryHTML(){
  const list=savedParties();
- return list.length?`<section class="dv4-party-history"><h4>MINHAS PARTIDAS NESTE APARELHO</h4><p>Partidas anteriormente acessadas nesta conta. Os registros permanecem neste navegador até seus dados locais serem apagados.</p><div class="dv4-party-grid">${list.map(x=>`<button type="button" data-party-token="${esc(x.token)}"><b>${esc(x.code)}</b><small>${x.mode==='solo'?'Solo':'Grupo'} · ${esc(x.name)}</small></button>`).join('')}</div></section>`:'';
+ return list.length?`<section class="dv4-party-history"><h4>MINHAS PARTIDAS NESTE APARELHO</h4><p>Abra uma partida anterior ou remova jogos abandonados. Quem criou a Partida-mestre também pode excluí-la do servidor.</p><div class="dv4-party-grid">${list.map(x=>`<article class="dv4-party-item"><button type="button" class="dv4-party-open" data-party-token="${esc(x.token)}"><b>${esc(x.code)}</b><small>${x.mode==='solo'?'Solo':'Grupo'} · ${esc(x.name)}</small></button><div class="dv4-party-actions"><button type="button" data-party-forget="${esc(x.token)}">Remover deste aparelho</button>${x.host?'<button type="button" class="dv4-party-delete" data-party-delete="'+esc(x.token)+'" data-party-code="'+esc(x.code)+'">Excluir Partida-mestre</button>':''}</div></article>`).join('')}</div></section>`:'';
 }
 const names=()=>view.rooms.flatMap(r=>r.players);
 const choices=(items,skip)=>items.filter(q=>q.id!==skip).map(q=>`<option value="${esc(q.id)}">${esc(q.name)}</option>`).join('');
@@ -471,8 +477,28 @@ $('togglePlayerRegentMode')?.addEventListener('click',()=>{
 });
 $('createSolo').onclick=()=>enter('create','solo');$('create').onclick=()=>enter('create','multiplayer');$('join').onclick=()=>enter('join');
 document.addEventListener('click',async e=>{
+ if(!currentUser)return;
+ const remove=e.target.closest('button[data-party-forget]');
+ if(remove){
+  const localToken=remove.dataset.partyForget;
+  if(window.confirm('Remover esta partida apenas deste aparelho?')){forgetParty(localToken);showPartyChooser();}
+  return;
+ }
+ const del=e.target.closest('button[data-party-delete]');
+ if(del){
+  const localToken=del.dataset.partyDelete,code=del.dataset.partyCode||'';
+  if(!window.confirm('Excluir definitivamente a Partida-mestre '+code+'? Todos os vínculos e sessões dela serão apagados.'))return;
+  try{
+   await api('deleteGame',{token:localToken});
+   forgetParty(localToken);
+   if(token===localToken){token='';view=null}
+   say('Partida-mestre '+code+' excluída.');
+   showPartyChooser();
+  }catch(error){say('Não foi possível excluir a partida: '+(error?.message||'erro desconhecido'),true)}
+  return;
+ }
  const button=e.target.closest('button[data-party-token]');
- if(!button||!currentUser)return;
+ if(!button)return;
  const next=button.dataset.partyToken;
  if(!next)return;
  token=next;localStorage.setItem(accountTokenKey(currentUser.id),token);
@@ -492,13 +518,13 @@ let authReady=false;
 const withAuthDeadline=(promise,ms=15000)=>Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error('Tempo limite da autenticação excedido.')),ms))]);
 async function showAccount(session,chooseParty=false){
  authReady=true;
- const user=session?.user&&!session.user.is_anonymous?session.user:null;
+ const user=session?.user||null;
  currentUser=user;sessionAccessToken=session?.access_token||'';view=null;token='';
  $('board').hidden=true;
  $('account').hidden=!!user;
  $('game').hidden=!user;
  if(!user){$('login').hidden=true;say('Entre na sua conta para abrir o playtest.');return}
- $('accountEmail').textContent=user.email||'Conta conectada';
+ $('accountEmail').textContent=user.email||'Sessão local do playtest';
  historyKey=`dorath.p1.secretHistory.${user.id}`;
  commonKey=`dorath.p1.commonHistory.${user.id}`;
  token=localStorage.getItem(accountTokenKey(user.id))||'';
@@ -527,29 +553,34 @@ $('accountForm').onsubmit=async e=>{
  finally{authBusy=false;$('accountSubmit').disabled=false;$('accountSubmit').textContent='Entrar';$('accountMode').value='login'}
 };
 $('signout').onclick=async()=>{
- if(authBusy)return;
- authBusy=true;
- // Invalida respostas de atualizacao pendentes antes de encerrar voluntariamente a conta.
- token='';
- try{
-  const {error}=await withAuthDeadline(supabase.auth.signOut());
-  if(error)throw error;
-  await showAccount(null);
- }catch(error){say('Falha ao sair: '+(error?.message||'Erro desconhecido'),true)}
- finally{authBusy=false}
+ if(!currentUser)return;
+ token='';view=null;
+ localStorage.removeItem(accountTokenKey(currentUser.id));
+ $('board').hidden=true;$('login').hidden=false;
+ say('Você saiu desta partida. A sessão anônima do playtest continua ativa neste aparelho.');
 };
 // INITIAL_SESSION entrega o estado local sem disparar uma segunda consulta concorrente.
 // SIGNED_IN e SIGNED_OUT são tratados pelo formulário e botão, evitando corridas.
 supabase.auth.onAuthStateChange((event,session)=>{
  if(event==='TOKEN_REFRESHED'&&session?.access_token)sessionAccessToken=session.access_token;
  if(event==='INITIAL_SESSION'){
-  if(!authBusy)void showAccount(session).catch(error=>say('Falha ao restaurar partida: '+error.message,true));
+  if(authBusy)return;
+  void (async()=>{
+   try{
+    const active=session||await ensurePlaytestSession();
+    await showAccount(active);
+   }catch(error){
+    $('account').hidden=false;$('game').hidden=true;
+    say('Não foi possível iniciar a sessão automática do playtest: '+(error?.message||'erro desconhecido'),true);
+   }
+  })();
  }
+ if(event==='SIGNED_IN'&&session&&!authReady&&!authBusy)void showAccount(session);
 });
 setTimeout(()=>{
  if(!authReady&&!authBusy){
   $('account').hidden=false;$('game').hidden=true;
-  say('A sessão demorou para inicializar. Tente entrar com sua conta.',true);
+  say('A sessão automática do playtest demorou para inicializar. Recarregue a página.',true);
  }
 },12000);
 setInterval(()=>{if(currentUser&&token&&!busy&&!refreshInFlight&&(!lastRefreshFailure||Date.now()-lastRefreshFailure>10000))refresh()},2000);
