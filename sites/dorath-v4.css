@@ -1551,3 +1551,58 @@ body.dv4-player-regent-mode .dv4-player-mode-toolbar{justify-content:center}
 .dv4-party-actions button{margin:0!important;min-height:40px!important;padding:8px!important;font-size:.75rem}
 .dv4-party-actions .dv4-party-delete{background:linear-gradient(#803f35,#4a231f)!important;border-color:#a76458!important}
 @media(max-width:520px){.dv4-party-actions{grid-template-columns:1fr}}
+
+
+/* Compartilhamento da Partida-mestre */
+.dv4-share-panel{
+ display:grid;
+ grid-template-columns:auto minmax(0,1fr);
+ align-items:center;
+ gap:10px 14px;
+ padding:12px 14px!important;
+ margin:8px 0 12px!important;
+ border:1px solid #a67c47!important;
+ border-radius:12px!important;
+ background:linear-gradient(145deg,#f6e7c7,#d8b17d)!important;
+ color:#3a2616!important;
+}
+.dv4-share-panel>div:first-child{display:flex;flex-direction:column;gap:2px;min-width:120px}
+.dv4-share-panel>div:first-child small{font:800 .62rem/1.2 system-ui,sans-serif;letter-spacing:.11em;color:#77502a}
+.dv4-share-panel>div:first-child strong{font:800 clamp(1.15rem,5vw,1.55rem)/1 Georgia,serif;letter-spacing:.08em;color:#35200f}
+.dv4-share-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.dv4-share-actions button{
+ min-height:42px;
+ margin:0!important;
+ padding:8px 9px!important;
+ border:1px solid #9c7445!important;
+ border-radius:8px!important;
+ background:linear-gradient(#674723,#392619)!important;
+ color:#ffe8bd!important;
+ font:700 .74rem/1.2 Georgia,serif!important;
+}
+.dv4-share-panel>small:last-child{grid-column:1/-1;min-height:1.1em;font:.72rem/1.35 system-ui,sans-serif;color:#694723}
+.dv4-share-qr{
+ position:fixed;
+ width:min(92vw,620px);
+ max-height:92vh;
+ padding:44px 18px 20px;
+ border:3px ridge #aa7b42;
+ border-radius:14px;
+ background:linear-gradient(#f8e8c6,#d9b27d);
+ color:#342111;
+ text-align:center;
+ box-shadow:0 18px 55px #000e;
+}
+.dv4-share-qr::backdrop{background:#000d}
+.dv4-share-qr img{display:block;width:min(78vw,520px);height:auto;max-height:64vh;object-fit:contain;margin:0 auto 12px;background:#fff;padding:8px;border-radius:8px}
+.dv4-share-qr strong{display:block;font-size:1.35rem;letter-spacing:.12em;margin:5px 0}
+.dv4-share-qr p{margin:7px 0 0;color:#4d331c}
+#shareQrClose,#regentShareQrClose{
+ position:absolute;right:9px;top:8px;width:36px;height:36px;padding:0;
+ border:1px solid #9d7340;border-radius:50%;background:#4a301b;color:#ffe8bd;font-size:1.35rem;
+}
+@media(max-width:620px){
+ .dv4-share-panel{grid-template-columns:1fr}
+ .dv4-share-actions{grid-template-columns:1fr 1fr}
+ .dv4-share-actions button:first-child{grid-column:1/-1}
+}
