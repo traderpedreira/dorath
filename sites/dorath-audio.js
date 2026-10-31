@@ -14,7 +14,7 @@ export class DorathAudio {
  async render(v){if(!this.enabled||document.hidden)return;const fallen=!!v.rupturesResolved?.R12;const isFall=fallen||this.fallen;
  // Global ruptures are read from the existing server state, never derived from local movement.
  if(fallen)this.fallen=true;
- const house=Number(v.me?.house||1);const next=new Map();
+ const house=Number(v.me?.house||v.currentHouse?.house||1);const next=new Map();
  if(this.ambient&&Date.now()>=this.silenceUntil){
   if(isFall)next.set('post',.24);
   else if(house===11){next.set('tension',.18)}
