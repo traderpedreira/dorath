@@ -77,9 +77,9 @@ function ensureDiceDialog(){
  return dialog;
 }
 function diceGlyph(max,value){
- if(max===6)return '<span class="dv4-die dv4-d6" aria-hidden="true"><b>'+value+'</b></span>';
- if(max===4)return '<span class="dv4-die dv4-d4" aria-hidden="true"><b>'+value+'</b></span>';
- if(max===8)return '<span class="dv4-die dv4-d8" aria-hidden="true"><b>'+value+'</b></span>';
+ if(max===6)return '<span class="dv4-die dv4-d6" aria-hidden="true"><span class="dv4-cube"><i class="front">'+value+'</i><i class="back">'+value+'</i><i class="right">'+value+'</i><i class="left">'+value+'</i><i class="top">'+value+'</i><i class="bottom">'+value+'</i></span></span>';
+ if(max===4)return '<span class="dv4-die dv4-d4" aria-hidden="true"><span class="dv4-poly dv4-tetra"><i>'+value+'</i></span></span>';
+ if(max===8)return '<span class="dv4-die dv4-d8" aria-hidden="true"><span class="dv4-poly dv4-octa"><i>'+value+'</i></span></span>';
  return '<span class="dv4-die" aria-hidden="true"><b>'+value+'</b></span>';
 }
 function diceImpactSound(){
@@ -107,7 +107,7 @@ async function animateDice(values,max,label){
  [...tray.children].forEach(el=>el.classList.add('is-landed'));
  result.textContent=values.length===1?('RESULTADO: '+values[0]):('RESULTADO: '+values.join(' · '));
  diceImpactSound();
- await new Promise(r=>setTimeout(r,520));
+ await new Promise(r=>setTimeout(r,2520));
  dialog.close();
  diceAnimating=false;
 }
