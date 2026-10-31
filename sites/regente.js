@@ -1,6 +1,6 @@
 import { DorathAudio } from './dorath-audio.js';
 import { EDGE_FUNCTION_URL, SUPABASE_PUBLISHABLE_KEY } from './supabase-config.js';
-import { supabase } from './auth.js';
+import { supabase, ensurePlaytestSession } from './auth.js';
 
 const $=id=>document.getElementById(id);
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -182,10 +182,10 @@ $('accountForm').onsubmit=async e=>{
 };
 
 async function showAccount(session){
- currentUser=session?.user&&!session.user.is_anonymous?session.user:null;
+ currentUser=session?.user||null;
  sessionAccessToken=session?.access_token||'';
  $('account').hidden=!!currentUser;
- if(!currentUser){$('joinPanel').hidden=true;$('board').hidden=true;say('Entre na sua conta para abrir o Regente.');return}
+ if(!currentUser){$('joinPanel').hidden=true;$('board').hidden=true;say('Iniciando sessão local do playtest…');return}
  $('joinPanel').hidden=false;
  token=localStorage.getItem(regentTokenKey(currentUser.id))||'';
  $('resumeRegent').hidden=!token;
@@ -194,8 +194,18 @@ async function showAccount(session){
 
 supabase.auth.onAuthStateChange((event,session)=>{
  if(event==='TOKEN_REFRESHED'&&session?.access_token)sessionAccessToken=session.access_token;
- if(event==='INITIAL_SESSION')void showAccount(session);
- if(event==='SIGNED_OUT')void showAccount(null);
+ if(event==='INITIAL_SESSION'){
+  void (async()=>{
+   try{
+    const active=session||await ensurePlaytestSession();
+    await showAccount(active);
+   }catch(error){
+    $('account').hidden=false;$('joinPanel').hidden=true;$('board').hidden=true;
+    say('Não foi possível iniciar a sessão automática do playtest: '+(error?.message||'erro desconhecido'),true);
+   }
+  })();
+ }
+ if(event==='SIGNED_IN'&&session&&!currentUser)void showAccount(session);
 });
 
 setInterval(()=>{if(currentUser&&token&&!busy&&!refreshInFlight)void refresh()},2000);
