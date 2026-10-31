@@ -1460,3 +1460,7 @@ body.dv4-regent-body{min-height:100vh}
  .dv4-regent-wide{grid-column:auto}
  .dv4-regent-login .dv4-regent-actions{grid-template-columns:1fr}
 }
+
+.dv4-player-mode-toolbar{display:flex;justify-content:flex-end;margin:8px 0 10px}
+.dv4-player-mode-toolbar button{min-height:40px;padding:8px 12px;border:1px solid #9a7547;border-radius:9px;background:#4a311d;color:#f5ddb2;font-weight:800}
+body.dv4-player-regent-mode .dv4-player-mode-toolbar{justify-content:center}
