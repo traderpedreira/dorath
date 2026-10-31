@@ -5,7 +5,7 @@ const host=board.querySelector('.mp-grid');const panels=['movement','missions','
 const active=(id)=>document.getElementById(id);
 const ui=document.createElement('section');ui.id='dv4';ui.innerHTML='<div class="dv4-meta" aria-label="Informações da partida"><span>PERÍODO 1<small>Éden ao Dilúvio</small></span><span id="dv4round">RODADA —</span><span id="dv4house">CASA —</span></div><div class="dv4-cards" id="dv4cards" aria-label="Cartas do jogador"></div><nav class="dv4-nav" aria-label="Navegação do Dorath"></nav><dialog id="dv4modal" aria-label="Carta ampliada"><button type="button" id="dv4close" aria-label="Fechar carta">✕</button><div id="dv4content"></div></dialog>';
 board.insertBefore(ui,host);const cards=ui.querySelector('#dv4cards'),nav=ui.querySelector('.dv4-nav'),modal=ui.querySelector('#dv4modal');
-const navItems=[['movement','Jogar','◈'],['missions','Missão','✦'],['world','Eventos','❢'],['player','Jogador','♛'],['threats','Ameaças','⚔'],['trades','Trocas','⇄'],['rooms','Salas','⌂'],['more','Mais','☰']];
+const navItems=[['movement','Jogar','◈'],['missions','Missão','✦'],['world','Eventos','❢'],['player','Jogador','♛'],['threats','Ameaças','⚔'],['trades','Trocas','⇄'],['rooms','Salas','⌂'],['share','Compartilhar','↗'],['more','Mais','☰']];
 // Icones vetoriais embutidos (sem dependencia de fontes ou bibliotecas externas).
 const navIconPaths={
  movement:'<path d="M6 3h12l4 9-10 9L2 12 6 3Z"/><path d="M2 12h20M6 3l6 9 6-9M12 12v9"/>',
@@ -15,6 +15,7 @@ const navIconPaths={
  threats:'<path d="m14.5 17.5 3-3L6 3 3 6l11.5 11.5ZM13 19l6 2 2-2-2-6M3 21l6-6"/>',
  trades:'<path d="M7 7h14m-4-4 4 4-4 4M17 17H3m4-4-4 4 4 4"/>',
  rooms:'<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V10Z"/><path d="M9 21v-8h6v8"/>',
+ share:'<path d="M12 3v12M7 8l5-5 5 5"/><path d="M5 13v7h14v-7"/>',
  more:'<path d="M4 6h16M4 12h16M4 18h16"/>',
  history:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/>',
  change:'<path d="M20 7H4m0 0 4-4M4 7l4 4M4 17h16m0 0-4-4m4 4-4 4"/>',
@@ -63,7 +64,7 @@ function openMore(){
 }
 closeMore();
 function select(id,user=false){if(!panels.includes(id))return;selected=id;manual=user;for(const key of panels)active(key)?.classList.toggle('dv4-current',key===id);for(const b of nav.querySelectorAll('button'))b.classList.toggle('dv4-selected',b.dataset.dv4===(navItems.some(n=>n[0]===id)?id:'more'));closeMore()}
-nav.addEventListener('click',e=>{const id=e.target.closest('button[data-dv4]')?.dataset.dv4;if(!id)return;if(id==='more'){openMore();return}if(id==='history'){select(id,true);return}select(id,true)});
+nav.addEventListener('click',e=>{const id=e.target.closest('button[data-dv4]')?.dataset.dv4;if(!id)return;if(id==='more'){openMore();return}if(id==='share'){closeMore();document.dispatchEvent(new Event('dorath-share-open'));return}if(id==='history'){select(id,true);return}select(id,true)});
 extras.addEventListener('click',e=>{const id=e.target.closest('[data-dv4]')?.dataset.dv4;if(id)select(id,true)});
 function openCard(card){
  const body=ui.querySelector('#dv4content');body.replaceChildren();
