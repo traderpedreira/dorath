@@ -19,6 +19,51 @@ document.getElementById('audioToggle').addEventListener('click',async()=>{if(aud
 document.getElementById('audioVolume').addEventListener('input',e=>audio.setVolume(Number(e.target.value)/100));
 document.getElementById('audioAmbient').addEventListener('change',e=>{audio.ambient=e.target.checked;if(audio.last)audio.render(audio.last)});
 document.getElementById('audioEffects').addEventListener('change',e=>{audio.effects=e.target.checked});
+function gameShareUrl(code){
+ const url=new URL('multiplayer.html',location.href);
+ url.search='';
+ url.hash='';
+ url.searchParams.set('code',code);
+ return url.toString();
+}
+function prefillSharedCode(){
+ const code=new URLSearchParams(location.search).get('code');
+ if(code&&/^[A-Z2-9]{6}$/i.test(code)){
+  const input=$('code');if(input)input.value=code.toUpperCase();
+ }
+}
+function renderSharePanel(){
+ const panel=$('sharePanel');
+ if(!panel||!view?.motherCode){if(panel)panel.hidden=true;return}
+ panel.hidden=false;
+ $('shareCode').textContent=view.motherCode;
+}
+async function copyText(value){
+ if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(value);return}
+ const area=document.createElement('textarea');area.value=value;area.style.position='fixed';area.style.opacity='0';document.body.append(area);area.select();document.execCommand('copy');area.remove();
+}
+async function shareGameLink(){
+ if(!view?.motherCode)return;
+ const url=gameShareUrl(view.motherCode);
+ const feedback=$('shareFeedback');
+ try{
+  if(navigator.share)await navigator.share({title:'Dorath',text:'Entre na partida Dorath '+view.motherCode,url});
+  else{await copyText(url);if(feedback)feedback.textContent='Link copiado para a área de transferência.'}
+ }catch(error){
+  if(error?.name!=='AbortError'&&feedback)feedback.textContent='Não foi possível compartilhar. Use Copiar link.';
+ }
+}
+async function showGameQr(){
+ if(!view?.motherCode)return;
+ const feedback=$('shareFeedback');
+ try{
+  const QR=await import('https://esm.sh/qrcode@1.5.4');
+  const url=gameShareUrl(view.motherCode);
+  $('shareQrImage').src=await QR.toDataURL(url,{width:520,margin:2,errorCorrectionLevel:'M'});
+  $('shareQrCode').textContent=view.motherCode;
+  $('shareQrDialog').showModal();
+ }catch(error){if(feedback)feedback.textContent='Não foi possível gerar o QR. Use Compartilhar ou Copiar link.'}
+}
 function say(t,error=false){$('status').textContent=t;$('status').classList.toggle('mp-error',error)}
 async function api(route,data={}){
  if(!/^https:\/\/[^/]+\.supabase\.co\/functions\/v1\/dorath-p1(?:-v4)?$/.test(EDGE_FUNCTION_URL))throw Error('Configure site/supabase-config.js antes de usar o app');
@@ -86,7 +131,7 @@ async function refresh(){
   if(token!==requestedToken||currentUser?.id!==requestedUser)return;
   const changed=!view||next.revision!==view.revision;const prior=view;view=next;recordResourceChanges(prior,next);syncPlayerRegentMode();
   void audio.update(view);saveCommon();rememberParty(view);
-  $('login').hidden=true;$('board').hidden=false;
+  $('login').hidden=true;$('board').hidden=false;renderSharePanel();
   if(changed)draw();
   say(`Conectado · Partida-mestre ${view.motherCode} · ${view.playerOrder.length} ${view.playerOrder.length===1?'jogador':'jogadores'} na partida`);
   lastRefreshFailure=0;
@@ -469,6 +514,17 @@ $('regentPlayerMode')?.addEventListener('change',e=>{
  syncPlayerRegentMode();
  if(view)draw();
 });
+$('shareGame')?.addEventListener('click',()=>void shareGameLink());
+$('copyGameLink')?.addEventListener('click',async()=>{
+ if(!view?.motherCode)return;
+ const feedback=$('shareFeedback');
+ try{await copyText(gameShareUrl(view.motherCode));if(feedback)feedback.textContent='Link copiado.'}
+ catch{if(feedback)feedback.textContent='Não foi possível copiar o link.'}
+});
+$('showGameQr')?.addEventListener('click',()=>void showGameQr());
+$('shareQrClose')?.addEventListener('click',()=>$('shareQrDialog')?.close());
+$('shareQrDialog')?.addEventListener('click',e=>{if(e.target===$('shareQrDialog'))$('shareQrDialog').close()});
+prefillSharedCode();
 $('togglePlayerRegentMode')?.addEventListener('click',()=>{
  const enabled=localStorage.getItem(playerRegentModeKey)==='1';
  localStorage.setItem(playerRegentModeKey,enabled?'0':'1');
@@ -530,7 +586,7 @@ async function showAccount(session,chooseParty=false){
  token=localStorage.getItem(accountTokenKey(user.id))||'';
  if(chooseParty){showPartyChooser();return}
  if(token)await refresh();
- else{$('login').hidden=false;say('Crie uma Partida-mestre ou entre pelo código da sala.')}
+ else{$('login').hidden=false;prefillSharedCode();say($('code')?.value?'Código da partida recebido. Informe seu nome e entre.':'Crie uma Partida-mestre ou entre pelo código da sala.')}
 }
 $('accountCreate').addEventListener('click',()=>{ $('accountMode').value='signup'; $('accountForm').requestSubmit(); });
 $('accountForm').onsubmit=async e=>{
