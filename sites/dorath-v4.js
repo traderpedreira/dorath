@@ -141,54 +141,63 @@ function renderCards(){
  const player=active('player');
  const label=text(player?.querySelector('h3')).split('·')[0].trim()||'Jogador';
  const selectedLine=text(player?.querySelectorAll('p')[2]);
- const chars=player?.dataset.setupDone==='true' && selectedLine.startsWith('Personagens (até 2):')
-  ? selectedLine.slice('Personagens (até 2):'.length).trim() : '';
- const official={
-  adao:['Adão',2,2,2],eva:['Eva',2,3,2],caim:['Caim',1,2,0],abel:['Abel',1,1,2],sete:['Sete',2,2,2],
-  'lameque-caim':['Lameque (linhagem de Caim)',0,4,0],'enoque-caim':['Enoque (linhagem de Caim)',2,3,1],
-  jabal:['Jabal',3,3,2],jubal:['Jubal',3,3,2],tubalcaim:['Tubalcaim',4,3,2],enos:['Enos',2,2,2],
-  'enoque-sete':['Enoque (linhagem de Sete)',3,2,3],matusalem:['Matusalém',3,2,4],
-  'lameque-noe':['Lameque (linhagem de Sete)',2,2,3],noe:['Noé',3,3,4],sem:['Sem',3,3,4],
-  cam:['Cam',3,4,2],jafe:['Jafé',3,2,3]
- };
- const people=chars.split(',').map(x=>x.trim()).filter(id=>Object.prototype.hasOwnProperty.call(official,id)).slice(0,2).map(id=>{
-  const [name,conhecimento,influencia,heranca]=official[id];
-  return {id,name,stats:`Conhecimento ${conhecimento} · Influência ${influencia} · Herança ${heranca}`};
- });
- const statLine=text(player?.querySelector('p'));const secret=text(player?.querySelectorAll('p')[1]).replace(/^Missão Secreta\s*/i,'').trim();
+ const charIds=player?.dataset.setupDone==='true' && selectedLine.startsWith('Personagens (até 2):')
+  ? selectedLine.slice('Personagens (até 2):'.length).split(',').map(x=>x.trim()).filter(Boolean).slice(0,2)
+  : [];
+ const statLine=text(player?.querySelector('p'));
+ const secret=text(player?.querySelectorAll('p')[1]).replace(/^Missão Secreta\s*/i,'').trim();
  let personal={};try{personal=JSON.parse(localStorage.getItem('dorath.visual.profile.v1.'+(document.getElementById('accountEmail')?.textContent?.trim()||'local'))||'{}')}catch{}
  const summary=text(document.querySelector('#summary h2')),raw=text(document.querySelector('#summary p'));
  const code=(summary.match(/P[1-8]-(\d{3})/)||[])[1],period=(summary.match(/P([1-8])-/)||[])[1]||'1',round=(raw.match(/Rodada\s+(\d+)/i)||[])[1]||'—';
  const house=code?String(Math.round(Number(code)/10)).padStart(2,'0'):'—';
  const miniName=personal.nome?.trim()||label;
- const key=[label,player?.dataset.setupDone,statLine,secret,miniName,period,round,house,people.map(p=>p.name+':'+p.stats).join('|')].join('|');if(oldNames===key)return;oldNames=key;cards.replaceChildren();
+ const characterCards=charIds.map(id=>{
+  const row=player?.querySelector('.dv4-character-option[data-character-id="'+CSS.escape(id)+'"]');
+  const name=row?.dataset.characterName||id;
+  const src=row?.dataset.characterArt||'';
+  return {kind:'PERSONAGEM',title:name,src};
+ });
+ while(characterCards.length<2)characterCards.push({kind:'PERSONAGEM',title:'Não selecionado',src:''});
+ const key=[label,player?.dataset.setupDone,statLine,secret,miniName,period,round,house,characterCards.map(c=>c.title+':'+c.src).join('|'),playerPhoto].join('|');
+ if(oldNames===key)return;oldNames=key;cards.replaceChildren();
  const getValue=name=>{const entry=statLine.split('·').find(x=>x.trim().toLowerCase().startsWith(name.toLowerCase()+':'));return entry?.match(/[0-9]+/)?.[0]||'0'};
- const set=[{title:label,kind:'JOGADOR',src:playerPhoto||null,info:'Toque em Editar carta para inserir sua foto, origem e história.'},...Array.from({length:2},(_,i)=>({kind:'PERSONAGEM',title:people[i]?.name||'Não selecionado',stats:people[i]?.stats||'',src: mapped[slug(people[i]?.name||'')]?'assets/personagens/'+mapped[slug(people[i].name)]:null}))];
+ const set=[{title:label,kind:'JOGADOR'},...characterCards];
  for(const [slot,c] of set.entries()){
-  const b=document.createElement('div');
-  b.className='dv4-card dv4-summary-card';
+  const b=document.createElement('button');
+  b.type='button';
+  b.className='dv4-card dv4-miniature-card';
+  b.setAttribute('aria-label',c.kind==='JOGADOR'?'Abrir Carta do Jogador':'Abrir carta '+c.title);
   if(c.kind==='JOGADOR'){
    b.classList.add('dv4-player-card');
-   b.innerHTML='<span class="dv4-summary-type">CARTA DO JOGADOR</span><strong class="dv4-summary-name">'+escapeHTML(miniName)+'</strong>'+
-    '<span class="dv4-summary-stats dv4-summary-stats-player">'+
-    [['Conhecimento','CON'],['Influência','INF'],['Herança','HER'],['Provisões','PRO']].map(([name,abbr])=>'<span class="dv4-summary-stat"><small>'+abbr+'</small><b>'+getValue(name)+'</b></span>').join('')+
-    '</span><button class="dv4-summary-open" type="button">VER CARTA<br>COMPLETA</button>';
-   b.querySelector('.dv4-summary-open').addEventListener('click',()=>openCard(c));
-  }else{
+   b.innerHTML='<span class="dv4-mini-art">'+
+    '<img class="dv4-mini-base" src="assets/ui/Cart%C3%A3o%20Dorath%20com%20miss%C3%A3o%20secreta.png" alt="Carta do Jogador">'+
+    (playerPhoto?'<img class="dv4-mini-selfie" src="'+escapeHTML(playerPhoto)+'" alt="">':'')+
+    '<span class="dv4-mini-name">'+escapeHTML(miniName)+'</span>'+
+    '<span class="dv4-mini-meta">P'+escapeHTML(period)+' · R'+escapeHTML(round)+' · C'+escapeHTML(house)+'</span>'+
+    '<span class="dv4-mini-medals">'+
+      '<span style="left:15.5%">'+getValue('Conhecimento')+'</span>'+
+      '<span style="left:38.7%">'+getValue('Influência')+'</span>'+
+      '<span style="left:62.3%">'+getValue('Herança')+'</span>'+
+      '<span style="left:85.4%">'+getValue('Provisões')+'</span>'+
+    '</span>'+
+    '<span class="dv4-mini-mission">'+escapeHTML(secret||'')+'</span>'+
+   '</span>';
+  }else if(c.src){
    b.classList.add('dv4-character-card');
-   const fields=[['Conhecimento','CON'],['Influência','INF'],['Herança','HER']];
-   const stat=name=>{const m=(c.stats||'').match(new RegExp(name+'\\s+(\\d+)','i'));return m?m[1]:'—'};
-   b.innerHTML='<span class="dv4-summary-type">PERSONAGEM '+slot+'</span><strong class="dv4-summary-name">'+escapeHTML(c.title)+'</strong>'+
-    '<span class="dv4-summary-stats dv4-summary-stats-character">'+fields.map(([name,abbr])=>'<span class="dv4-summary-stat"><small>'+abbr+'</small><b>'+stat(name)+'</b></span>').join('')+
-    '<button class="dv4-summary-swap" type="button" aria-label="Trocar personagem '+slot+'">TROCAR<br>CARTA</button></span>'+
-    '<button class="dv4-summary-open" type="button">VER CARTA<br>COMPLETA</button>';
-   b.querySelector('.dv4-summary-open').addEventListener('click',()=>openCard(c));
-   b.querySelector('.dv4-summary-swap').addEventListener('click',()=>{
+   b.innerHTML='<img class="dv4-character-art" src="'+escapeHTML(c.src)+'" alt="'+escapeHTML(c.title)+'" loading="lazy">';
+  }else{
+   b.classList.add('dv4-character-card','dv4-empty-character');
+   b.innerHTML='<span class="dv4-empty-card" aria-hidden="true">♛</span><span class="dv4-card-foot">Personagem não selecionado</span>';
+  }
+  b.addEventListener('click',()=>{
+   if(c.kind==='JOGADOR')openCard({kind:'JOGADOR',title:label});
+   else if(c.src)openCard({kind:'PERSONAGEM',title:c.title,src:c.src});
+   else{
     select('player',true);
     const gallery=active('player')?.querySelector('.dv4-player-section[data-section="collection"]');
     if(gallery){gallery.open=true;gallery.scrollIntoView({block:'nearest',behavior:'smooth'})}
-   });
-  }
+   }
+  });
   cards.append(b);
  }
 }
