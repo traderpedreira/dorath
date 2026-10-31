@@ -107,6 +107,14 @@ async function regentJoin(a: any, userId: string) {
   return { token: t, motherCode: g.motherCode, role: 'regent' };
 }
 
+async function deleteGame(a: any, userId: string) {
+  const { row, g, p, role } = await session(a.token, userId);
+  if (role !== 'player' || !p || p.id !== g.hostPlayerId) fail('Somente quem criou a Partida-mestre pode excluí-la', 403);
+  const { error } = await db.from('dorath_games').delete().eq('id', row.id);
+  check(error);
+  return { deleted: true, motherCode: g.motherCode };
+}
+
 async function action(a: any, userId: string) {
   const { row, g, p, role } = await session(a.token, userId);
   if (Number(a.expectedRevision) !== row.revision) fail('Estado mudou; atualize antes de agir', 409);
@@ -127,12 +135,13 @@ Deno.serve(async req => {
     const bearer = req.headers.get('authorization') || '';
     if (!/^Bearer\s+\S+$/i.test(bearer)) fail('Entre na sua conta para continuar', 401);
     const { data: { user }, error: authError } = await db.auth.getUser(bearer.replace(/^Bearer\s+/i, ''));
-    if (authError || !user || user.is_anonymous) fail('Conta inválida ou sessão expirada', 401);
+    if (authError || !user) fail('Sessão do playtest inválida ou expirada', 401);
     const a = await req.json();
     switch (a.route) {
       case 'create': return result(await create(a, user.id));
       case 'join': return result(await join(a, user.id));
       case 'regentJoin': return result(await regentJoin(a, user.id));
+      case 'deleteGame': return result(await deleteGame(a, user.id));
       case 'state': { const { g, p, role } = await session(a.token, user.id); return result(role === 'regent' ? publicRegentView(g) : publicView(g, p)); }
       case 'action': return result(await action(a, user.id));
       default: return result({ error: 'Rota não encontrada' }, 404);
