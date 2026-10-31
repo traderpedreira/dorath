@@ -1606,3 +1606,108 @@ body.dv4-player-regent-mode .dv4-player-mode-toolbar{justify-content:center}
  .dv4-share-actions{grid-template-columns:1fr 1fr}
  .dv4-share-actions button:first-child{grid-column:1/-1}
 }
+
+
+/* Dorath V4 — animação dos dados digitais */
+.dv4-dice-dialog{
+ position:fixed;
+ width:min(92vw,620px);
+ max-width:620px;
+ border:2px solid #b98a4f;
+ border-radius:18px;
+ padding:0;
+ background:radial-gradient(circle at 50% 24%,#4c3522,#1a120d 68%,#0e0a08);
+ color:#f4ddb5;
+ box-shadow:0 22px 70px #000e,inset 0 0 40px #0008;
+ overflow:hidden;
+}
+.dv4-dice-dialog::backdrop{background:#000c;backdrop-filter:blur(3px)}
+.dv4-dice-stage{
+ min-height:min(72vh,520px);
+ display:grid;
+ grid-template-rows:auto 1fr auto;
+ place-items:center;
+ gap:18px;
+ padding:26px 20px 30px;
+ text-align:center;
+ background:
+  radial-gradient(circle at 50% 88%,#6f4b29 0 2%,transparent 28%),
+  linear-gradient(180deg,#241912,#120d0a);
+}
+#dv4DiceLabel{
+ font:800 .75rem/1 system-ui,sans-serif;
+ letter-spacing:.2em;
+ color:#dcb87c;
+}
+.dv4-dice-tray{
+ width:100%;
+ min-height:230px;
+ display:flex;
+ flex-wrap:wrap;
+ align-items:center;
+ justify-content:center;
+ gap:18px;
+ perspective:900px;
+}
+.dv4-die{
+ --dice-delay:0ms;
+ position:relative;
+ width:132px;
+ height:132px;
+ display:grid;
+ place-items:center;
+ filter:drop-shadow(0 16px 16px #0009);
+ animation:dv4-dice-tumble 1.05s cubic-bezier(.22,.75,.3,1) var(--dice-delay) both;
+ transform-style:preserve-3d;
+}
+.dv4-die b{
+ position:relative;
+ z-index:2;
+ display:grid;
+ place-items:center;
+ width:64%;
+ height:64%;
+ color:#28190e;
+ font:800 clamp(2rem,10vw,4.2rem)/1 Georgia,serif;
+ text-shadow:0 1px #fff6d6;
+}
+.dv4-d6{
+ border-radius:20px;
+ background:linear-gradient(145deg,#f7e5bd,#d3ab72 64%,#8c6134);
+ border:4px ridge #c99a57;
+ box-shadow:inset 0 0 0 3px #fff0c566,inset -14px -18px 24px #6f431d66;
+}
+.dv4-d4{
+ clip-path:polygon(50% 3%,97% 92%,3% 92%);
+ background:linear-gradient(160deg,#f4deb2,#bf8d51 72%,#6e4726);
+ filter:drop-shadow(0 18px 15px #0009);
+}
+.dv4-d4 b{transform:translateY(18%)}
+.dv4-d8{
+ clip-path:polygon(50% 0,94% 25%,94% 75%,50% 100%,6% 75%,6% 25%);
+ background:linear-gradient(145deg,#f5dfb4,#c49358 66%,#714a28);
+}
+.dv4-die.is-landed{animation:none;transform:rotateX(0) rotateY(0) rotateZ(0) scale(1)}
+#dv4DiceResult{
+ min-height:1.4em;
+ font:800 clamp(1.25rem,5.5vw,2rem)/1.1 Georgia,serif;
+ letter-spacing:.06em;
+ color:#f4d397;
+ text-shadow:0 2px 8px #000;
+}
+@keyframes dv4-dice-tumble{
+ 0%{transform:translateY(-120px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(.75)}
+ 28%{transform:translateY(26px) rotateX(260deg) rotateY(190deg) rotateZ(120deg) scale(1.03)}
+ 47%{transform:translateY(-38px) rotateX(470deg) rotateY(330deg) rotateZ(230deg) scale(.96)}
+ 68%{transform:translateY(11px) rotateX(650deg) rotateY(520deg) rotateZ(340deg) scale(1)}
+ 84%{transform:translateY(-9px) rotateX(760deg) rotateY(650deg) rotateZ(420deg) scale(.99)}
+ 100%{transform:translateY(0) rotateX(900deg) rotateY(720deg) rotateZ(540deg) scale(1)}
+}
+@media(max-width:520px){
+ .dv4-dice-stage{min-height:56vh;padding:22px 12px 24px}
+ .dv4-dice-tray{min-height:190px;gap:10px}
+ .dv4-die{width:min(29vw,112px);height:min(29vw,112px)}
+}
+@media(prefers-reduced-motion:reduce){
+ .dv4-die{animation-duration:.18s;animation-iteration-count:1}
+}
