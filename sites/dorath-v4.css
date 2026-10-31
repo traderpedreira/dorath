@@ -1464,3 +1464,78 @@ body.dv4-regent-body{min-height:100vh}
 .dv4-player-mode-toolbar{display:flex;justify-content:flex-end;margin:8px 0 10px}
 .dv4-player-mode-toolbar button{min-height:40px;padding:8px 12px;border:1px solid #9a7547;border-radius:9px;background:#4a311d;color:#f5ddb2;font-weight:800}
 body.dv4-player-regent-mode .dv4-player-mode-toolbar{justify-content:center}
+
+
+/* V4 miniaturas puras das três cartas do jogador */
+#dv4 .dv4-cards{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;align-items:stretch}
+#dv4 .dv4-miniature-card{
+ appearance:none;
+ width:100%;
+ aspect-ratio:3/4.35;
+ min-height:0!important;
+ padding:3px!important;
+ margin:0!important;
+ display:flex;
+ align-items:stretch;
+ justify-content:center;
+ background:#1a120d!important;
+ border:2px solid #a8793f!important;
+ border-radius:9px!important;
+ overflow:hidden;
+ box-shadow:0 5px 14px #0008!important;
+}
+#dv4 .dv4-miniature-card::before{display:none!important}
+#dv4 .dv4-miniature-card .dv4-character-art{
+ display:block;
+ width:100%;
+ height:100%;
+ object-fit:contain;
+ object-position:center;
+ border:0!important;
+ border-radius:5px;
+ background:#120d09;
+}
+#dv4 .dv4-miniature-card.dv4-player-card{
+ background:#1a120d!important;
+}
+#dv4 .dv4-miniature-card .dv4-mini-art{
+ position:relative;
+ display:block;
+ width:100%;
+ height:100%;
+ flex:none;
+ aspect-ratio:auto;
+}
+#dv4 .dv4-miniature-card .dv4-mini-base{
+ display:block;
+ width:100%;
+ height:100%;
+ object-fit:fill;
+ border:0!important;
+ border-radius:5px;
+}
+#dv4 .dv4-miniature-card .dv4-empty-card{
+ display:grid;
+ place-items:center;
+ width:100%;
+ height:100%;
+ font-size:3rem;
+ color:#aa7f4d;
+ background:#21170f;
+}
+#dv4 .dv4-miniature-card .dv4-card-foot{
+ position:absolute;
+ left:4px;
+ right:4px;
+ bottom:5px;
+ padding:4px;
+ color:#efd7ad;
+ background:#120d09d9;
+ border-radius:4px;
+ font-size:.56rem;
+}
+#dv4 .dv4-miniature-card:focus-visible{outline:3px solid #e1b36e;outline-offset:2px}
+@media(max-width:430px){
+ #dv4 .dv4-cards{gap:6px}
+ #dv4 .dv4-miniature-card{border-radius:7px!important;padding:2px!important}
+}
