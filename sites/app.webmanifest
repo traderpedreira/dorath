@@ -1,0 +1,57 @@
+{
+  "id": "./multiplayer.html",
+  "name": "Dorath",
+  "short_name": "Dorath",
+  "description": "Companion app do jogo bíblico Dorath.",
+  "lang": "pt-BR",
+  "start_url": "./multiplayer.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "orientation": "any",
+  "background_color": "#1f130d",
+  "theme_color": "#1f130d",
+  "icons": [
+    {
+      "src": "assets/icons/dorath-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/dorath-icon-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Jogador",
+      "short_name": "Jogador",
+      "url": "./multiplayer.html",
+      "icons": [
+        {
+          "src": "assets/icons/dorath-icon.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Regente da Partida",
+      "short_name": "Regente",
+      "url": "./regente.html",
+      "icons": [
+        {
+          "src": "assets/icons/dorath-icon.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ]
+}
