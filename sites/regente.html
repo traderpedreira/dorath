@@ -58,7 +58,16 @@
     </div>
   </section>
 
-  <section id="summary" class="dv4-regent-summary"></section>
+  <section id="regentSharePanel" class="dv4-regent-summary dv4-share-panel" hidden>
+  <div><small>CONVIDAR JOGADORES</small><strong id="regentShareCode">—</strong></div>
+  <div class="dv4-share-actions">
+    <button id="regentShareGame" type="button">Compartilhar partida</button>
+    <button id="regentCopyGameLink" type="button">Copiar link</button>
+    <button id="regentShowGameQr" type="button">Mostrar QR</button>
+  </div>
+  <small id="regentShareFeedback" role="status"></small>
+</section>
+<section id="summary" class="dv4-regent-summary"></section>
 
   <div class="dv4-regent-grid">
     <section class="dv4-regent-wide">
@@ -94,12 +103,12 @@
 </section>
 </main>
 
-<dialog id="activeCardModal" class="dv4-active-modal">
+<dialog id="regentShareQrDialog" class="dv4-share-qr"><button id="regentShareQrClose" type="button" aria-label="Fechar QR">×</button><h2>Entrar na partida</h2><img id="regentShareQrImage" alt="QR Code para entrar na partida"><strong id="regentShareQrCode"></strong><p>Os jogadores apontam a câmera do celular para este QR.</p></dialog><dialog id="activeCardModal" class="dv4-active-modal">
   <button id="activeCardModalClose" type="button" aria-label="Fechar carta">×</button>
   <h2 id="activeCardModalTitle"></h2>
   <img id="activeCardModalImage" alt="">
 </dialog>
 
-<script type="module" src="regente.js?v=20261031"></script>
+<script type="module" src="regente.js?v=share-20261031"></script>
 <script src="pwa.js" defer></script></body>
 </html>
