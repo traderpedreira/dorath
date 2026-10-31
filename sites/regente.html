@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="dorath-build" content="regente-v1-20261031">
+<title>Dorath · Regente da Partida</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="dorath-v4.css?v=regente-20261031">
+</head>
+<body class="dv4-regent-body">
+<main class="dv4-regent-shell">
+<header class="topbar">
+  <div>
+    <h1 class="dv4-brand"><img src="assets/ui/logotipo%20dorath.png" alt="Dorath" class="dv4-brand-logo"></h1>
+    <p class="dv4-playtest">REGENTE DA PARTIDA · PLAYTEST P1</p>
+    <p class="muted mini">Painel coletivo opcional. Não ocupa vaga de jogador.</p>
+  </div>
+</header>
+
+<div id="status" class="mp-status">Conectando…</div>
+
+<section id="account" class="dv4-regent-login" hidden>
+  <h2>Acessar conta</h2>
+  <form id="accountForm">
+    <label>E-mail<input id="email" type="email" autocomplete="email" required></label>
+    <label>Senha<input id="password" type="password" minlength="6" autocomplete="current-password" required></label>
+    <div class="dv4-regent-actions">
+      <button id="accountSubmit" class="primary" type="submit">Entrar</button>
+      <a class="dv4-regent-launch" href="multiplayer.html">Voltar ao app dos jogadores</a>
+    </div>
+  </form>
+</section>
+
+<section id="joinPanel" class="dv4-regent-login" hidden>
+  <span class="dv4-regent-badge">MODO REGENTE</span>
+  <h2>Assumir a mesa</h2>
+  <label>Nome do Regente<input id="regentName" maxlength="40" value="Regente"></label>
+  <label>Código da Partida-mestre ou sala<input id="code" maxlength="8" placeholder="ABC123"></label>
+  <div class="dv4-regent-actions">
+    <button id="joinRegent" class="primary" type="button">Entrar como Regente</button>
+    <button id="resumeRegent" class="secondary" type="button" hidden>Retomar sessão deste tablet</button>
+  </div>
+  <p class="muted mini">O Regente não recebe recursos, Missões ou Personagens e não entra na ordem de turnos.</p>
+</section>
+
+<section id="board" hidden>
+  <section id="audioPanel" class="dv4-regent-summary">
+    <div class="dv4-regent-audio">
+      <strong>🔊 Áudio coletivo</strong>
+      <button id="audioToggle" type="button">Ativar experiência sonora</button>
+      <label>Volume <input id="audioVolume" type="range" min="0" max="100" value="50"></label>
+      <label><input id="audioAmbient" type="checkbox" checked> Ambiente</label>
+      <label><input id="audioEffects" type="checkbox" checked> Efeitos</label>
+      <small id="audioStatus">Desativado</small>
+    </div>
+  </section>
+
+  <section id="summary" class="dv4-regent-summary"></section>
+
+  <div class="dv4-regent-grid">
+    <section class="dv4-regent-wide">
+      <h3>Jogadores e posições</h3>
+      <div id="players" class="dv4-regent-players"></div>
+    </section>
+
+    <section class="dv4-regent-wide">
+      <h3>Cartas ativas da mesa</h3>
+      <div id="activeCards" class="dv4-regent-cards"></div>
+    </section>
+
+    <section>
+      <h3>Condução coletiva</h3>
+      <div id="collective" class="dv4-regent-controls"></div>
+    </section>
+
+    <section>
+      <h3>Ameaças</h3>
+      <div id="threats" class="dv4-regent-controls"></div>
+    </section>
+
+    <section class="dv4-regent-wide">
+      <h3>Histórico coletivo</h3>
+      <ul id="history" class="dv4-regent-history"></ul>
+    </section>
+  </div>
+
+  <div class="dv4-regent-actions" style="margin-top:14px">
+    <button id="leaveRegent" type="button">Sair desta mesa</button>
+    <a class="dv4-regent-launch" href="multiplayer.html">Abrir app dos jogadores</a>
+  </div>
+</section>
+</main>
+
+<dialog id="activeCardModal" class="dv4-active-modal">
+  <button id="activeCardModalClose" type="button" aria-label="Fechar carta">×</button>
+  <h2 id="activeCardModalTitle"></h2>
+  <img id="activeCardModalImage" alt="">
+</dialog>
+
+<script type="module" src="regente.js?v=20261031"></script>
+</body>
+</html>
