@@ -164,6 +164,7 @@ export function applyRegentAction(g,a){
  if(a.type==='marcoD4')actor=g.players.find(x=>x.id===g.pendingMarco?.initiator);
  else if(a.type==='ruptureD4')actor=g.players.find(x=>x.id===g.pendingRupture?.initiator);
  else if(a.type==='threatSpawnD4')actor=g.players.find(x=>x.id===g.pendingThreat?.initiator);
+ else if(a.type==='threatD4')actor=g.players.find(x=>x.id===g.pendingThreatResult?.by);
  else if(a.type==='dominatorD8')actor=g.players[g.dominator?.nextIndex];
  else if(a.type==='dominatorTierD4')actor=g.players.find(x=>x.id===g.dominator?.decider);
  else if(a.type==='advanceFinal')actor=g.players.find(x=>x.id===g.hostPlayerId);
