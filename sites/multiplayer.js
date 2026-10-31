@@ -9,6 +9,7 @@ const playerRegentModeKey='dorath.v4.playerRegentMode';
 function syncPlayerRegentMode(){
  const enabled=localStorage.getItem(playerRegentModeKey)==='1';
  const box=$('regentPlayerMode');if(box)box.checked=enabled;
+ const toggle=$('togglePlayerRegentMode');if(toggle)toggle.textContent=enabled?'Mostrar interface completa':'Usar modo Jogador com Regente';
  document.body.classList.toggle('dv4-player-regent-mode',enabled&&view?.role==='player');
 }
 
@@ -459,6 +460,12 @@ function showPartyChooser(){
 document.addEventListener('dorath-choose-party',showPartyChooser);
 $('regentPlayerMode')?.addEventListener('change',e=>{
  localStorage.setItem(playerRegentModeKey,e.target.checked?'1':'0');
+ syncPlayerRegentMode();
+ if(view)draw();
+});
+$('togglePlayerRegentMode')?.addEventListener('click',()=>{
+ const enabled=localStorage.getItem(playerRegentModeKey)==='1';
+ localStorage.setItem(playerRegentModeKey,enabled?'0':'1');
  syncPlayerRegentMode();
  if(view)draw();
 });
