@@ -17,6 +17,41 @@ $('audioVolume').addEventListener('input',e=>audio.setVolume(Number(e.target.val
 $('audioAmbient').addEventListener('change',e=>{audio.ambient=e.target.checked;if(audio.last)audio.render(audio.last)});
 $('audioEffects').addEventListener('change',e=>audio.effects=e.target.checked);
 
+function playerShareUrl(code){
+ const url=new URL('multiplayer.html',location.href);
+ url.search='';
+ url.hash='';
+ url.searchParams.set('code',code);
+ return url.toString();
+}
+function prefillRegentCode(){
+ const code=new URLSearchParams(location.search).get('code');
+ if(code&&/^[A-Z2-9]{6}$/i.test(code))$('code').value=code.toUpperCase();
+}
+async function copyText(value){
+ if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(value);return}
+ const area=document.createElement('textarea');area.value=value;area.style.position='fixed';area.style.opacity='0';document.body.append(area);area.select();document.execCommand('copy');area.remove();
+}
+async function sharePlayers(){
+ if(!view?.motherCode)return;
+ const feedback=$('regentShareFeedback');
+ const url=playerShareUrl(view.motherCode);
+ try{
+  if(navigator.share)await navigator.share({title:'Dorath',text:'Entre na partida Dorath '+view.motherCode,url});
+  else{await copyText(url);if(feedback)feedback.textContent='Link copiado.'}
+ }catch(error){if(error?.name!=='AbortError'&&feedback)feedback.textContent='Não foi possível compartilhar. Use Copiar link.'}
+}
+async function showPlayersQr(){
+ if(!view?.motherCode)return;
+ const feedback=$('regentShareFeedback');
+ try{
+  const QR=await import('https://esm.sh/qrcode@1.5.4');
+  const url=playerShareUrl(view.motherCode);
+  $('regentShareQrImage').src=await QR.toDataURL(url,{width:620,margin:2,errorCorrectionLevel:'M'});
+  $('regentShareQrCode').textContent=view.motherCode;
+  $('regentShareQrDialog').showModal();
+ }catch{if(feedback)feedback.textContent='Não foi possível gerar o QR.'}
+}
 function say(t,error=false){$('status').textContent=t;$('status').classList.toggle('mp-error',error)}
 async function api(route,data={}){
  if(!/^https:\/\/[^/]+\.supabase\.co\/functions\/v1\/dorath-p1(?:-v4)?$/.test(EDGE_FUNCTION_URL))throw Error('Configure site/supabase-config.js antes de usar o app');
@@ -99,6 +134,7 @@ function render(){
  $('threats').innerHTML=threats||'<p>Nenhuma Ameaça ativa.</p>';
 
  $('history').innerHTML=(view.recentHistory||[]).slice().reverse().map(e=>'<li>'+esc(e.message)+'</li>').join('')||'<li>Sem eventos coletivos registrados.</li>';
+ $('regentSharePanel').hidden=false;$('regentShareCode').textContent=view.motherCode;
  void audio.update(view);
  say(`Regente conectado · ${view.playerOrder?.length||0} jogador(es) · rodada ${view.round}`);
 }
@@ -139,6 +175,16 @@ async function regentAction(type,data={}){
  finally{busy=false}
 }
 
+$('regentShareGame').onclick=()=>void sharePlayers();
+$('regentCopyGameLink').onclick=async()=>{
+ if(!view?.motherCode)return;
+ try{await copyText(playerShareUrl(view.motherCode));$('regentShareFeedback').textContent='Link copiado.'}
+ catch{$('regentShareFeedback').textContent='Não foi possível copiar o link.'}
+};
+$('regentShowGameQr').onclick=()=>void showPlayersQr();
+$('regentShareQrClose').onclick=()=>$('regentShareQrDialog').close();
+$('regentShareQrDialog').addEventListener('click',e=>{if(e.target===$('regentShareQrDialog'))$('regentShareQrDialog').close()});
+prefillRegentCode();
 $('joinRegent').onclick=joinRegent;
 $('resumeRegent').onclick=async()=>{
  token=localStorage.getItem(regentTokenKey(currentUser.id))||'';
@@ -189,7 +235,7 @@ async function showAccount(session){
  $('joinPanel').hidden=false;
  token=localStorage.getItem(regentTokenKey(currentUser.id))||'';
  $('resumeRegent').hidden=!token;
- if(token)await refresh();else say('Informe o código da Partida-mestre para assumir a mesa.');
+ if(token)await refresh();else{prefillRegentCode();say($('code').value?'Código recebido. Entre como Regente desta partida.':'Informe o código da Partida-mestre para assumir a mesa.');}
 }
 
 supabase.auth.onAuthStateChange((event,session)=>{
