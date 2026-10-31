@@ -1,5 +1,5 @@
 import { createClient } from 'npm:@supabase/supabase-js@2.95.0';
-import { newPlayer, publicView, applyAction, log, code } from './engine.js';
+import { newPlayer, publicView, publicRegentView, applyAction, applyRegentAction, log, code } from './engine.js';
 
 const url = Deno.env.get('SUPABASE_URL')!;
 const secret = JSON.parse(Deno.env.get('SUPABASE_SECRET_KEYS') || '{}').default
@@ -31,16 +31,17 @@ async function session(value: unknown, userId: string) {
   check(ge); if (!row) fail('Partida não encontrada', 404);
   const g = row.state; g.revision = row.revision;
   if (g.engineVersion !== 'P1-MASTER-v1.5') fail('Partida criada antes da reorganização da Zona 1; inicie uma nova Partida-mestre para o playtest v0.8.0', 409);
-  const p = g.players.find((x: any) => x.id === s.player_id);
-  if (!p) fail('Jogador não encontrado', 401);
-  return { row, g, p };
+  const p = g.players.find((x: any) => x.id === s.player_id) || null;
+  const role = p ? 'player' : (Array.isArray(g.regents) && g.regents.some((x: any) => x.id === s.player_id) ? 'regent' : null);
+  if (!role) fail('Participante não encontrado', 401);
+  return { row, g, p, role };
 }
 async function create(a: any, userId: string) {
   const id = crypto.randomUUID(), motherCode = code(), roomCode = code();
   const mode = a.mode === 'solo' ? 'solo' : 'multiplayer';
   const player = newPlayer(a.name, roomCode, a.team, a.secretHistory, a.commonHistory);
   const g = { id, engineVersion: 'P1-MASTER-v1.5', mode, motherCode, hostPlayerId: player.id, rooms: [{ code: roomCode, name: 'Sala 1', team: a.team || '' }],
-    players: [player], phase: 'lobby', round: 1, turnIndex: 0, globalStates: {}, violence: 0,
+    players: [player], regents: [], phase: 'lobby', round: 1, turnIndex: 0, globalStates: {}, violence: 0,
     marcos: {}, arkOpened: false, preparationClosed: false, rupturesResolved: {}, pendingRupture: null,
     activeThreats: [], seenThreats: [], lastSpawnRound: 0, trades: [], history: [], revision: 0,
     pendingConsequencePlayers: [], pendingThreat: null, marcoQueue: [], finalScores: null };
@@ -79,15 +80,43 @@ async function join(a: any, userId: string) {
   check(error); if (!ok) fail('Conflito: atualize a partida e tente novamente', 409);
   return { token: t, motherCode: g.motherCode, roomCode: room.code, playerId: p.id };
 }
+async function regentJoin(a: any, userId: string) {
+  const codeText = String(a.code || '').trim().toUpperCase();
+  if (!/^[A-Z2-9]{6}$/.test(codeText)) fail('Código da Partida-mestre inválido');
+  const { data: byMother, error: me } = await db.from('dorath_games').select('id,revision,state')
+    .eq('mother_code', codeText).maybeSingle();
+  check(me);
+  let row = byMother;
+  if (!row) {
+    const { data: byRoom, error: re } = await db.from('dorath_games').select('id,revision,state')
+      .contains('room_codes', [codeText]).limit(1);
+    check(re); row = byRoom?.[0];
+  }
+  if (!row) fail('Partida-mestre não encontrada', 404);
+  const g = row.state;
+  if (g.engineVersion !== 'P1-MASTER-v1.5') fail('Partida incompatível com o Regente V4', 409);
+  g.regents = Array.isArray(g.regents) ? g.regents.slice(-7) : [];
+  const regentId = crypto.randomUUID();
+  g.regents.push({ id: regentId, name: String(a.name || 'Regente').trim().slice(0, 40) || 'Regente' });
+  log(g, 'regente', 'Regente conectado à Partida-mestre');
+  const t = token();
+  const { data: ok, error } = await db.rpc('dorath_join', { p_id: row.id,
+    p_expected_revision: row.revision, p_room_codes: rooms(g), p_state: g,
+    p_token_hash: await hash(t), p_player_id: regentId, p_user_id: userId });
+  check(error); if (!ok) fail('Conflito: atualize a partida e tente novamente', 409);
+  return { token: t, motherCode: g.motherCode, role: 'regent' };
+}
+
 async function action(a: any, userId: string) {
-  const { row, g, p } = await session(a.token, userId);
+  const { row, g, p, role } = await session(a.token, userId);
   if (Number(a.expectedRevision) !== row.revision) fail('Estado mudou; atualize antes de agir', 409);
-  applyAction(g, p, a);
+  if (role === 'regent') applyRegentAction(g, a);
+  else applyAction(g, p, a);
   const { data: ok, error } = await db.rpc('dorath_commit', { p_id: row.id,
     p_expected_revision: row.revision, p_room_codes: rooms(g), p_state: g });
   check(error); if (!ok) fail('Conflito de versão; tente novamente', 409);
   g.revision = row.revision + 1;
-  return publicView(g, p);
+  return role === 'regent' ? publicRegentView(g) : publicView(g, p);
 }
 
 Deno.serve(async req => {
@@ -103,7 +132,8 @@ Deno.serve(async req => {
     switch (a.route) {
       case 'create': return result(await create(a, user.id));
       case 'join': return result(await join(a, user.id));
-      case 'state': { const { g, p } = await session(a.token, user.id); return result(publicView(g, p)); }
+      case 'regentJoin': return result(await regentJoin(a, user.id));
+      case 'state': { const { g, p, role } = await session(a.token, user.id); return result(role === 'regent' ? publicRegentView(g) : publicView(g, p)); }
       case 'action': return result(await action(a, user.id));
       default: return result({ error: 'Rota não encontrada' }, 404);
     }
