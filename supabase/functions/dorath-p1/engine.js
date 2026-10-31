@@ -380,11 +380,11 @@ function endTurn(g,p){activeTurn(g,p);
 function move(g,p,a){activeTurn(g,p);if(g.round===1&&p.house===1)fail('Na rodada inicial, a entrada na Casa 02 é automática; não role D6');if(p.house>=50)fail('A sequência P1-500 a P1-540 é coletiva e sem D6');
  if(p.lastMovedRound===g.round)fail('Você já se moveu nesta rodada');
  const roll=number(a.roll,1,6),old=p.house;
- const distance=rand(3)+1;
+ const distance=roll;
  let n=Math.min(50,old+distance);const barrier=master.ruptures.find(r=>r.house>old&&r.house<=n&&!g.rupturesResolved[r.id]);
  if(barrier)n=barrier.house;
  p.house=n;p.lastMovedRound=g.round;p.offeredMove=null;
- log(g,'movimento',`${p.name}: D6 físico ${roll}, ritmo ${distance} casa(s), P1-${String(old*10).padStart(3,'0')} → P1-${String(n*10).padStart(3,'0')}`,{roll,distance});
+ log(g,'movimento',`${p.name}: D6 ${roll}, avanço ${distance} casa(s), P1-${String(old*10).padStart(3,'0')} → P1-${String(n*10).padStart(3,'0')}`,{roll,distance});
  if(barrier)g.pendingRupture={house:n,initiator:p.id,prepared:[p.id]};
  afterMove(g,p,old,n);
 }
