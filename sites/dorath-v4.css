@@ -1810,9 +1810,9 @@ body.dv4-player-regent-mode .dv4-player-mode-toolbar{justify-content:center}
  pointer-events:none;
 }
 
-/* O número só aparece depois que o dado termina de rolar. */
-.dv4-die :is(i,b){opacity:0!important}
-.dv4-die.is-landed :is(i,b){opacity:1!important;transition:opacity .12s ease-out}
+/* O número só aparece depois que o dado termina de rolar; a geometria permanece visível. */
+.dv4-die-value{opacity:0!important;display:inline-block}
+.dv4-die.is-landed .dv4-die-value{opacity:1!important;transition:opacity .12s ease-out}
 
 /* D6: a trajetória e a rotação do cubo são independentes. */
 .dv4-d6{
