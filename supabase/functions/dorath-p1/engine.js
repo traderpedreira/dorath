@@ -114,7 +114,7 @@ function syncFreeCollection(g,p){
  }else p.freeCharacterChoices=candidates.map(c=>c.id);
 }
 export function publicView(g,p){return {
- revision:g.revision,motherCode:g.motherCode,mode:g.mode||'multiplayer',phase:g.phase,round:g.round,
+ role:'player',revision:g.revision,motherCode:g.motherCode,mode:g.mode||'multiplayer',phase:g.phase,round:g.round,
  turnPlayerId:g.players[g.turnIndex]?.id||null,hostPlayerId:g.hostPlayerId,
  playerOrder:g.players.map(x=>({id:x.id,name:x.name})),
  rooms:g.rooms.map(r=>({...r,players:g.players.filter(x=>x.room===r.code).map(x=>({id:x.id,name:x.name,house:x.house,team:x.team,preserved:x.preserved,arkFinalized:x.arkFinalized}))})),
@@ -139,6 +139,39 @@ export function publicView(g,p){return {
  })):null,
  dominator:g.dominator||null,ruleNotes:g.ruleNotes||[]
 }}
+export function publicRegentView(g){
+ const turn=g.players[g.turnIndex]||null;
+ return {
+  role:'regent',revision:g.revision,motherCode:g.motherCode,mode:g.mode||'multiplayer',phase:g.phase,round:g.round,
+  turnPlayerId:turn?.id||null,hostPlayerId:g.hostPlayerId,
+  playerOrder:g.players.map(x=>({id:x.id,name:x.name,house:x.house,preserved:x.preserved,arkFinalized:x.arkFinalized})),
+  players:g.players.map(x=>({id:x.id,name:x.name,room:x.room,team:x.team,house:x.house,houseCode:byHouse.get(x.house)?.code||('P1-'+String(x.house*10).padStart(3,'0')),houseName:byHouse.get(x.house)?.name||'Casa',preserved:x.preserved,arkFinalized:x.arkFinalized,readyAt47:x.readyAt47,consequences:(x.consequences||[]).map(c=>({id:c.id,d4:c.d4,expiresRound:c.expiresRound})),specialChoices:x.specialChoices||{},mandamentoChoice:x.mandamentoChoice||null})),
+  rooms:g.rooms.map(r=>({...r,players:g.players.filter(x=>x.room===r.code).map(x=>({id:x.id,name:x.name,house:x.house,team:x.team,preserved:x.preserved,arkFinalized:x.arkFinalized}))})),
+  currentHouse:turn?byHouse.get(turn.house):null,
+  globalStates:g.globalStates,violence:g.violence,arkOpened:g.arkOpened,preparationClosed:g.preparationClosed,
+  rupturesResolved:g.rupturesResolved,pendingMarco:g.pendingMarco,pendingRupture:g.pendingRupture,
+  pendingConsequencePlayers:g.pendingConsequencePlayers||[],pendingThreat:g.pendingThreat,pendingThreatResult:g.pendingThreatResult||null,
+  activeThreats:g.activeThreats.map(t=>({id:t.id,card:t.card,name:`Nefilim ${t.card}`,successes:t.successes,aggravated:t.aggravated})),
+  seenThreats:g.seenThreats,marcos:g.marcos,consequenceCards:master.consequences.distinctCards,
+  recentHistory:g.history.slice(-50).filter(e=>!e.privateFor),masterVersion:master.masterVersion,
+  finalScores:g.finalScores||null,dominator:g.dominator||null,ruleNotes:g.ruleNotes||[]
+ }
+}
+
+export function applyRegentAction(g,a){
+ if(!a||typeof a.type!=='string')fail('Ação do Regente inválida');
+ let actor=null;
+ if(a.type==='marcoD4')actor=g.players.find(x=>x.id===g.pendingMarco?.initiator);
+ else if(a.type==='ruptureD4')actor=g.players.find(x=>x.id===g.pendingRupture?.initiator);
+ else if(a.type==='threatSpawnD4')actor=g.players.find(x=>x.id===g.pendingThreat?.initiator);
+ else if(a.type==='dominatorD8')actor=g.players[g.dominator?.nextIndex];
+ else if(a.type==='dominatorTierD4')actor=g.players.find(x=>x.id===g.dominator?.decider);
+ else if(a.type==='advanceFinal')actor=g.players.find(x=>x.id===g.hostPlayerId);
+ else fail('Esta ação permanece no aparelho do jogador');
+ if(!actor)fail('Jogador responsável não encontrado');
+ applyAction(g,actor,a);
+}
+
 function missionEligible(g,p){
  if(g.phase!=='active'||p.house>=50||p.offeredMove===g.round+':'+p.house)return false;
  const h=byHouse.get(p.house);
