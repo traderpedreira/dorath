@@ -64,6 +64,65 @@ async function showGameQr(){
   $('shareQrDialog').showModal();
  }catch(error){if(feedback)feedback.textContent='Não foi possível gerar o QR. Use Compartilhar ou Copiar link.'}
 }
+let diceAnimating=false;
+function ensureDiceDialog(){
+ let dialog=$('dv4DiceDialog');
+ if(dialog)return dialog;
+ dialog=document.createElement('dialog');
+ dialog.id='dv4DiceDialog';
+ dialog.className='dv4-dice-dialog';
+ dialog.innerHTML='<div class="dv4-dice-stage"><small id="dv4DiceLabel">ROLANDO…</small><div id="dv4DiceTray" class="dv4-dice-tray"></div><strong id="dv4DiceResult"></strong></div>';
+ document.body.append(dialog);
+ dialog.addEventListener('cancel',e=>e.preventDefault());
+ return dialog;
+}
+function diceGlyph(max,value){
+ if(max===6)return '<span class="dv4-die dv4-d6" aria-hidden="true"><b>'+value+'</b></span>';
+ if(max===4)return '<span class="dv4-die dv4-d4" aria-hidden="true"><b>'+value+'</b></span>';
+ if(max===8)return '<span class="dv4-die dv4-d8" aria-hidden="true"><b>'+value+'</b></span>';
+ return '<span class="dv4-die" aria-hidden="true"><b>'+value+'</b></span>';
+}
+function diceImpactSound(){
+ try{
+  const Ctx=window.AudioContext||window.webkitAudioContext;if(!Ctx)return;
+  const ctx=new Ctx(),osc=ctx.createOscillator(),gain=ctx.createGain();
+  osc.type='triangle';osc.frequency.setValueAtTime(150,ctx.currentTime);osc.frequency.exponentialRampToValueAtTime(65,ctx.currentTime+.11);
+  gain.gain.setValueAtTime(.0001,ctx.currentTime);gain.gain.exponentialRampToValueAtTime(.18,ctx.currentTime+.01);gain.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+.14);
+  osc.connect(gain);gain.connect(ctx.destination);osc.start();osc.stop(ctx.currentTime+.15);
+  setTimeout(()=>ctx.close().catch(()=>{}),260);
+ }catch{}
+}
+async function animateDice(values,max,label){
+ const dialog=ensureDiceDialog(),tray=$('dv4DiceTray'),result=$('dv4DiceResult'),title=$('dv4DiceLabel');
+ if(diceAnimating)return;
+ diceAnimating=true;
+ title.textContent=label||('ROLANDO D'+max+'…');
+ result.textContent='';
+ tray.innerHTML=values.map(v=>diceGlyph(max,v)).join('');
+ [...tray.children].forEach((el,i)=>{el.style.setProperty('--dice-delay',(i*90)+'ms')});
+ dialog.showModal();
+ await new Promise(r=>setTimeout(r,250));
+ diceImpactSound();
+ await new Promise(r=>setTimeout(r,950));
+ [...tray.children].forEach(el=>el.classList.add('is-landed'));
+ result.textContent=values.length===1?('RESULTADO: '+values[0]):('RESULTADO: '+values.join(' · '));
+ diceImpactSound();
+ await new Promise(r=>setTimeout(r,520));
+ dialog.close();
+ diceAnimating=false;
+}
+async function digitalRoll(max,label){
+ const buf=new Uint32Array(1);crypto.getRandomValues(buf);
+ const value=(buf[0]%max)+1;
+ await animateDice([value],max,label);
+ return value;
+}
+async function digitalRollMany(count,max,label){
+ const buf=new Uint32Array(count);crypto.getRandomValues(buf);
+ const values=[...buf].map(n=>(n%max)+1);
+ await animateDice(values,max,label);
+ return values;
+}
 function say(t,error=false){$('status').textContent=t;$('status').classList.toggle('mp-error',error)}
 async function api(route,data={}){
  if(!/^https:\/\/[^/]+\.supabase\.co\/functions\/v1\/dorath-p1(?:-v4)?$/.test(EDGE_FUNCTION_URL))throw Error('Configure site/supabase-config.js antes de usar o app');
@@ -561,7 +620,7 @@ document.addEventListener('click',async e=>{
  $('login').hidden=true;await refresh();
 });
 document.addEventListener('change',e=>{if(e.target.matches('#player .char-check'))selectAtMostTwo(e.target);if(e.target.id==='consequenceCard'&&$('consequencePreview'))$('consequencePreview').src='assets/consequencias/'+e.target.selectedOptions[0].dataset.asset});
-document.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b||!view)return;const t=b.dataset.action;if(t==='setupDigital3D6'){const buf=new Uint32Array(3);crypto.getRandomValues(buf);buf.forEach((n,i)=>{const el=$('setupRoll'+i);if(el)el.value=String((n%6)+1)});b.textContent=`🎲 3D6: ${[0,1,2].map(i=>$('setupRoll'+i)?.value).join(' · ')}`;return;}let r=Number(b.dataset.roll);if(b.dataset.digitalMax){const max=Number(b.dataset.digitalMax);const buf=new Uint32Array(1);crypto.getRandomValues(buf);r=(buf[0]%max)+1;b.textContent=`🎲 D${max}: ${r}`;b.setAttribute('aria-label',`Resultado digital D${max}: ${r}`);}const val=id=>$(id)?.value;
+document.addEventListener('click',async e=>{const b=e.target.closest('[data-action]');if(!b||!view||diceAnimating)return;const t=b.dataset.action;if(t==='setupDigital3D6'){const values=await digitalRollMany(3,6,'ROLANDO 3D6…');values.forEach((n,i)=>{const el=$('setupRoll'+i);if(el)el.value=String(n)});b.textContent=`🎲 3D6: ${values.join(' · ')}`;return;}let r=Number(b.dataset.roll);if(b.dataset.digitalMax){const max=Number(b.dataset.digitalMax);r=await digitalRoll(max,`ROLANDO D${max}…`);b.textContent=`🎲 D${max}: ${r}`;b.setAttribute('aria-label',`Resultado digital D${max}: ${r}`);}const val=id=>$(id)?.value;
  if(['missionOffer','missionDecline','missionAttempt','missionD4'].includes(t)){
   if(view.turnPlayerId!==view.me.id){say('Aguarde seu turno.');return}
   if(t==='missionAttempt'&&(!view.me.mission||view.me.missionRewardPending||view.me.missionUsedRound===view.round)){say('Nenhuma tentativa de Missão disponível.');return}
