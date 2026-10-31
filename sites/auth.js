@@ -11,6 +11,17 @@ export async function validSession() {
   const { data, error } = await supabase.auth.getSession();
   if (error) throw error;
   const session = data?.session;
-  if (!session?.access_token || !session.user || session.user.is_anonymous) return null;
+  if (!session?.access_token || !session.user) return null;
   return { user: session.user, accessToken: session.access_token };
+}
+
+
+export async function ensurePlaytestSession() {
+  const { data, error } = await supabase.auth.getSession();
+  if (error) throw error;
+  if (data?.session?.access_token && data.session.user) return data.session;
+  const created = await supabase.auth.signInAnonymously();
+  if (created.error) throw created.error;
+  if (!created.data?.session) throw new Error('Não foi possível iniciar a sessão anônima do playtest.');
+  return created.data.session;
 }
