@@ -1407,3 +1407,56 @@ html body #board #movement .dv4-final-note{font-size:.82rem!important;line-heigh
 .dv4-gallery-fallback{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:10px;background:linear-gradient(145deg,#d9ba86,#9c7548);color:#35220f;font-weight:800;font-size:.8rem;line-height:1.15;border:1px solid #8b6336}
 .dv4-gallery-fallback small{display:block;margin-top:8px;font:700 .52rem/1.2 system-ui,sans-serif;letter-spacing:.08em;opacity:.72}
 .dv4-locked .dv4-gallery-fallback{filter:grayscale(.75);opacity:.68}
+
+
+/* Dorath V4 — modo Jogador com Regente */
+.dv4-regent-player-toggle{display:flex!important;align-items:center;gap:10px;margin:14px 0 8px;padding:11px 12px;border:1px solid #9b784b;border-radius:10px;background:#f6ead3;color:#3f2a18;font-weight:700}
+.dv4-regent-player-toggle input{width:auto!important;margin:0!important}
+.dv4-regent-launch{display:flex;align-items:center;justify-content:center;min-height:46px;margin:8px 0 14px;padding:10px 14px;border:1px solid #8d693d;border-radius:10px;background:#3f2b1c;color:#f7dfb1!important;text-decoration:none;font-weight:800}
+body.dv4-player-regent-mode #activeCards,
+body.dv4-player-regent-mode #rooms,
+body.dv4-player-regent-mode #history{display:none!important}
+body.dv4-player-regent-mode .mp-grid{grid-template-columns:1fr!important}
+body.dv4-player-regent-mode #player,
+body.dv4-player-regent-mode #movement,
+body.dv4-player-regent-mode #missions,
+body.dv4-player-regent-mode #world,
+body.dv4-player-regent-mode #threats,
+body.dv4-player-regent-mode #trades{display:block}
+
+/* Dorath V4 — painel Regente */
+body.dv4-regent-body{min-height:100vh}
+.dv4-regent-shell{max-width:1180px;margin:0 auto;padding:14px}
+.dv4-regent-login,.dv4-regent-grid>section,.dv4-regent-summary{border:1px solid #a47b47;border-radius:14px;background:linear-gradient(160deg,#f8ecd5,#dfc394);box-shadow:0 8px 24px #2a170e22;color:#3b2819}
+.dv4-regent-login{max-width:620px;margin:18px auto;padding:18px}
+.dv4-regent-login label{display:grid;gap:6px;margin:10px 0}
+.dv4-regent-login input{width:100%;min-height:45px;padding:9px 11px}
+.dv4-regent-login .dv4-regent-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.dv4-regent-summary{padding:16px;margin:12px 0}
+.dv4-regent-summary h2{margin:0 0 6px;font-family:Georgia,serif}
+.dv4-regent-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.dv4-regent-grid>section{padding:14px;min-width:0}
+.dv4-regent-wide{grid-column:1/-1}
+.dv4-regent-players{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px}
+.dv4-regent-player{padding:10px;border:1px solid #b29265;border-radius:10px;background:#fff8e9}
+.dv4-regent-player.is-turn{outline:3px solid #9b6a2e;outline-offset:1px}
+.dv4-regent-player strong{display:block;font-size:1.05rem}
+.dv4-regent-player small{display:block;margin-top:4px}
+.dv4-regent-controls{display:grid;gap:10px}
+.dv4-regent-controls .dice{display:flex;flex-wrap:wrap;gap:6px}
+.dv4-regent-controls button{min-height:44px}
+.dv4-regent-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:9px}
+.dv4-regent-card{display:grid;gap:5px;padding:6px;border:2px ridge #a77d47;border-radius:9px;background:#1d1510;color:#f0d39f;text-align:center}
+.dv4-regent-card img{width:100%;aspect-ratio:3/4.45;object-fit:contain;background:#120d09;border-radius:5px}
+.dv4-regent-card span{font-size:.67rem;font-weight:800;letter-spacing:.08em}
+.dv4-regent-card small{font-size:.62rem}
+.dv4-regent-threat{padding:10px;border:1px solid #b18b5e;border-radius:10px;background:#fff7e7}
+.dv4-regent-history{max-height:280px;overflow:auto}
+.dv4-regent-history li{margin:6px 0}
+.dv4-regent-audio{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.dv4-regent-badge{display:inline-flex;padding:5px 9px;border-radius:999px;background:#4d321d;color:#f8ddb0;font-size:.72rem;font-weight:800;letter-spacing:.08em}
+@media(max-width:760px){
+ .dv4-regent-grid{grid-template-columns:1fr}
+ .dv4-regent-wide{grid-column:auto}
+ .dv4-regent-login .dv4-regent-actions{grid-template-columns:1fr}
+}
