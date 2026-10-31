@@ -573,6 +573,9 @@ $('regentPlayerMode')?.addEventListener('change',e=>{
  syncPlayerRegentMode();
  if(view)draw();
 });
+document.addEventListener('dorath-share-open',()=>{renderSharePanel();$('shareMenuDialog')?.showModal();});
+$('shareMenuClose')?.addEventListener('click',()=>$('shareMenuDialog')?.close());
+$('shareMenuDialog')?.addEventListener('click',e=>{if(e.target===$('shareMenuDialog'))$('shareMenuDialog').close()});
 $('shareGame')?.addEventListener('click',()=>void shareGameLink());
 $('copyGameLink')?.addEventListener('click',async()=>{
  if(!view?.motherCode)return;
