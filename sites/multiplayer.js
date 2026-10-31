@@ -5,6 +5,13 @@ const $=id=>document.getElementById(id), esc=x=>String(x??'').replace(/[&<>"']/g
 const label={conhecimento:'Conhecimento',influencia:'Influência',provisoes:'Provisões',heranca:'Herança'};
 let token='',view=null,busy=false,stream=null,currentUser=null,sessionAccessToken='';
 let historyKey='',commonKey='';
+const playerRegentModeKey='dorath.v4.playerRegentMode';
+function syncPlayerRegentMode(){
+ const enabled=localStorage.getItem(playerRegentModeKey)==='1';
+ const box=$('regentPlayerMode');if(box)box.checked=enabled;
+ document.body.classList.toggle('dv4-player-regent-mode',enabled&&view?.role==='player');
+}
+
 const audio=new DorathAudio();
 audio.status=message=>{const el=document.getElementById('audioStatus');if(el)el.textContent=message};
 document.getElementById('audioToggle').addEventListener('click',async()=>{if(audio.enabled){audio.disable();document.getElementById('audioToggle').textContent='Ativar experiência sonora'}else{await audio.activate();document.getElementById('audioToggle').textContent='Desativar áudio'}});
@@ -76,7 +83,7 @@ async function refresh(){
  try{
   const next=await api('state',{token:requestedToken});
   if(token!==requestedToken||currentUser?.id!==requestedUser)return;
-  const changed=!view||next.revision!==view.revision;const prior=view;view=next;recordResourceChanges(prior,next);
+  const changed=!view||next.revision!==view.revision;const prior=view;view=next;recordResourceChanges(prior,next);syncPlayerRegentMode();
   void audio.update(view);saveCommon();rememberParty(view);
   $('login').hidden=true;$('board').hidden=false;
   if(changed)draw();
@@ -292,6 +299,7 @@ document.addEventListener('click',e=>{
 });
 
 function draw(){const v=view,p=v.me,host=p.id===v.hostPlayerId,turn=v.turnPlayerId===p.id;
+ syncPlayerRegentMode();
  renderActiveCards();
  syncSelectedCharacters(p);
  $('summary').innerHTML=`<h2>${esc(v.house?.code||'P1-'+String(p.house*10).padStart(3,'0'))} · ${esc(v.house?.name||'Casa')}</h2><p>${esc(v.house?.family||'')} · Rodada ${v.round} · ${esc(v.phase)} · Violência ${v.violence}</p><p>${esc(v.house?.rule||'')}</p><p>Arca: ${p.preserved?'PRESERVADO / ENTROU':p.arkFinalized?'NÃO ENTROU':'entrada em aberto'} ${v.preparationClosed?'· fechada':''}</p>`;
@@ -449,6 +457,11 @@ function showPartyChooser(){
  say(saved?'Escolha: voltar à partida anterior ou entrar em outra pelo código.':'Crie ou entre em uma partida.');
 }
 document.addEventListener('dorath-choose-party',showPartyChooser);
+$('regentPlayerMode')?.addEventListener('change',e=>{
+ localStorage.setItem(playerRegentModeKey,e.target.checked?'1':'0');
+ syncPlayerRegentMode();
+ if(view)draw();
+});
 $('createSolo').onclick=()=>enter('create','solo');$('create').onclick=()=>enter('create','multiplayer');$('join').onclick=()=>enter('join');
 document.addEventListener('click',async e=>{
  const button=e.target.closest('button[data-party-token]');
