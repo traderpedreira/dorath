@@ -1896,3 +1896,23 @@ body.dv4-player-regent-mode .dv4-player-mode-toolbar{justify-content:center}
  opacity:1!important;
 }
 .dv4-d4.is-landed .dv4-d4-value{opacity:1!important}
+
+
+/* Consequências: D4 físico ou digital */
+.dv4-consequence-die{
+ display:grid;
+ grid-template-columns:minmax(0,1fr) auto;
+ gap:8px;
+ align-items:end;
+ margin:10px 0;
+}
+.dv4-consequence-die label{margin:0!important}
+.dv4-consequence-die .digital-die{
+ min-height:44px;
+ margin:0!important;
+ white-space:nowrap;
+}
+@media(max-width:520px){
+ .dv4-consequence-die{grid-template-columns:1fr}
+ .dv4-consequence-die .digital-die{width:100%}
+}
