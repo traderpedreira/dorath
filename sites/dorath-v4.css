@@ -2043,3 +2043,43 @@ body.dv4-player-regent-mode .dv4-player-mode-toolbar{justify-content:center}
  opacity:.72;
  cursor:default;
 }
+
+
+/* Missão — passo D4 mais compacto no mobile */
+html #missions.dv4-current .dv4-mission-reward-step{
+ padding:10px!important;
+ margin-top:10px!important;
+}
+html #missions.dv4-current .dv4-mission-reward-step>p{
+ margin:4px 0 8px!important;
+ line-height:1.35!important;
+}
+html #missions.dv4-current .dv4-beneficiary-fixed{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:10px;
+ margin:6px 0 8px;
+ padding:8px 10px;
+ border:1px solid #a87942;
+ border-radius:8px;
+ background:#f4dfb6;
+ color:#3b2819;
+}
+html #missions.dv4-current .dv4-beneficiary-fixed span{
+ font:700 .68rem/1.2 system-ui,sans-serif;
+ letter-spacing:.08em;
+}
+html #missions.dv4-current .dv4-beneficiary-fixed strong{
+ font:700 1rem/1.2 Georgia,serif;
+}
+html #missions.dv4-current .dv4-beneficiary-select{
+ margin:6px 0 8px!important;
+}
+html #missions.dv4-current .dv4-beneficiary-select select{
+ margin:4px 0 0!important;
+ min-height:44px!important;
+}
+html #missions.dv4-current .dv4-mission-reward-step .dice{
+ margin-top:6px!important;
+}
