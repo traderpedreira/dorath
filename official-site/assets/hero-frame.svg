@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 720" fill="none">
+<defs>
+ <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8f5a20"/><stop offset=".48" stop-color="#f0c36f"/><stop offset="1" stop-color="#8b4f18"/></linearGradient>
+ <filter id="glow"><feGaussianBlur stdDeviation="1.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<g stroke="url(#g)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)">
+ <path d="M44 18H1556M44 702H1556M18 44V676M1582 44V676"/>
+ <path d="M18 74C18 40 40 18 74 18M18 646c0 34 22 56 56 56M1582 74c0-34-22-56-56-56M1582 646c0 34-22 56-56 56"/>
+ <!-- TL ornament -->
+ <path d="M22 83C27 57 40 39 66 28c-9 15-6 31 7 42-18-4-35 0-51 13Z"/>
+ <path d="M35 52c19 5 32-2 39-22M28 72c20-7 36-3 48 11M69 23c7 9 17 14 31 14"/>
+ <circle cx="80" cy="18" r="4"/><circle cx="18" cy="91" r="4"/>
+ <!-- TR ornament -->
+ <path d="M1578 83c-5-26-18-44-44-55 9 15 6 31-7 42 18-4 35 0 51 13Z"/>
+ <path d="M1565 52c-19 5-32-2-39-22M1572 72c-20-7-36-3-48 11M1531 23c-7 9-17 14-31 14"/>
+ <circle cx="1520" cy="18" r="4"/><circle cx="1582" cy="91" r="4"/>
+ <!-- BL ornament -->
+ <path d="M22 637c5 26 18 44 44 55-9-15-6-31 7-42-18 4-35 0-51-13Z"/>
+ <path d="M35 668c19-5 32 2 39 22M28 648c20 7 36 3 48-11M69 697c7-9 17-14 31-14"/>
+ <circle cx="80" cy="702" r="4"/><circle cx="18" cy="629" r="4"/>
+ <!-- BR ornament -->
+ <path d="M1578 637c-5 26-18 44-44 55 9-15 6-31 7-42-18 4-35 0-51-13Z"/>
+ <path d="M1565 668c-19-5-32 2-39 22M1572 648c-20 7-36 3-48-11M1531 697c-7-9-17-14-31-14"/>
+ <circle cx="1520" cy="702" r="4"/><circle cx="1582" cy="629" r="4"/>
+ <path d="M121 18l12-9 12 9-12 9-12-9ZM1455 18l12-9 12 9-12 9-12-9Z"/>
+ <path d="M760 702h80"/><path d="M784 702l16-11 16 11-16 11-16-11Z"/>
+</g>
+</svg>
