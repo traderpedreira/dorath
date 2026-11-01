@@ -44,3 +44,22 @@ test('Missão pode ser tentada antes de mover e o limite persiste após o avanç
 test('visão do Regente é coletiva e não expõe ficha privada do jogador',()=>{const g=game();start(g);const v=publicRegentView(g);assert.equal(v.role,'regent');assert.equal(v.players.length,2);assert.equal(Object.prototype.hasOwnProperty.call(v,'me'),false);assert.equal(v.players[0].house,2)});
 
 test('Regente pode registrar o D4 coletivo do Marco sem assumir vaga de jogador',()=>{const g=game();start(g);const [a]=g.players;a.house=5;play(g,a,'move',{roll:1});assert.equal(g.phase,'marco-roll');applyRegentAction(g,{type:'marcoD4',d4:2});assert.equal(g.phase,'marco-individual');assert.equal(g.marcos[6].d4,2)});
+
+
+test('Intensificador pertence ao D4: D6 apenas qualifica e tabela permanece separada da recompensa',()=>{
+ const failGame=game();start(failGame);const a=failGame.players[0];
+ a.house=8;a.mission={...master.commonMissions.find(m=>m.id==='M02')};a.missionCharacterId='adao';
+ play(failGame,a,'missionAttempt',{roll:4,attribute:'conhecimento'});
+ assert.equal(a.missionRewardPending,null);
+ assert.equal(a.missionUsedRound,failGame.round);
+
+ const okGame=game();start(okGame);const p=okGame.players[0];
+ p.house=8;p.mission={...master.commonMissions.find(m=>m.id==='M02')};p.missionCharacterId='adao';
+ const before=p.resources.conhecimento;
+ play(okGame,p,'missionAttempt',{roll:5,attribute:'conhecimento'});
+ assert.equal(p.missionRewardPending,true);
+ assert.equal(p.missionRewardIntensifier.bonus,1);
+ play(okGame,p,'missionD4',{d4:1});
+ assert.equal(p.resources.conhecimento,before+2);
+ assert.equal(p.missionRewardIntensifier,null);
+});
