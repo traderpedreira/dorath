@@ -578,7 +578,17 @@ function draw(){const v=view,p=v.me,host=p.id===v.hostPlayerId,turn=v.turnPlayer
 let mission='<h3>Missão comum</h3>';
  if(!p.setupDone)mission+='<p>Confirme os atributos iniciais em Jogar antes de acessar Missões.</p>';
  if(p.mission)mission+=`<div class="dv4-mission-details"><div class="dv4-mission-field dv4-mission-field-name"><span>MISSÃO</span><strong>${esc(p.mission.name)}</strong></div><div class="dv4-mission-field"><span>DIFICULDADE</span><strong>${esc(p.mission.difficulty)} · alvo ${p.mission.target}</strong></div><div class="dv4-mission-field"><span>REQUISITO</span><strong>${esc(p.mission.requirement)}</strong></div><div class="dv4-mission-field dv4-mission-field-reward"><span>RECOMPENSA</span><strong>${esc(p.mission.baseReward)}</strong></div></div>`;
- if(p.missionRewardPending)mission+=missionSupportBlock()+`<div class="dv4-mission-reward-step"><div class="dv4-mission-reward-heading">TESTE D6 CONCLUÍDO · AGORA ROLE O D4</div><p>Sucesso confirmado. O D4 define a intensidade da recompensa e recebe o Intensificador mostrado acima.</p>${['M11','M19'].includes(p.mission.id)?`<label>Jogador beneficiado<select id="missionOther">${choices(names(),p.id)}</select></label>`:''}${p.mission.id==='M19'?'<label>Recompensa<select id="missionRewardOption"><option value="outro">Provisões para o outro</option><option value="ambos">1 Provisão para cada um</option></select></label>':p.mission.id==='M20'?'<label>Recompensa<select id="missionRewardOption"><option value="provisoes">Provisões</option><option value="heranca">Herança</option></select></label>':''}${die('missionD4',4)}</div>`;
+ if(p.missionRewardPending){
+  const otherPlayers=names().filter(q=>q.id!==p.id);
+  const beneficiary=['M11','M19'].includes(p.mission.id)
+   ?(otherPlayers.length===1
+     ?`<input type="hidden" id="missionOther" value="${esc(otherPlayers[0].id)}"><div class="dv4-beneficiary-fixed"><span>BENEFICIADO</span><strong>${esc(otherPlayers[0].name)}</strong></div>`
+     :otherPlayers.length>1
+      ?`<label class="dv4-beneficiary-select">Jogador beneficiado<select id="missionOther">${choices(names(),p.id)}</select></label>`
+      :'')
+   :'';
+  mission+=missionSupportBlock()+`<div class="dv4-mission-reward-step"><div class="dv4-mission-reward-heading">TESTE D6 CONCLUÍDO · AGORA ROLE O D4</div><p>Sucesso confirmado. O D4 define a intensidade da recompensa e recebe o Intensificador mostrado acima.</p>${beneficiary}${p.mission.id==='M19'?'<label>Recompensa<select id="missionRewardOption"><option value="outro">Provisões para o outro</option><option value="ambos">1 Provisão para cada um</option></select></label>':p.mission.id==='M20'?'<label>Recompensa<select id="missionRewardOption"><option value="provisoes">Provisões</option><option value="heranca">Herança</option></select></label>':''}${die('missionD4',4)}</div>`;
+ }
  else if(v.phase==='active'&&turn&&p.mission&&p.missionUsedRound!==v.round)mission+=missionSupportBlock();
  if(v.phase==='active'&&turn&&p.mission&&!p.missionRewardPending&&p.missionUsedRound!==v.round)mission+=`<div class="dv4-mission-qualification"><div class="dv4-mission-reward-heading">ETAPA 1 · TESTE DE QUALIFICAÇÃO</div><p>Role o D6. Se atingir o alvo da Missão, você libera o D4 de recompensa. O Intensificador não altera este D6.</p><div class="dv4-mission-dice">${die('missionAttempt',6).replace('<div class="dice">','<div class="dice" style="display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:4px!important;flex-wrap:nowrap!important">')}</div></div>`;
  mission+='<p id="dv4MissionFeedback" class="dv4-mission-feedback" role="status" aria-live="polite" hidden></p>';
