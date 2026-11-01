@@ -1892,9 +1892,9 @@ body.dv4-player-regent-mode .dv4-player-mode-toolbar{justify-content:center}
  color:#28190e;
  font:800 2.15rem/1 Georgia,serif;
  text-shadow:none;
- opacity:0!important;
+ opacity:1!important;
 }
-.dv4-d4.is-landed .dv4-d4-value{opacity:1!important;transition:opacity .12s ease-out}
+.dv4-d4.is-landed .dv4-d4-value{opacity:1!important}
 
 
 /* Consequências: D4 físico ou digital */
