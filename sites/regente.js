@@ -116,6 +116,9 @@ function render(){
  $('activeCards').innerHTML=cards.length?cards.map(c=>`<button type="button" class="dv4-regent-card" data-card-src="${esc(c.src)}" data-card-title="${esc(c.title)}"><span>${esc(c.kind)}</span><img src="${esc(c.src)}" alt="${esc(c.title)}" loading="lazy"><small>${esc(c.status)}</small></button>`).join(''):'<p>Nenhuma carta coletiva ativa neste momento.</p>';
 
  let collective='';
+ if(view.phase==='active'&&turn&&turn.house<50&&turn.lastMovedRound!==view.round&&!(view.round===1&&turn.house===1)){
+  collective+=`<p><b>Movimento de ${esc(turn.name)}</b>: role o D6 no Regente.</p>${die('move',6)}`;
+ }
  if(view.phase==='marco-roll')collective+=`<p>Marco ${view.pendingMarco?.house}: informe o D4 coletivo.</p>${die('marcoD4',4)}`;
  if(view.phase==='rupture-roll')collective+=`<p>Ruptura P1-${String((view.pendingRupture?.house||0)*10).padStart(3,'0')}: informe o D4 coletivo.</p>${die('ruptureD4',4)}`;
  if(view.phase==='threat-spawn')collective+=`<p>Surgimento de Nefilim ${esc(view.pendingThreat?.card)}: informe o D4 coletivo.</p>${die('threatSpawnD4',4)}`;
@@ -208,7 +211,8 @@ document.addEventListener('click',e=>{
  const b=e.target.closest?.('[data-regent-action]');if(!b)return;
  const type=b.dataset.regentAction;
  const roll=Number(b.dataset.roll);
- if(type==='threatD4')regentAction(type,{d4:roll,attribute:$('regentThreatAttr')?.value||'conhecimento'});
+ if(type==='move')regentAction(type,{roll});
+ else if(type==='threatD4')regentAction(type,{d4:roll,attribute:$('regentThreatAttr')?.value||'conhecimento'});
  else if(type==='marcoD4'||type==='ruptureD4'||type==='threatSpawnD4'||type==='dominatorTierD4')regentAction(type,{d4:roll});
  else if(type==='dominatorD8')regentAction(type,{roll});
  else if(type==='advanceFinal')regentAction(type);
