@@ -1,0 +1,3 @@
+const menu=document.querySelector('.menu');const links=document.querySelector('.nav-links');if(menu&&links){menu.addEventListener('click',()=>links.classList.toggle('open'))}
+const form=document.querySelector('[data-playtest-form]');if(form){form.addEventListener('submit',e=>{e.preventDefault();const status=form.querySelector('[data-status]');status.textContent='Cadastro de interesse registrado apenas nesta prévia. A integração definitiva será ativada antes da abertura pública.';status.hidden=false;})}
+document.querySelectorAll('[data-year]').forEach(el=>el.textContent=new Date().getFullYear());
