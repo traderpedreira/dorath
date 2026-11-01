@@ -93,3 +93,34 @@ background-size:auto,66px 66px,66px 66px}
 .table-glow{position:absolute;inset:-12%;background:radial-gradient(circle at 60% 35%,#f0a84b22,transparent 55%);filter:blur(24px)}
 .hero-table-scene .pawn,.hero-table-scene .die{z-index:3}
 @media(max-width:820px){.brand-real img{width:132px}.hero-table-scene{left:-4%;right:-12%;top:21%;height:56%}}
+
+/* Hero V2.2 — restaura o salão antigo e a moldura do mockup */
+.hero-v2{
+ background:
+ linear-gradient(90deg,rgba(8,5,3,.94) 0%,rgba(11,7,4,.80) 33%,rgba(13,8,5,.34) 58%,rgba(10,6,4,.14) 100%),
+ linear-gradient(180deg,rgba(12,7,4,.18),rgba(12,7,4,.34)),
+ url("https://images.unsplash.com/photo-1769436275855-6f3911ab11d5?auto=format&fit=crop&fm=jpg&q=82&w=2400") center/cover no-repeat!important;
+}
+.hero-v2:before{
+ background:
+ linear-gradient(180deg,rgba(36,17,7,.12),transparent 30%,rgba(12,7,4,.46) 100%),
+ radial-gradient(circle at 79% 28%,rgba(246,171,74,.20),transparent 30%)!important;
+}
+.hero-frame-official{
+ background-image:url("assets/hero-frame.svg")!important;
+ background-size:100% 100%!important;
+ background-position:center!important;
+ background-repeat:no-repeat!important;
+ opacity:1!important;
+ filter:none!important;
+ inset:6px!important;
+}
+.hero-table-scene{background:transparent}
+.table-surface{
+ background:
+ linear-gradient(180deg,rgba(53,29,13,.08),rgba(35,18,8,.18)),
+ linear-gradient(145deg,rgba(111,70,35,.82),rgba(152,105,57,.72) 45%,rgba(64,36,18,.84))!important;
+ backdrop-filter:blur(1px);
+ border-color:#70451f!important;
+}
+.site-header{background:linear-gradient(180deg,rgba(16,9,5,.90),rgba(16,9,5,.68))!important}
