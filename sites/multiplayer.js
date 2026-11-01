@@ -111,6 +111,7 @@ async function animateDice(values,max,label){
  diceAnimating=true;
  title.textContent=label||('ROLANDO D'+max+'…');
  result.textContent='';
+ result.hidden=true;
  tray.innerHTML=values.map(v=>diceGlyph(max,v)).join('');
  const rand=(min,max)=>Math.round(min+Math.random()*(max-min));
  [...tray.children].forEach((el,i)=>{
@@ -133,26 +134,18 @@ async function animateDice(values,max,label){
   el.style.setProperty('--rz3',rand(520,820)+'deg');
  });
  dialog.showModal();
- let d4Ticker=null;
- if(max===4){
-  let face=1;
-  d4Ticker=setInterval(()=>{
-   [...tray.children].forEach((el,i)=>{
-    const n=el.querySelector('.dv4-d4-value');if(!n)return;
-    face=((face+i)%4)+1;n.textContent=String(face);
-   });
-  },115);
- }
+
  await new Promise(r=>setTimeout(r,170));
  diceImpactSound();
  await new Promise(r=>setTimeout(r,1180));
- if(d4Ticker)clearInterval(d4Ticker);
  [...tray.children].forEach((el,i)=>{
   el.classList.add('is-landed');
   settleDiceFace(el,max,values[i]);
-  const n=el.querySelector('.dv4-d4-value');if(n)n.textContent=String(values[i]);
+  const d4=el.querySelector('.dv4-d4-value');if(d4)d4.textContent=String(values[i]);
+  const d8=el.querySelector('.dv4-die-value');if(d8&&max===8)d8.textContent=String(values[i]);
  });
- result.textContent=values.length===1?('RESULTADO: '+values[0]):('RESULTADO: '+values.join(' · '));
+ result.textContent='';
+ result.hidden=true;
  diceImpactSound();
  await new Promise(r=>setTimeout(r,2520));
  dialog.close();
