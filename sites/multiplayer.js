@@ -93,7 +93,7 @@ function settleDiceFace(el,max,value){
   5:'rotateX(90deg) rotateY(0deg) rotateZ(0deg)',
   6:'rotateX(0deg) rotateY(180deg) rotateZ(0deg)'
  };
- cube.style.transform=rotations[value]||rotations[1];
+ cube.style.setProperty('transform',rotations[value]||rotations[1],'important');
 }
 function diceImpactSound(){
  try{
@@ -663,7 +663,7 @@ document.addEventListener('click',async e=>{
  $('login').hidden=true;await refresh();
 });
 document.addEventListener('change',e=>{if(e.target.matches('#player .char-check'))selectAtMostTwo(e.target);if(e.target.id==='consequenceCard'&&$('consequencePreview'))$('consequencePreview').src='assets/consequencias/'+e.target.selectedOptions[0].dataset.asset});
-document.addEventListener('click',async e=>{const b=e.target.closest('[data-action]');if(!b||!view||diceAnimating)return;const t=b.dataset.action;if(t==='setupDigital3D6'){const values=await digitalRollMany(3,6,'ROLANDO 3D6…');values.forEach((n,i)=>{const el=$('setupRoll'+i);if(el)el.value=String(n)});b.textContent=`🎲 3D6: ${values.join(' · ')}`;return;}let r=Number(b.dataset.roll);if(b.dataset.digitalMax){const max=Number(b.dataset.digitalMax);r=await digitalRoll(max,`ROLANDO D${max}…`);b.textContent=`🎲 D${max}: ${r}`;b.setAttribute('aria-label',`Resultado digital D${max}: ${r}`);if(t==='consequenceDigitalD4'){const field=$('consequenceD4');if(field)field.value=String(r);return;}}const val=id=>$(id)?.value;
+document.addEventListener('click',async e=>{const b=e.target.closest('[data-action]');if(!b||!view||diceAnimating)return;const t=b.dataset.action;if(t==='setupDigital3D6'){const values=await digitalRollMany(3,6,'ROLANDO 3D6…');values.forEach((n,i)=>{const el=$('setupRoll'+i);if(el)el.value=String(n)});b.textContent=`🎲 3D6: ${values.join(' · ')}`;return;}let r=Number(b.dataset.roll);if(b.dataset.digitalMax){const max=Number(b.dataset.digitalMax);r=await digitalRoll(max,`ROLANDO D${max}…`);b.setAttribute('aria-label',`Rolar D${max} digital. Último resultado: ${r}`);if(t==='consequenceDigitalD4'){const field=$('consequenceD4');if(field)field.value=String(r);return;}}const val=id=>$(id)?.value;
  if(['missionOffer','missionDecline','missionAttempt','missionD4'].includes(t)){
   if(view.turnPlayerId!==view.me.id){say('Aguarde seu turno.');return}
   if(t==='missionAttempt'&&(!view.me.mission||view.me.missionRewardPending||view.me.missionUsedRound===view.round)){say('Nenhuma tentativa de Missão disponível.');return}
