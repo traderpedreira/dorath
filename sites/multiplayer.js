@@ -77,11 +77,23 @@ function ensureDiceDialog(){
  return dialog;
 }
 function diceGlyph(max,value){
- const n='<span class="dv4-die-value">'+value+'</span>';
- if(max===6)return '<span class="dv4-die dv4-d6" aria-hidden="true"><span class="dv4-cube"><i class="front">'+n+'</i><i class="back">'+n+'</i><i class="right">'+n+'</i><i class="left">'+n+'</i><i class="top">'+n+'</i><i class="bottom">'+n+'</i></span></span>';
- if(max===4)return '<span class="dv4-die dv4-d4" aria-hidden="true"><span class="dv4-poly dv4-tetra"><i>'+n+'</i></span></span>';
- if(max===8)return '<span class="dv4-die dv4-d8" aria-hidden="true"><span class="dv4-poly dv4-octa"><i>'+n+'</i></span></span>';
- return '<span class="dv4-die" aria-hidden="true"><b>'+n+'</b></span>';
+ if(max===6)return '<span class="dv4-die dv4-d6" data-result="'+value+'" aria-hidden="true"><span class="dv4-cube"><i class="front">1</i><i class="back">6</i><i class="right">3</i><i class="left">4</i><i class="top">2</i><i class="bottom">5</i></span></span>';
+ if(max===4)return '<span class="dv4-die dv4-d4" data-result="'+value+'" aria-hidden="true"><span class="dv4-poly dv4-tetra"><i><span class="dv4-die-value">'+value+'</span></i></span></span>';
+ if(max===8)return '<span class="dv4-die dv4-d8" data-result="'+value+'" aria-hidden="true"><span class="dv4-poly dv4-octa"><i><span class="dv4-die-value">'+value+'</span></i></span></span>';
+ return '<span class="dv4-die" data-result="'+value+'" aria-hidden="true"><b><span class="dv4-die-value">'+value+'</span></b></span>';
+}
+function settleDiceFace(el,max,value){
+ if(max!==6)return;
+ const cube=el.querySelector('.dv4-cube');if(!cube)return;
+ const rotations={
+  1:'rotateX(0deg) rotateY(0deg) rotateZ(0deg)',
+  2:'rotateX(-90deg) rotateY(0deg) rotateZ(0deg)',
+  3:'rotateX(0deg) rotateY(-90deg) rotateZ(0deg)',
+  4:'rotateX(0deg) rotateY(90deg) rotateZ(0deg)',
+  5:'rotateX(90deg) rotateY(0deg) rotateZ(0deg)',
+  6:'rotateX(0deg) rotateY(180deg) rotateZ(0deg)'
+ };
+ cube.style.transform=rotations[value]||rotations[1];
 }
 function diceImpactSound(){
  try{
@@ -124,7 +136,7 @@ async function animateDice(values,max,label){
  await new Promise(r=>setTimeout(r,170));
  diceImpactSound();
  await new Promise(r=>setTimeout(r,1180));
- [...tray.children].forEach(el=>el.classList.add('is-landed'));
+ [...tray.children].forEach((el,i)=>{el.classList.add('is-landed');settleDiceFace(el,max,values[i])});
  result.textContent=values.length===1?('RESULTADO: '+values[0]):('RESULTADO: '+values.join(' · '));
  diceImpactSound();
  await new Promise(r=>setTimeout(r,2520));
