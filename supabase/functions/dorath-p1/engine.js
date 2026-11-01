@@ -55,7 +55,7 @@ export function newPlayer(name,room,team,history=[],commonHistory=[]){
  missionHistory:Array.isArray(commonHistory)?commonHistory.filter(id=>master.commonMissions.some(m=>m.id===id)).slice(-100):[],missionUsedRound:0,missionSuccesses:0,difficultMissionSuccess:false,missionRewardIntensifier:null,
  threatAttempts:{},threatContributions:0,consequenceCount:0,tradeCount:0,donatedAmount:0,
  conversionCount:0,convertedRound:0,tradedRound:0,firstRuptures:0,marcoPersonal:{},
- lastMovedRound:0,offeredMove:null,readyAt47:false,enteredAt48:false,checkpointProvisions:null};
+ lastMovedRound:0,offeredMove:null,readyAt47:false,enteredAt48:false,checkpointProvisions:null,lastRegentRoll:null};
 }
 function unlocked(p){return characters.filter(c=>c.unlockHouse<=Math.max(3,p.house))}
 // Capacidade homologada: 1–2 jogadores: 5 cartas; 3–4: 4; 5–6: 3; 7–8: 2.
@@ -145,7 +145,7 @@ export function publicRegentView(g){
   role:'regent',revision:g.revision,motherCode:g.motherCode,mode:g.mode||'multiplayer',phase:g.phase,round:g.round,
   turnPlayerId:turn?.id||null,hostPlayerId:g.hostPlayerId,
   playerOrder:g.players.map(x=>({id:x.id,name:x.name,house:x.house,preserved:x.preserved,arkFinalized:x.arkFinalized})),
-  players:g.players.map(x=>({id:x.id,name:x.name,room:x.room,team:x.team,house:x.house,houseCode:byHouse.get(x.house)?.code||('P1-'+String(x.house*10).padStart(3,'0')),houseName:byHouse.get(x.house)?.name||'Casa',preserved:x.preserved,arkFinalized:x.arkFinalized,readyAt47:x.readyAt47,consequences:(x.consequences||[]).map(c=>({id:c.id,d4:c.d4,expiresRound:c.expiresRound})),specialChoices:x.specialChoices||{},mandamentoChoice:x.mandamentoChoice||null})),
+  players:g.players.map(x=>({id:x.id,name:x.name,room:x.room,team:x.team,house:x.house,houseCode:byHouse.get(x.house)?.code||('P1-'+String(x.house*10).padStart(3,'0')),houseName:byHouse.get(x.house)?.name||'Casa',preserved:x.preserved,arkFinalized:x.arkFinalized,readyAt47:x.readyAt47,lastMovedRound:x.lastMovedRound||0,lastRegentRoll:x.lastRegentRoll||null,consequences:(x.consequences||[]).map(c=>({id:c.id,d4:c.d4,expiresRound:c.expiresRound})),specialChoices:x.specialChoices||{},mandamentoChoice:x.mandamentoChoice||null})),
   rooms:g.rooms.map(r=>({...r,players:g.players.filter(x=>x.room===r.code).map(x=>({id:x.id,name:x.name,house:x.house,team:x.team,preserved:x.preserved,arkFinalized:x.arkFinalized}))})),
   currentHouse:turn?byHouse.get(turn.house):null,
   globalStates:g.globalStates,violence:g.violence,arkOpened:g.arkOpened,preparationClosed:g.preparationClosed,
@@ -161,7 +161,8 @@ export function publicRegentView(g){
 export function applyRegentAction(g,a){
  if(!a||typeof a.type!=='string')fail('Ação do Regente inválida');
  let actor=null;
- if(a.type==='marcoD4')actor=g.players.find(x=>x.id===g.pendingMarco?.initiator);
+ if(a.type==='move')actor=g.players[g.turnIndex];
+ else if(a.type==='marcoD4')actor=g.players.find(x=>x.id===g.pendingMarco?.initiator);
  else if(a.type==='ruptureD4')actor=g.players.find(x=>x.id===g.pendingRupture?.initiator);
  else if(a.type==='threatSpawnD4')actor=g.players.find(x=>x.id===g.pendingThreat?.initiator);
  else if(a.type==='threatD4')actor=g.players.find(x=>x.id===g.pendingThreatResult?.by);
@@ -170,7 +171,18 @@ export function applyRegentAction(g,a){
  else if(a.type==='advanceFinal')actor=g.players.find(x=>x.id===g.hostPlayerId);
  else fail('Esta ação permanece no aparelho do jogador');
  if(!actor)fail('Jogador responsável não encontrado');
+ const fromHouse=actor.house;
  applyAction(g,actor,a);
+ if(a.type==='move'){
+  const roll=number(a.roll,1,6);
+  actor.lastRegentRoll={id:uuid(),die:'D6',roll,round:g.round,fromHouse,toHouse:actor.house};
+ }else if(['marcoD4','ruptureD4','threatSpawnD4','threatD4','dominatorTierD4'].includes(a.type)){
+  const roll=number(a.d4,1,4);
+  actor.lastRegentRoll={id:uuid(),die:'D4',roll,round:g.round,intensity:['Leve','Média','Alta','Máxima'][roll-1]};
+ }else if(a.type==='dominatorD8'){
+  const roll=number(a.roll,1,8);
+  actor.lastRegentRoll={id:uuid(),die:'D8',roll,round:g.round};
+ }
 }
 
 function missionEligible(g,p){
