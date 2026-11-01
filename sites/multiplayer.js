@@ -135,9 +135,23 @@ async function animateDice(values,max,label){
  });
  dialog.showModal();
 
+ let d4Ticker=null;
+ if(max===4){
+  const d4Els=[...tray.children];
+  let tick=0;
+  d4Ticker=setInterval(()=>{
+   tick++;
+   d4Els.forEach((el,i)=>{
+    const n=el.querySelector('.dv4-d4-value');
+    if(n)n.textContent=String(((tick+i)%4)+1);
+   });
+  },110);
+ }
+
  await new Promise(r=>setTimeout(r,170));
  diceImpactSound();
  await new Promise(r=>setTimeout(r,1180));
+ if(d4Ticker)clearInterval(d4Ticker);
  [...tray.children].forEach((el,i)=>{
   el.classList.add('is-landed');
   settleDiceFace(el,max,values[i]);
