@@ -1919,3 +1919,49 @@ body.dv4-player-regent-mode .dv4-player-mode-toolbar{justify-content:center}
 
 /* Resultado exibido somente na face do dado */
 #dv4DiceResult{display:none!important}
+
+
+/* Ameaça: uma tentativa por rodada também na interface */
+.dv4-threat-attempted{
+ margin-top:10px;
+ padding:10px 12px;
+ border:1px solid #8d6b3f;
+ border-radius:10px;
+ background:#2b2118;
+ color:#d9c49d;
+ font:700 .78rem/1.3 system-ui,sans-serif;
+ text-align:center;
+ letter-spacing:.04em;
+}
+
+/* Movimento: o D6 é a própria chamada para ação, sem texto redundante */
+.dv4-move-die-cta{
+ display:flex;
+ justify-content:center;
+ margin:14px 0 8px;
+}
+.dv4-move-die-cta .dice{
+ display:flex!important;
+ justify-content:center;
+ align-items:center;
+ gap:6px;
+ width:100%;
+}
+.dv4-move-die-cta .digital-die{
+ min-width:min(78vw,320px);
+ min-height:64px;
+ padding:14px 22px;
+ border-width:2px;
+ border-radius:16px;
+ font-size:1.12rem;
+ font-weight:800;
+ box-shadow:0 0 0 0 rgba(203,157,92,.42),0 8px 22px #0006;
+ animation:dv4-d6-cta-pulse 1.8s ease-in-out infinite;
+}
+@keyframes dv4-d6-cta-pulse{
+ 0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(203,157,92,.38),0 8px 22px #0006}
+ 50%{transform:scale(1.035);box-shadow:0 0 0 10px rgba(203,157,92,0),0 10px 26px #0008}
+}
+@media(prefers-reduced-motion:reduce){
+ .dv4-move-die-cta .digital-die{animation:none}
+}
