@@ -78,7 +78,7 @@ function ensureDiceDialog(){
 }
 function diceGlyph(max,value){
  if(max===6)return '<span class="dv4-die dv4-d6" data-result="'+value+'" aria-hidden="true"><span class="dv4-cube"><i class="front">1</i><i class="back">6</i><i class="right">3</i><i class="left">4</i><i class="top">2</i><i class="bottom">5</i></span></span>';
- if(max===4)return '<span class="dv4-die dv4-d4" data-result="'+value+'" aria-hidden="true"><span class="dv4-poly dv4-tetra"><i><span class="dv4-die-value">'+value+'</span></i></span></span>';
+ if(max===4)return '<span class="dv4-die dv4-d4" data-result="'+value+'" aria-hidden="true"><span class="dv4-poly dv4-tetra"><i><span class="dv4-d4-value">1</span></i></span></span>';
  if(max===8)return '<span class="dv4-die dv4-d8" data-result="'+value+'" aria-hidden="true"><span class="dv4-poly dv4-octa"><i><span class="dv4-die-value">'+value+'</span></i></span></span>';
  return '<span class="dv4-die" data-result="'+value+'" aria-hidden="true"><b><span class="dv4-die-value">'+value+'</span></b></span>';
 }
@@ -133,10 +133,25 @@ async function animateDice(values,max,label){
   el.style.setProperty('--rz3',rand(520,820)+'deg');
  });
  dialog.showModal();
+ let d4Ticker=null;
+ if(max===4){
+  let face=1;
+  d4Ticker=setInterval(()=>{
+   [...tray.children].forEach((el,i)=>{
+    const n=el.querySelector('.dv4-d4-value');if(!n)return;
+    face=((face+i)%4)+1;n.textContent=String(face);
+   });
+  },115);
+ }
  await new Promise(r=>setTimeout(r,170));
  diceImpactSound();
  await new Promise(r=>setTimeout(r,1180));
- [...tray.children].forEach((el,i)=>{el.classList.add('is-landed');settleDiceFace(el,max,values[i])});
+ if(d4Ticker)clearInterval(d4Ticker);
+ [...tray.children].forEach((el,i)=>{
+  el.classList.add('is-landed');
+  settleDiceFace(el,max,values[i]);
+  const n=el.querySelector('.dv4-d4-value');if(n)n.textContent=String(values[i]);
+ });
  result.textContent=values.length===1?('RESULTADO: '+values[0]):('RESULTADO: '+values.join(' · '));
  diceImpactSound();
  await new Promise(r=>setTimeout(r,2520));
