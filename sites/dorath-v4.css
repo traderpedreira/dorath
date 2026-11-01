@@ -1893,9 +1893,9 @@ body.dv4-player-regent-mode .dv4-player-mode-toolbar{justify-content:center}
  color:#28190e;
  font:800 2.15rem/1 Georgia,serif;
  text-shadow:none;
- opacity:1!important;
+ opacity:0!important;
 }
-.dv4-d4.is-landed .dv4-d4-value{opacity:1!important}
+.dv4-d4.is-landed .dv4-d4-value{opacity:1!important;transition:opacity .12s ease-out}
 
 
 /* Consequências: D4 físico ou digital */
@@ -1916,3 +1916,7 @@ body.dv4-player-regent-mode .dv4-player-mode-toolbar{justify-content:center}
  .dv4-consequence-die{grid-template-columns:1fr}
  .dv4-consequence-die .digital-die{width:100%}
 }
+
+
+/* Resultado exibido somente na face do dado */
+#dv4DiceResult{display:none!important}
