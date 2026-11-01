@@ -78,7 +78,7 @@ function ensureDiceDialog(){
 }
 function diceGlyph(max,value){
  if(max===6)return '<span class="dv4-die dv4-d6" data-result="'+value+'" aria-hidden="true"><span class="dv4-cube"><i class="front">1</i><i class="back">6</i><i class="right">3</i><i class="left">4</i><i class="top">2</i><i class="bottom">5</i></span></span>';
- if(max===4)return '<span class="dv4-die dv4-d4" data-result="'+value+'" aria-hidden="true"><span class="dv4-poly dv4-tetra"><i><span class="dv4-d4-value">1</span></i></span></span>';
+ if(max===4)return '<span class="dv4-die dv4-d4" data-result="'+value+'" aria-hidden="true"><span class="dv4-poly dv4-tetra" aria-hidden="true"></span><span class="dv4-d4-value">1</span></span>';
  if(max===8)return '<span class="dv4-die dv4-d8" data-result="'+value+'" aria-hidden="true"><span class="dv4-poly dv4-octa"><i><span class="dv4-die-value">'+value+'</span></i></span></span>';
  return '<span class="dv4-die" data-result="'+value+'" aria-hidden="true"><b><span class="dv4-die-value">'+value+'</span></b></span>';
 }
