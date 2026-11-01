@@ -52,7 +52,7 @@ export function newPlayer(name,room,team,history=[],commonHistory=[]){
  secretMissionId:sid,secretCompletedAt:null,setupDone:false,preserved:false,preservedCharacterId:null,
  arkFinalized:false,preservationBonus:null,consequences:[],mission:null,missionRewardPending:null,
  specialChoices:{},mandamentoChoice:null,lastChanceUsed:false,houseOccurrences:{},house3LandingBonus:null,missionRandomBonus:null,
- missionHistory:Array.isArray(commonHistory)?commonHistory.filter(id=>master.commonMissions.some(m=>m.id===id)).slice(-100):[],missionUsedRound:0,missionSuccesses:0,difficultMissionSuccess:false,
+ missionHistory:Array.isArray(commonHistory)?commonHistory.filter(id=>master.commonMissions.some(m=>m.id===id)).slice(-100):[],missionUsedRound:0,missionSuccesses:0,difficultMissionSuccess:false,missionRewardIntensifier:null,
  threatAttempts:{},threatContributions:0,consequenceCount:0,tradeCount:0,donatedAmount:0,
  conversionCount:0,convertedRound:0,tradedRound:0,firstRuptures:0,marcoPersonal:{},
  lastMovedRound:0,offeredMove:null,readyAt47:false,enteredAt48:false,checkpointProvisions:null};
@@ -214,7 +214,7 @@ function missionOffer(g,p,replace){
  log(g,'missao',soloRepair?`Missão incompatível com aventura solo substituída gratuitamente para ${p.name}`:`Missão privada oferecida a ${p.name}`,{privateFor:p.id});
 }
 function missionReward(g,p,n,a={}){
- const m=p.mission,amount=master.missionRewardD4ByDifficulty[m.difficulty][n];
+ const m=p.mission,rawD4=number(n,1,4),intensifier=Math.max(0,Math.min(2,Number(p.missionRewardIntensifier?.bonus)||0)),effectiveD4=Math.min(4,rawD4+intensifier),amount=master.missionRewardD4ByDifficulty[m.difficulty][effectiveD4];
  let key=m.baseReward.includes('Herança')||m.baseReward.includes('Heranças')?'heranca':m.baseReward.includes('Provis')?'provisoes':m.baseReward.includes('Influência')?'influencia':'conhecimento';
  if(m.id==='M19'){
   const q=g.players.find(q=>q.id===a.otherId&&q.id!==p.id);if(!q)fail('Escolha o jogador ajudado');
@@ -233,7 +233,7 @@ function missionReward(g,p,n,a={}){
  if(m.id==='M17')gain(g,p,'influencia',1);
  if(m.id==='M15'&&g.activeThreats.length){g.activeThreats[0].successes++;p.threatContributions++}
  p.missionSuccesses++;if(m.difficulty==='Difícil')p.difficultMissionSuccess=true;
- log(g,'missao',`${p.name} concluiu ${m.name} · D4 ${n}`,{privateFor:p.id});p.mission=null;p.missionRewardPending=null;
+ log(g,'missao',`${p.name} concluiu ${m.name} · D4 ${rawD4} + Intensificador ${intensifier} = intensidade ${effectiveD4}`,{privateFor:p.id});p.mission=null;p.missionRewardPending=null;p.missionRewardIntensifier=null;
 }
 function applyConsequence(g,p,id,n){
  if(!consequences[id])fail('Carta de Consequência inválida');
@@ -431,12 +431,16 @@ function missionAttempt(g,p,a){
  if(req.includes('EM RISCO')&&!g.players.some(q=>q.id!==p.id&&!arkReady(q)))fail('Nenhum jogador EM RISCO');
  if(m.id==='M09'&&p.donatedAmount<=(p.missionDonationSnapshot||0))fail('Transfira voluntariamente 1 recurso após receber esta Missão');
  const support=characterMissionBonus(g,p,m,a);
- const bonus=support.bonus+(p.nextCooperationBonus||0);
+ const d6Bonus=p.nextCooperationBonus||0;
  p.missionRandomBonus=null;
  p.nextCooperationBonus=0;p.missionUsedRound=g.round;
- const success=number(a.roll,1,6)+bonus>=m.target;
- log(g,'missao',`Teste de ${m.name}: ${support.character}${support.attribute?' / '+support.attribute:''} (+${support.bonus}), outros bônus +${bonus-support.bonus}, D6 ${a.roll}, alvo ${m.target}`,{privateFor:p.id});
- if(success){p.missionRewardPending=true;log(g,'missao',`${p.name} passou no teste de ${m.name}; D4 separado pendente`,{privateFor:p.id})}
+ const success=number(a.roll,1,6)+d6Bonus>=m.target;
+ log(g,'missao',`Teste de ${m.name}: D6 ${a.roll}, outros bônus de D6 +${d6Bonus}, alvo ${m.target}; Intensificador do D4: ${support.character}${support.attribute?' / '+support.attribute:''} (+${support.bonus})`,{privateFor:p.id});
+ if(success){
+  p.missionRewardPending=true;
+  p.missionRewardIntensifier={bonus:support.bonus,character:support.character,attribute:support.attribute};
+  log(g,'missao',`${p.name} passou no teste de ${m.name}; D4 de recompensa pendente com Intensificador +${support.bonus}`,{privateFor:p.id});
+ }
  else {if(m.failure.startsWith('-1 Provis'))change(p,'provisoes',-1);if(m.failure.startsWith('-1 Conhecimento'))change(p,'conhecimento',-1);if(m.failure.startsWith('-1 Influência'))change(p,'influencia',-1);
   log(g,'missao',`${p.name} falhou em ${m.name}`,{privateFor:p.id})}
 }
