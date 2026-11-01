@@ -2016,3 +2016,30 @@ body.dv4-player-regent-mode .dv4-player-mode-toolbar{justify-content:center}
 @media(max-width:520px){
  .dv4-d4 .dv4-d4-svg{width:82px;height:82px}
 }
+
+
+/* Missão: preserva contexto do bônus D6 enquanto o D4 de recompensa é rolado */
+.dv4-mission-reward-step{
+ margin-top:12px;
+ padding:12px;
+ border:2px solid #a87942;
+ border-radius:12px;
+ background:linear-gradient(180deg,#3a2a1d,#241910);
+ box-shadow:inset 0 0 0 1px #e0b97a22;
+}
+.dv4-mission-reward-heading{
+ margin-bottom:8px;
+ color:#e7c68d;
+ font:800 .78rem/1.2 system-ui,sans-serif;
+ letter-spacing:.08em;
+ text-align:center;
+}
+.dv4-mission-reward-step p{
+ margin:6px 0 10px;
+ text-align:center;
+}
+.dv4-mission-bonus button:disabled,
+.dv4-mission-bonus select:disabled{
+ opacity:.72;
+ cursor:default;
+}
