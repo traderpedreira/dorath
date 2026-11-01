@@ -1974,3 +1974,45 @@ body.dv4-player-regent-mode .dv4-player-mode-toolbar{justify-content:center}
 @media(prefers-reduced-motion:reduce){
  .dv4-move-die-cta .digital-die{animation:none}
 }
+
+
+/* D4 SVG — geometria e número formam um único objeto durante a animação */
+.dv4-d4{
+ clip-path:none!important;
+ background:none!important;
+ border:0!important;
+ overflow:visible!important;
+}
+.dv4-d4 .dv4-d4-svg{
+ width:100px;
+ height:100px;
+ display:block;
+ overflow:visible;
+ transform:none!important;
+}
+.dv4-d4 .dv4-d4-shape{
+ fill:#c99558;
+ stroke:#9a6833;
+ stroke-width:2.5;
+ vector-effect:non-scaling-stroke;
+}
+.dv4-d4 .dv4-d4-value{
+ position:static!important;
+ display:block!important;
+ transform:none!important;
+ opacity:1!important;
+ visibility:visible!important;
+ fill:#28190e!important;
+ color:#28190e!important;
+ font:800 30px Georgia,serif!important;
+ line-height:1!important;
+ text-shadow:none!important;
+ pointer-events:none;
+}
+.dv4-d4.is-landed .dv4-d4-value{
+ opacity:1!important;
+ visibility:visible!important;
+}
+@media(max-width:520px){
+ .dv4-d4 .dv4-d4-svg{width:82px;height:82px}
+}
