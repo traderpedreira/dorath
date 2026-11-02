@@ -13,3 +13,17 @@ if(!reduceMotion){
  };
  addEventListener('scroll',updateParallax,{passive:true});addEventListener('resize',updateParallax);updateParallax();
 }
+
+async function loadApprovedHero(){
+ const img=document.getElementById('heroApprovedImage'); if(!img)return;
+ try{
+  const [a,b]=await Promise.all([fetch('assets/hero-approved.part1'),fetch('assets/hero-approved.part2')]);
+  if(!a.ok||!b.ok)throw new Error('hero asset');
+  const [ab,bb]=await Promise.all([a.arrayBuffer(),b.arrayBuffer()]);
+  const merged=new Uint8Array(ab.byteLength+bb.byteLength);
+  merged.set(new Uint8Array(ab),0); merged.set(new Uint8Array(bb),ab.byteLength);
+  const url=URL.createObjectURL(new Blob([merged],{type:'image/webp'}));
+  img.src=url; img.hidden=false; img.addEventListener('load',()=>URL.revokeObjectURL(url),{once:true});
+ }catch(e){document.querySelector('.hero-approved')?.classList.add('hero-load-error')}
+}
+loadApprovedHero();
